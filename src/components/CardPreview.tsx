@@ -1,0 +1,43 @@
+'use client';
+
+import { forwardRef } from 'react';
+import { CardData } from '@/types/card';
+import ModernCard from './templates/ModernCard';
+import ClassicCard from './templates/ClassicCard';
+import BoldCard from './templates/BoldCard';
+import MinimalCard from './templates/MinimalCard';
+
+interface Props {
+  data: CardData;
+}
+
+const CardPreview = forwardRef<HTMLDivElement, Props>(({ data }, ref) => {
+  const renderTemplate = () => {
+    switch (data.template) {
+      case 'modern':
+        return <ModernCard data={data} />;
+      case 'classic':
+        return <ClassicCard data={data} />;
+      case 'bold':
+        return <BoldCard data={data} />;
+      case 'minimal':
+        return <MinimalCard data={data} />;
+      default:
+        return <ModernCard data={data} />;
+    }
+  };
+
+  return (
+    <div
+      ref={ref}
+      className="w-full shadow-2xl rounded-lg overflow-hidden card-preview"
+      style={{ aspectRatio: '3.5 / 2' }}
+    >
+      {renderTemplate()}
+    </div>
+  );
+});
+
+CardPreview.displayName = 'CardPreview';
+
+export default CardPreview;

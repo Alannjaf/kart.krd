@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  --font-noto: 'Noto Sans Arabic', 'Inter', sans-serif;
+  --color-purple-deep: #1a0a2e;
+  --color-purple-dark: #2d1b69;
+  --color-purple-mid: #4a2c9e;
+  --color-gold: #f0b429;
+  --color-gold-light: #fcd34d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+}
+
+/* Kurdish/Arabic RTL font */
+.font-ku,
+.font-ar {
+  font-family: 'Noto Sans Arabic', sans-serif;
+}
+
+/* English LTR font */
+.font-en {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Card preview aspect ratio */
+.card-aspect {
+  aspect-ratio: 3.5 / 2;
+}
+
+/* Smooth transitions */
+.card-preview {
+  transition: all 0.2s ease;
+}
