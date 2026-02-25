@@ -1,4 +1,7 @@
+'use client';
+
 import Link from "next/link";
+import React, { useState } from "react";
 
 const templatePreviews = [
   {
@@ -8,6 +11,7 @@ const templatePreviews = [
     bg: "from-violet-900 to-purple-800",
     accent: "bg-gradient-to-b from-yellow-400 to-amber-500",
     textColor: "text-white",
+    isFree: true,
   },
   {
     id: "classic",
@@ -16,6 +20,7 @@ const templatePreviews = [
     bg: "from-gray-50 to-gray-100",
     accent: "border-2 border-amber-500",
     textColor: "text-gray-800",
+    isFree: false,
   },
   {
     id: "bold",
@@ -24,6 +29,7 @@ const templatePreviews = [
     bg: "from-gray-950 to-gray-900",
     accent: "bg-yellow-400",
     textColor: "text-white",
+    isFree: false,
   },
   {
     id: "minimal",
@@ -32,29 +38,131 @@ const templatePreviews = [
     bg: "from-white to-gray-50",
     accent: "border-b border-gray-300",
     textColor: "text-gray-700",
+    isFree: false,
   },
 ];
 
 export default function HomePage() {
+  const [language, setLanguage] = useState<'ku' | 'en'>('ku');
+  const isKurdish = language === 'ku';
+
+  const content = {
+    ku: {
+      badge: "✦ بەخۆڕایی — بەبێ تۆمارکردن",
+      heroTitle: "کارتی بزنسی ئامادەکە",
+      heroSubtitle: "لە چەند چرکەیەکدا",
+      heroDesc: "کارتی بزنسی پیشەیی بۆ خۆت ئامادەبکە — بەکوردی، عەرەبی، یان ئینگلیزی. پی‌دی‌ئێف دابەزێنە، بەبێ هیچ تۆمارکردنێک.",
+      ctaButton: "🎨 دروستی بکە — بەخۆڕایی",
+      ctaSubtext: "هیچ تۆمارکردنێک پێویست نییە",
+      templatesTitle: "چوار شێوازی جیاواز",
+      templatesDesc: "شێوازێک هەڵبژێرە کە لە خۆت نوێنەرایەتی بکات",
+      features: [
+        {
+          icon: "🌐",
+          title: "سێ زمان",
+          desc: "کوردی، عەرەبی، ئینگلیزی — هەموو لەگەڵ پشتگیری چەپ‌بەراستەوە و ڕاست‌بەچەپەوە",
+        },
+        {
+          icon: "⚡",
+          title: "خێرا و ئاسان",
+          desc: "زانیاریت داخڵ بکە، پێشبینی زیندوو ببینە، PIF دابەزێنە — هەمووی لەسەر وێب",
+        },
+        {
+          icon: "🎨",
+          title: "چوار شێواز",
+          desc: "مۆدێرن، کلاسیک، بۆڵد، مینیمال — شێوازێک هەڵبژێرە کە لە پیشەی خۆت نوێنەرایەتی بکات",
+        },
+      ],
+      ctaBottomTitle: "ئەمڕۆ کارتەکەت ئامادەبکە",
+      ctaBottomDesc: "بەخۆڕایی — بەبێ تۆمارکردن — PIF دابەزێنە",
+      ctaBottomButton: "دروستی بکە — ئیستا",
+      footerText: "© 2026 kart.krd — دروستکراوە لە کوردستان 🏔️",
+      createButton: "دروستی بکە"
+    },
+    en: {
+      badge: "✦ Free — No Registration Required",
+      heroTitle: "Create Professional",
+      heroSubtitle: "Business Cards in Seconds",
+      heroDesc: "Generate professional business cards in Kurdish, Arabic, or English. Download as PDF instantly, no account required.",
+      ctaButton: "🎨 Create Free Card",
+      ctaSubtext: "No registration required",
+      templatesTitle: "Four Different Styles",
+      templatesDesc: "Choose a template that represents your profession",
+      features: [
+        {
+          icon: "🌐",
+          title: "3 Languages",
+          desc: "Kurdish, Arabic, English — all with full RTL and LTR text support",
+        },
+        {
+          icon: "⚡",
+          title: "Fast & Easy",
+          desc: "Enter your details, see live preview, download PDF — all in your browser",
+        },
+        {
+          icon: "🎨",
+          title: "4 Templates",
+          desc: "Modern, Classic, Bold, Minimal — choose a style that represents your profession",
+        },
+      ],
+      ctaBottomTitle: "Create Your Card Today",
+      ctaBottomDesc: "Free — No Registration — Download PDF",
+      ctaBottomButton: "Create Now",
+      footerText: "© 2026 kart.krd — Made in Kurdistan 🏔️",
+      createButton: "Create"
+    }
+  };
+
+  const currentContent = content[language];
+
   return (
-    <div className="min-h-screen bg-[#0f0520] text-white" dir="rtl">
+    <div className="min-h-screen bg-[#0f0520] text-white" dir={isKurdish ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="border-b border-purple-900/40 bg-[#0f0520]/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          {/* Language Toggle */}
+          <div className="flex items-center gap-3">
+            <div className="bg-purple-900/30 border border-purple-700/50 rounded-lg p-1 flex">
+              <button
+                onClick={() => setLanguage('ku')}
+                className={`px-3 py-1 rounded text-sm font-medium transition-all ${
+                  isKurdish
+                    ? 'bg-yellow-400 text-black'
+                    : 'text-purple-300 hover:text-white'
+                }`}
+              >
+                KU
+              </button>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`px-3 py-1 rounded text-sm font-medium transition-all ${
+                  !isKurdish
+                    ? 'bg-yellow-400 text-black'
+                    : 'text-purple-300 hover:text-white'
+                }`}
+              >
+                EN
+              </button>
+            </div>
+          </div>
+
+          {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center">
               <span className="text-black font-bold text-sm">K</span>
             </div>
-            <span className="font-bold text-xl text-white" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
+            <span className="font-bold text-xl text-white" style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}>
               kart.krd
             </span>
           </div>
+
+          {/* CTA Button */}
           <Link
             href="/editor"
             className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold px-5 py-2 rounded-lg text-sm hover:from-yellow-300 hover:to-amber-400 transition-all"
-            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
           >
-            دروستی بکە
+            {currentContent.createButton}
           </Link>
         </div>
       </header>
@@ -70,43 +178,42 @@ export default function HomePage() {
         <div className="relative max-w-6xl mx-auto px-4 pt-24 pb-20 text-center">
           <div
             className="inline-block bg-purple-900/40 border border-purple-700/50 text-purple-300 text-sm px-4 py-2 rounded-full mb-8"
-            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
           >
-            ✦ بەخۆڕایی — بەبێ تۆمارکردن
+            {currentContent.badge}
           </div>
 
           <h1
             className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6"
-            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
           >
-            کارتی بزنسی ئامادەکە
+            {currentContent.heroTitle}
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">
-              لە چەند چرکەیەکدا
+              {currentContent.heroSubtitle}
             </span>
           </h1>
 
           <p
             className="text-purple-200 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
-            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
           >
-            کارتی بزنسی پیشەیی بۆ خۆت ئامادەبکە — بەکوردی، عەرەبی، یان ئینگلیزی.
-            پی‌دی‌ئێف دابەزێنە، بەبێ هیچ تۆمارکردنێک.
+            {currentContent.heroDesc}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/editor"
               className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold px-8 py-4 rounded-xl text-lg hover:from-yellow-300 hover:to-amber-400 transition-all shadow-lg shadow-amber-500/20 w-full sm:w-auto"
-              style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+              style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
             >
-              🎨 دروستی بکە — بەخۆڕایی
+              {currentContent.ctaButton}
             </Link>
             <span
               className="text-purple-400 text-sm"
-              style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+              style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
             >
-              هیچ تۆمارکردنێک پێویست نییە
+              {currentContent.ctaSubtext}
             </span>
           </div>
         </div>
@@ -116,26 +223,43 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-4 py-16">
         <h2
           className="text-2xl md:text-3xl font-bold text-center text-white mb-4"
-          style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+          style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
         >
-          چوار شێوازی جیاواز
+          {currentContent.templatesTitle}
         </h2>
         <p
           className="text-purple-300 text-center mb-12"
-          style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+          style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
         >
-          شێوازێک هەڵبژێرە کە لە خۆت نوێنەرایەتی بکات
+          {currentContent.templatesDesc}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {templatePreviews.map((tpl) => (
-            <Link key={tpl.id} href={`/editor?template=${tpl.id}`}>
-              <div className="group cursor-pointer">
-                {/* Card Preview */}
-                <div
-                  className={`relative rounded-xl overflow-hidden shadow-xl bg-gradient-to-br ${tpl.bg} mb-3 border border-white/10 hover:scale-105 transition-transform duration-300`}
-                  style={{ aspectRatio: "3.5/2" }}
-                >
+          {templatePreviews.map((tpl) => {
+            const TemplateCard = ({ children }: { children: React.ReactNode }) => {
+              if (tpl.isFree) {
+                return (
+                  <Link href={`/editor?template=${tpl.id}`}>
+                    {children}
+                  </Link>
+                );
+              } else {
+                return (
+                  <div className="cursor-not-allowed opacity-75">
+                    {children}
+                  </div>
+                );
+              }
+            };
+
+            return (
+              <TemplateCard key={tpl.id}>
+                <div className="group">
+                  {/* Card Preview */}
+                  <div
+                    className={`relative rounded-xl overflow-hidden shadow-xl bg-gradient-to-br ${tpl.bg} mb-3 border border-white/10 ${tpl.isFree ? 'hover:scale-105 cursor-pointer' : ''} transition-transform duration-300`}
+                    style={{ aspectRatio: "3.5/2" }}
+                  >
                   {/* Mock card content */}
                   <div className="absolute inset-0 p-4 flex flex-col justify-between">
                     {tpl.id === "modern" && (
@@ -189,48 +313,44 @@ export default function HomePage() {
                         </div>
                       </>
                     )}
+
+                    {/* Lock icon for premium templates */}
+                    {!tpl.isFree && (
+                      <div className="absolute top-2 left-2 w-6 h-6 bg-black/70 rounded-full flex items-center justify-center">
+                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      </div>
+                    )}
+
+                    {/* Premium overlay for locked templates */}
+                    {!tpl.isFree && (
+                      <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]" />
+                    )}
+                  </div>
+                  </div>
+
+                  {/* Template name */}
+                  <div className="text-center">
+                    <span
+                      className="text-white font-medium"
+                      style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+                    >
+                      {isKurdish ? tpl.name : tpl.nameEn} {!tpl.isFree && '🔒'}
+                    </span>
+                    {isKurdish && <span className="text-purple-400 text-sm mr-2">— {tpl.nameEn}</span>}
                   </div>
                 </div>
-
-                {/* Template name */}
-                <div className="text-center">
-                  <span
-                    className="text-white font-medium"
-                    style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
-                  >
-                    {tpl.name}
-                  </span>
-                  <span className="text-purple-400 text-sm mr-2">— {tpl.nameEn}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </TemplateCard>
+            );
+          })}
         </div>
       </section>
 
       {/* Features */}
       <section className="max-w-6xl mx-auto px-4 py-16 border-t border-purple-900/30">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              icon: "🌐",
-              title: "سێ زمان",
-              titleEn: "3 Languages",
-              desc: "کوردی، عەرەبی، ئینگلیزی — هەموو لەگەڵ پشتگیری چەپ‌بەراستەوە و ڕاست‌بەچەپەوە",
-            },
-            {
-              icon: "⚡",
-              title: "خێرا و ئاسان",
-              titleEn: "Fast & Easy",
-              desc: "زانیاریت داخڵ بکە، پێشبینی زیندوو ببینە، PIF دابەزێنە — هەمووی لەسەر وێب",
-            },
-            {
-              icon: "🎨",
-              title: "چوار شێواز",
-              titleEn: "4 Templates",
-              desc: "مۆدێرن، کلاسیک، بۆڵد، مینیمال — شێوازێک هەڵبژێرە کە لە پیشەی خۆت نوێنەرایەتی بکات",
-            },
-          ].map((f, i) => (
+          {currentContent.features.map((f, i) => (
             <div
               key={i}
               className="bg-purple-900/20 border border-purple-800/30 rounded-2xl p-6 text-center"
@@ -238,13 +358,13 @@ export default function HomePage() {
               <div className="text-4xl mb-4">{f.icon}</div>
               <h3
                 className="text-white font-bold text-xl mb-2"
-                style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
               >
                 {f.title}
               </h3>
               <p
                 className="text-purple-300 text-sm leading-relaxed"
-                style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
               >
                 {f.desc}
               </p>
@@ -258,30 +378,30 @@ export default function HomePage() {
         <div className="bg-gradient-to-r from-purple-900/60 to-indigo-900/60 border border-purple-700/40 rounded-3xl p-12">
           <h2
             className="text-3xl md:text-4xl font-extrabold text-white mb-4"
-            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
           >
-            ئەمڕۆ کارتەکەت ئامادەبکە
+            {currentContent.ctaBottomTitle}
           </h2>
           <p
             className="text-purple-200 mb-8"
-            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
           >
-            بەخۆڕایی — بەبێ تۆمارکردن — PIF دابەزێنە
+            {currentContent.ctaBottomDesc}
           </p>
           <Link
             href="/editor"
             className="inline-block bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold px-10 py-4 rounded-xl text-lg hover:from-yellow-300 hover:to-amber-400 transition-all shadow-xl shadow-amber-500/20"
-            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
           >
-            دروستی بکە — ئیستا
+            {currentContent.ctaBottomButton}
           </Link>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-purple-900/30 py-8 text-center text-purple-500 text-sm">
-        <p style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
-          © 2026 kart.krd — دروستکراوە لە کوردستان 🏔️
+        <p style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}>
+          {currentContent.footerText}
         </p>
       </footer>
     </div>

@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { CardData, TemplateId, defaultCardData } from '@/types/card';
+import { CardData, TemplateId, defaultCardData, TEMPLATES } from '@/types/card';
 import CardForm from '@/components/CardForm';
 import CardPreview from '@/components/CardPreview';
 import TemplateSelector from '@/components/TemplateSelector';
@@ -11,7 +11,11 @@ import { generatePdf } from '@/lib/generatePdf';
 
 function EditorContent() {
   const searchParams = useSearchParams();
-  const initialTemplate = (searchParams.get('template') as TemplateId) || 'modern';
+  const urlTemplate = searchParams.get('template') as TemplateId;
+
+  // Check if the requested template is free, otherwise default to 'modern'
+  const template = TEMPLATES.find(t => t.id === urlTemplate);
+  const initialTemplate = (template && template.isFree) ? urlTemplate : 'modern';
 
   const [cardData, setCardData] = useState<CardData>({
     ...defaultCardData,

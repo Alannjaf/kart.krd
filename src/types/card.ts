@@ -37,9 +37,9 @@ export const defaultCardData: CardData = {
   template: 'modern',
 };
 
-export const TEMPLATES: { id: TemplateId; label: string; labelKu: string }[] = [
-  { id: 'modern', label: 'Modern', labelKu: 'مۆدێرن' },
-  { id: 'classic', label: 'Classic', labelKu: 'کلاسیک' },
-  { id: 'bold', label: 'Bold', labelKu: 'بۆڵد' },
-  { id: 'minimal', label: 'Minimal', labelKu: 'مینیمال' },
+export const TEMPLATES: { id: TemplateId; label: string; labelKu: string; isFree: boolean }[] = [
+  { id: 'modern', label: 'Modern', labelKu: 'مۆدێرن', isFree: true },
+  { id: 'classic', label: 'Classic', labelKu: 'کلاسیک', isFree: false },
+  { id: 'bold', label: 'Bold', labelKu: 'بۆڵد', isFree: false },
+  { id: 'minimal', label: 'Minimal', labelKu: 'مینیمال', isFree: false },
 ];
