@@ -16,7 +16,7 @@ interface Props {
 const CardPreview = forwardRef<HTMLDivElement, Props>(({ data, showBack = false }, ref) => {
   const renderTemplate = () => {
     if (showBack) {
-      return <BackCard data={data} />;
+      return <BackCard data={data} template={data.template} />;
     }
 
     switch (data.template) {

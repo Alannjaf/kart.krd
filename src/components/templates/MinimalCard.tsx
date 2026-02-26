@@ -1,8 +1,6 @@
 'use client';
 
 import { CardData } from '@/types/card';
-import { useState, useEffect } from 'react';
-import { generateVCardQR } from '@/lib/qrUtils';
 
 interface Props {
   data: CardData;
@@ -40,15 +38,6 @@ export default function MinimalCard({ data }: Props) {
   const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif";
   const contactSize = '13px';
   const socialSize = '10px';
-  const [qrCode, setQrCode] = useState<string>('');
-
-  useEffect(() => {
-    if (data.qrEnabled) {
-      generateVCardQR(data).then(setQrCode);
-    } else {
-      setQrCode('');
-    }
-  }, [data]);
 
   return (
     <div
@@ -56,24 +45,20 @@ export default function MinimalCard({ data }: Props) {
       dir={isRTL ? 'rtl' : 'ltr'}
       style={{ fontFamily }}
     >
-      {/* Logo - top corner */}
-      {data.logoUrl && (
-        <div
-          className="absolute z-10"
-          style={{
-            [isRTL ? 'right' : 'left']: '28px',
-            top: '20px'
-          }}
-        >
-          <img
-            src={data.logoUrl}
-            alt="Logo"
-            className="w-[35px] h-[35px] object-contain"
-          />
-        </div>
-      )}
       {/* Content */}
-      <div className="flex-1 flex flex-col justify-between px-7 py-5">
+      <div className="flex-1 flex items-center px-7 py-5">
+        {/* Logo - vertically centered on opposite side of name */}
+        {data.logoUrl && !isRTL && (
+          <div className="flex items-center justify-center mr-6">
+            <img
+              src={data.logoUrl}
+              alt="Logo"
+              className="w-[60px] h-[60px] object-contain"
+            />
+          </div>
+        )}
+
+        <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
         {/* Top: Name & title */}
         <div>
           <h1
@@ -173,26 +158,21 @@ export default function MinimalCard({ data }: Props) {
             </div>
           )}
         </div>
+        </div>
+
+        {/* Logo - vertically centered on opposite side of name (RTL) */}
+        {data.logoUrl && isRTL && (
+          <div className="flex items-center justify-center ml-6">
+            <img
+              src={data.logoUrl}
+              alt="Logo"
+              className="w-[60px] h-[60px] object-contain"
+            />
+          </div>
+        )}
       </div>
 
-      {/* QR Code - bottom left */}
-      {data.qrEnabled && qrCode && (
-        <div
-          className="absolute z-10"
-          style={{
-            left: '28px',
-            bottom: '20px'
-          }}
-        >
-          <img
-            src={qrCode}
-            alt="QR Code"
-            className="w-[35px] h-[35px] bg-transparent p-0 rounded"
-          />
-        </div>
-      )}
-
-{/* watermark only in PDF */}
+      {/* watermark only in PDF */}
     </div>
   );
 }
