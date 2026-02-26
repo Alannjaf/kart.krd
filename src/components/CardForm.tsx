@@ -161,6 +161,74 @@ export default function CardForm({ data, onChange }: Props) {
 
       <div className="h-px bg-gray-100" />
 
+      {/* V2 Features */}
+      <div className="space-y-3">
+        <h3
+          className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
+          style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+        >
+          تایبەتمەندیەکانی نوێ
+        </h3>
+
+        {/* QR Code checkbox */}
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            id="qr-enabled"
+            checked={data.qrEnabled}
+            onChange={(e) => onChange({ ...data, qrEnabled: e.target.checked })}
+            className="w-4 h-4 text-purple-600 bg-white border-gray-300 rounded focus:ring-purple-500 focus:ring-2"
+          />
+          <label
+            htmlFor="qr-enabled"
+            className="text-sm text-gray-700 cursor-pointer"
+            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+          >
+            QR کۆد — QR Code
+          </label>
+        </div>
+
+        {/* Logo upload */}
+        <div>
+          <label className={labelClass} style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
+            لۆگۆ — Upload Logo
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file && file.size <= 2 * 1024 * 1024) { // 2MB limit
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                  const dataUrl = event.target?.result as string;
+                  onChange({ ...data, logoUrl: dataUrl });
+                };
+                reader.readAsDataURL(file);
+              } else if (file) {
+                alert('پەڕگەکە گەورەترە لە 2MB. تکایە پەڕگەیەکی بچووکتر هەڵبژێرە.');
+              }
+            }}
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all bg-white file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+          />
+          {data.logoUrl && (
+            <div className="mt-2 flex items-center gap-2">
+              <img src={data.logoUrl} alt="Logo preview" className="w-8 h-8 object-contain border rounded" />
+              <button
+                onClick={() => onChange({ ...data, logoUrl: '' })}
+                className="text-xs text-red-500 hover:text-red-700"
+                style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+              >
+                سڕینەوە
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="h-px bg-gray-100" />
+
       {/* Social links */}
       <div className="space-y-3">
         <h3

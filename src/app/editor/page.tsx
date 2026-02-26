@@ -23,6 +23,7 @@ function EditorContent() {
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [pdfSuccess, setPdfSuccess] = useState(false);
+  const [showBack, setShowBack] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPdf = useCallback(async () => {
@@ -30,7 +31,14 @@ function EditorContent() {
     setIsGenerating(true);
     setPdfSuccess(false);
     try {
-      await generatePdf(cardRef.current, cardData);
+      // Callback to switch between front/back views during PDF generation
+      const showBackCallback = async (showBackView: boolean) => {
+        setShowBack(showBackView);
+        // Wait for state update and re-render
+        await new Promise(resolve => setTimeout(resolve, 200));
+      };
+
+      await generatePdf(cardRef.current, cardData, showBackCallback);
       setPdfSuccess(true);
       setTimeout(() => setPdfSuccess(false), 3000);
     } catch (err) {
@@ -113,17 +121,44 @@ function EditorContent() {
                 >
                   پێشبینی زیندوو
                 </h2>
-                <span
-                  className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full"
-                  style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
-                >
-                  3.5&quot; × 2&quot;
-                </span>
+                <div className="flex items-center gap-3">
+                  {/* Front/Back toggle */}
+                  <div className="flex bg-gray-100 rounded-lg p-1">
+                    <button
+                      onClick={() => setShowBack(false)}
+                      className={`px-3 py-1 text-xs font-medium rounded transition-all ${
+                        !showBack
+                          ? 'bg-white text-gray-900 shadow-sm'
+                          : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                      style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                    >
+                      پێشەوە
+                    </button>
+                    <button
+                      onClick={() => setShowBack(true)}
+                      className={`px-3 py-1 text-xs font-medium rounded transition-all ${
+                        showBack
+                          ? 'bg-white text-gray-900 shadow-sm'
+                          : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                      style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                    >
+                      پشتەوە
+                    </button>
+                  </div>
+                  <span
+                    className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full"
+                    style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                  >
+                    3.5&quot; × 2&quot;
+                  </span>
+                </div>
               </div>
 
               {/* Card preview — constrained to business card aspect ratio */}
               <div className="max-w-lg mx-auto">
-                <CardPreview ref={cardRef} data={cardData} />
+                <CardPreview ref={cardRef} data={cardData} showBack={showBack} />
               </div>
 
               {/* Download button (mobile friendly, below card) */}

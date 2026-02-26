@@ -19,6 +19,9 @@ export interface CardData {
   // Settings
   language: CardLanguage;
   template: TemplateId;
+  // V2 features
+  qrEnabled: boolean;
+  logoUrl: string;
 }
 
 export const defaultCardData: CardData = {
@@ -35,6 +38,8 @@ export const defaultCardData: CardData = {
   twitter: '',
   language: 'ku',
   template: 'modern',
+  qrEnabled: false,
+  logoUrl: '',
 };
 
 export const TEMPLATES: { id: TemplateId; label: string; labelKu: string; isFree: boolean }[] = [

@@ -6,13 +6,19 @@ import ModernCard from './templates/ModernCard';
 import ClassicCard from './templates/ClassicCard';
 import BoldCard from './templates/BoldCard';
 import MinimalCard from './templates/MinimalCard';
+import BackCard from './BackCard';
 
 interface Props {
   data: CardData;
+  showBack?: boolean;
 }
 
-const CardPreview = forwardRef<HTMLDivElement, Props>(({ data }, ref) => {
+const CardPreview = forwardRef<HTMLDivElement, Props>(({ data, showBack = false }, ref) => {
   const renderTemplate = () => {
+    if (showBack) {
+      return <BackCard data={data} />;
+    }
+
     switch (data.template) {
       case 'modern':
         return <ModernCard data={data} />;

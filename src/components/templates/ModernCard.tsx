@@ -1,6 +1,8 @@
 'use client';
 
 import { CardData } from '@/types/card';
+import { useState, useEffect } from 'react';
+import { generateVCardQR } from '@/lib/qrUtils';
 
 interface Props {
   data: CardData;
@@ -27,6 +29,15 @@ export default function ModernCard({ data }: Props) {
   const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif";
   const contactSize = '14px';
   const socialSize = '10px';
+  const [qrCode, setQrCode] = useState<string>('');
+
+  useEffect(() => {
+    if (data.qrEnabled) {
+      generateVCardQR(data).then(setQrCode);
+    } else {
+      setQrCode('');
+    }
+  }, [data]);
 
   return (
     <div
@@ -36,6 +47,23 @@ export default function ModernCard({ data }: Props) {
     >
       {/* Accent bar */}
       <div className="w-2.5 h-full bg-gradient-to-b from-yellow-400 to-amber-500 flex-shrink-0" />
+
+      {/* Logo - top corner */}
+      {data.logoUrl && (
+        <div
+          className="absolute z-10"
+          style={{
+            [isRTL ? 'right' : 'left']: '16px',
+            top: '16px'
+          }}
+        >
+          <img
+            src={data.logoUrl}
+            alt="Logo"
+            className="w-[35px] h-[35px] object-contain"
+          />
+        </div>
+      )}
 
       {/* Content */}
       <div className="flex-1 flex flex-col justify-between p-4" style={{ padding: '16px 20px' }}>
@@ -121,6 +149,26 @@ export default function ModernCard({ data }: Props) {
           )}
         </div>
       </div>
+
+      {/* QR Code - bottom left */}
+      {data.qrEnabled && qrCode && (
+        <div
+          className="absolute z-10"
+          style={{
+            left: '16px',
+            bottom: '16px'
+          }}
+        >
+          <img
+            src={qrCode}
+            alt="QR Code"
+            className="w-[35px] h-[35px] bg-white p-1 rounded"
+            style={{
+              filter: 'invert(1)' // White QR dots on dark background
+            }}
+          />
+        </div>
+      )}
 
 {/* watermark only in PDF */}
     </div>
