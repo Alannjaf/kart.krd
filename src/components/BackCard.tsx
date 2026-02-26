@@ -20,7 +20,7 @@ export default function BackCard({ data, template }: Props) {
     } else {
       setQrCode('');
     }
-  }, [data]);
+  }, [data.qrEnabled, data.name, data.title, data.company, data.phone, data.email, data.website, data.address]);
 
   // Modern template back
   if (template === 'modern') {

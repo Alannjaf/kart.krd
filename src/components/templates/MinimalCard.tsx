@@ -47,17 +47,6 @@ export default function MinimalCard({ data }: Props) {
     >
       {/* Content */}
       <div className="flex-1 flex items-center px-7 py-5">
-        {/* Logo - vertically centered on opposite side of name */}
-        {data.logoUrl && !isRTL && (
-          <div className="flex items-center justify-center mr-6">
-            <img
-              src={data.logoUrl}
-              alt="Logo"
-              className="w-[60px] h-[60px] object-contain"
-            />
-          </div>
-        )}
-
         <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
         {/* Top: Name & title */}
         <div>
@@ -109,7 +98,7 @@ export default function MinimalCard({ data }: Props) {
           {data.address && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-400">
               <LocationIcon />
-              <span style={{ whiteSpace: 'nowrap', fontWeight: 300, unicodeBidi: 'plaintext' as any }}>{data.address}</span>
+              <span style={{ whiteSpace: 'nowrap', fontWeight: 300, unicodeBidi: 'plaintext' as React.CSSProperties['unicodeBidi'] }}>{data.address}</span>
             </div>
           )}
 
@@ -121,7 +110,6 @@ export default function MinimalCard({ data }: Props) {
               alignItems: 'center',
               gap: '6px',
               marginTop: '4px',
-              justifyContent: isRTL ? 'flex-end' : 'flex-start'
             }}>
               {data.facebook && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: socialSize }} className="text-gray-500">
@@ -160,9 +148,9 @@ export default function MinimalCard({ data }: Props) {
         </div>
         </div>
 
-        {/* Logo - vertically centered on opposite side of name (RTL) */}
-        {data.logoUrl && isRTL && (
-          <div className="flex items-center justify-center ml-6">
+        {/* Logo - vertically centered on opposite side of name */}
+        {data.logoUrl && (
+          <div className="flex items-center justify-center ms-6">
             <img
               src={data.logoUrl}
               alt="Logo"

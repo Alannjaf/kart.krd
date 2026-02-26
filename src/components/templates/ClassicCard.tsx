@@ -51,17 +51,6 @@ export default function ClassicCard({ data }: Props) {
 
       {/* Content */}
       <div className="relative z-10 w-full px-8 py-4 flex items-center h-full">
-        {/* Logo - vertically centered on opposite side of name */}
-        {data.logoUrl && !isRTL && (
-          <div className="flex items-center justify-center mr-6">
-            <img
-              src={data.logoUrl}
-              alt="Logo"
-              className="w-[60px] h-[60px] object-contain"
-            />
-          </div>
-        )}
-
         <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
         {/* Top: Name section */}
         <div className="text-center pt-3">
@@ -116,13 +105,13 @@ export default function ClassicCard({ data }: Props) {
             {data.address && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
                 <LocationIcon />
-                <span style={{ whiteSpace: 'nowrap', unicodeBidi: 'plaintext' as any }}>{data.address}</span>
+                <span style={{ whiteSpace: 'nowrap', unicodeBidi: 'plaintext' as React.CSSProperties['unicodeBidi'] }}>{data.address}</span>
               </div>
             )}
 
             {/* Social Links */}
             {(data.facebook || data.instagram || data.linkedin || data.twitter) && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px', marginTop: '4px', justifyContent: isRTL ? 'flex-start' : 'flex-start' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
                 {data.facebook && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: socialSize }} className="text-gray-500">
                     <svg width="9" height="9" viewBox="0 0 24 24" fill="#1877F2" className="flex-shrink-0">
@@ -161,9 +150,9 @@ export default function ClassicCard({ data }: Props) {
         </div>
         </div>
 
-        {/* Logo - vertically centered on opposite side of name (RTL) */}
-        {data.logoUrl && isRTL && (
-          <div className="flex items-center justify-center ml-6">
+        {/* Logo - vertically centered on opposite side of name */}
+        {data.logoUrl && (
+          <div className="flex items-center justify-center ms-6">
             <img
               src={data.logoUrl}
               alt="Logo"
