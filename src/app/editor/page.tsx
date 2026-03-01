@@ -185,7 +185,7 @@ function EditorContent() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left panel: Form */}
           <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-20 max-h-[calc(100vh-90px)] overflow-y-auto">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-90px)] lg:overflow-y-auto">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
                 <h2
                   className="text-base font-bold text-gray-800"
