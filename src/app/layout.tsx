@@ -11,7 +11,21 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "kart.krd — کارتی بزنسی کوردی",
   description: "کارتی بزنسی پیشەیی ئامادەکە — لە چەند چرکەیەکدا. Kurdish Business Card Maker.",
-  keywords: ["business card", "Kurdish", "کارتی بزنس", "کوردی"],
+  keywords: ["business card", "Kurdish", "کارتی بزنس", "کوردی", "kart", "card maker"],
+  metadataBase: new URL("https://kart.krd"),
+  openGraph: {
+    title: "kart.krd — کارتی بزنسی کوردی",
+    description: "کارتی بزنسی پیشەیی ئامادەکە — لە چەند چرکەیەکدا. Kurdish Business Card Maker.",
+    url: "https://kart.krd",
+    siteName: "kart.krd",
+    locale: "ku_IQ",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "kart.krd — کارتی بزنسی کوردی",
+    description: "کارتی بزنسی پیشەیی ئامادەکە — لە چەند چرکەیەکدا. Kurdish Business Card Maker.",
+  },
 };
 
 export default function RootLayout({

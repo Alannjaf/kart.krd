@@ -26,7 +26,6 @@ export async function generateVCardQR(data: CardData): Promise<string> {
       }
     });
   } catch (error) {
-    console.error('QR code generation failed:', error);
-    return '';
+    throw new Error(`QR code generation failed: ${error instanceof Error ? error.message : String(error)}`);
   }
 }

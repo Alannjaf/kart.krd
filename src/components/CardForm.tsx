@@ -1,14 +1,19 @@
 'use client';
 
 import { CardData, CardLanguage } from '@/types/card';
+import type { FormErrors } from '@/app/editor/page';
 
 interface Props {
   data: CardData;
   onChange: (data: CardData) => void;
+  errors?: FormErrors;
 }
 
 const inputClass =
   'w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all bg-white placeholder-gray-400';
+
+const inputErrorClass =
+  'w-full border border-red-400 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all bg-white placeholder-gray-400';
 
 const labelClass = 'block text-xs font-medium text-gray-600 mb-1';
 
@@ -20,9 +25,10 @@ interface FieldProps {
   placeholder?: string;
   type?: string;
   dir?: string;
+  error?: string;
 }
 
-function Field({ label, labelEn, value, onChange, placeholder, type = 'text', dir }: FieldProps) {
+function Field({ label, labelEn, value, onChange, placeholder, type = 'text', dir, error }: FieldProps) {
   return (
     <div>
       <label className={labelClass} style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
@@ -34,9 +40,14 @@ function Field({ label, labelEn, value, onChange, placeholder, type = 'text', di
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder || label}
         dir={dir}
-        className={inputClass}
+        className={error ? inputErrorClass : inputClass}
         style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
       />
+      {error && (
+        <p className="text-red-500 text-xs mt-1" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -47,7 +58,7 @@ const LANGUAGES: { value: CardLanguage; label: string; flag: string }[] = [
   { value: 'en', label: 'English', flag: '🌍' },
 ];
 
-export default function CardForm({ data, onChange }: Props) {
+export default function CardForm({ data, onChange, errors = {} }: Props) {
   const set = (key: keyof CardData) => (value: string) =>
     onChange({ ...data, [key]: value });
 
@@ -96,6 +107,7 @@ export default function CardForm({ data, onChange }: Props) {
           value={data.name}
           onChange={set('name')}
           placeholder="ناوی تەواو"
+          error={errors.name}
         />
         <Field
           label="پیشە"
@@ -132,6 +144,7 @@ export default function CardForm({ data, onChange }: Props) {
           placeholder="+964 750 000 0000"
           type="tel"
           dir="ltr"
+          error={errors.phone}
         />
         <Field
           label="ئیمەیل"
@@ -141,6 +154,7 @@ export default function CardForm({ data, onChange }: Props) {
           placeholder="name@example.com"
           type="email"
           dir="ltr"
+          error={errors.email}
         />
         <Field
           label="وێبسایت"
@@ -214,7 +228,7 @@ export default function CardForm({ data, onChange }: Props) {
           />
           {data.logoUrl && (
             <div className="mt-2 flex items-center gap-2">
-              <img src={data.logoUrl} alt="Logo preview" className="w-8 h-8 object-contain border rounded" />
+              <img src={data.logoUrl} alt="Logo preview" className="w-12 h-12 object-contain border rounded-lg" />
               <button
                 onClick={() => onChange({ ...data, logoUrl: '' })}
                 className="text-xs text-red-500 hover:text-red-700"

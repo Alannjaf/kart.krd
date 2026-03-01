@@ -11,7 +11,6 @@ const templatePreviews = [
     bg: "from-violet-900 to-purple-800",
     accent: "bg-gradient-to-b from-yellow-400 to-amber-500",
     textColor: "text-white",
-    isFree: true,
   },
   {
     id: "classic",
@@ -20,7 +19,6 @@ const templatePreviews = [
     bg: "from-gray-50 to-gray-100",
     accent: "border-2 border-amber-500",
     textColor: "text-gray-800",
-    isFree: false,
   },
   {
     id: "bold",
@@ -29,7 +27,6 @@ const templatePreviews = [
     bg: "from-gray-950 to-gray-900",
     accent: "bg-yellow-400",
     textColor: "text-white",
-    isFree: false,
   },
   {
     id: "minimal",
@@ -38,7 +35,6 @@ const templatePreviews = [
     bg: "from-white to-gray-50",
     accent: "border-b border-gray-300",
     textColor: "text-gray-700",
-    isFree: false,
   },
 ];
 
@@ -235,115 +231,83 @@ export default function HomePage() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {templatePreviews.map((tpl) => {
-            const TemplateCard = ({ children }: { children: React.ReactNode }) => {
-              if (tpl.isFree) {
-                return (
-                  <Link href={`/editor?template=${tpl.id}`}>
-                    {children}
-                  </Link>
-                );
-              } else {
-                return (
-                  <div className="cursor-not-allowed opacity-75">
-                    {children}
-                  </div>
-                );
-              }
-            };
-
-            return (
-              <TemplateCard key={tpl.id}>
-                <div className="group">
-                  {/* Card Preview */}
-                  <div
-                    className={`relative rounded-xl overflow-hidden shadow-xl bg-gradient-to-br ${tpl.bg} mb-3 border border-white/10 ${tpl.isFree ? 'hover:scale-105 cursor-pointer' : ''} transition-transform duration-300`}
-                    style={{ aspectRatio: "3.5/2" }}
-                  >
-                  {/* Mock card content */}
-                  <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                    {tpl.id === "modern" && (
-                      <>
-                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-yellow-400 to-amber-500" />
-                        <div className="pr-4">
-                          <div className="w-24 h-3 bg-white/80 rounded mb-2" />
-                          <div className="w-16 h-2 bg-white/50 rounded" />
-                        </div>
-                        <div className="pr-4">
-                          <div className="w-20 h-2 bg-white/40 rounded mb-1" />
-                          <div className="w-24 h-2 bg-white/40 rounded" />
-                        </div>
-                      </>
-                    )}
-                    {tpl.id === "classic" && (
-                      <div className="border-2 border-amber-500/60 inset-2 absolute rounded-lg p-3 flex flex-col justify-between">
-                        <div>
-                          <div className="w-20 h-2.5 bg-gray-700/60 rounded mb-2" />
-                          <div className="w-14 h-2 bg-gray-500/50 rounded" />
-                        </div>
-                        <div>
-                          <div className="w-16 h-1.5 bg-gray-500/40 rounded mb-1" />
-                          <div className="w-20 h-1.5 bg-gray-500/40 rounded" />
-                        </div>
+          {templatePreviews.map((tpl) => (
+            <Link href={`/editor?template=${tpl.id}`} key={tpl.id}>
+              <div className="group">
+                {/* Card Preview */}
+                <div
+                  className={`relative rounded-xl overflow-hidden shadow-xl bg-gradient-to-br ${tpl.bg} mb-3 border border-white/10 hover:scale-105 cursor-pointer transition-transform duration-300`}
+                  style={{ aspectRatio: "3.5/2" }}
+                >
+                {/* Mock card content */}
+                <div className="absolute inset-0 p-4 flex flex-col justify-between">
+                  {tpl.id === "modern" && (
+                    <>
+                      <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-yellow-400 to-amber-500" />
+                      <div className="pr-4">
+                        <div className="w-24 h-3 bg-white/80 rounded mb-2" />
+                        <div className="w-16 h-2 bg-white/50 rounded" />
                       </div>
-                    )}
-                    {tpl.id === "bold" && (
-                      <>
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-yellow-400" />
-                        <div>
-                          <div className="w-28 h-4 bg-white/90 rounded mb-2" />
-                          <div className="w-20 h-2.5 bg-yellow-400/80 rounded" />
-                        </div>
-                        <div>
-                          <div className="w-20 h-2 bg-white/40 rounded mb-1" />
-                          <div className="w-24 h-2 bg-white/40 rounded" />
-                        </div>
-                      </>
-                    )}
-                    {tpl.id === "minimal" && (
-                      <>
-                        <div>
-                          <div className="w-24 h-3 bg-gray-700/70 rounded mb-2" />
-                          <div className="w-16 h-2 bg-gray-500/50 rounded" />
-                        </div>
-                        <div>
-                          <div className="w-full h-px bg-gray-300/60 mb-2" />
-                          <div className="w-20 h-1.5 bg-gray-400/50 rounded mb-1" />
-                          <div className="w-24 h-1.5 bg-gray-400/50 rounded" />
-                        </div>
-                      </>
-                    )}
-
-                    {/* Lock icon for premium templates */}
-                    {!tpl.isFree && (
-                      <div className="absolute top-2 left-2 w-6 h-6 bg-black/70 rounded-full flex items-center justify-center">
-                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
+                      <div className="pr-4">
+                        <div className="w-20 h-2 bg-white/40 rounded mb-1" />
+                        <div className="w-24 h-2 bg-white/40 rounded" />
                       </div>
-                    )}
-
-                    {/* Premium overlay for locked templates */}
-                    {!tpl.isFree && (
-                      <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]" />
-                    )}
-                  </div>
-                  </div>
-
-                  {/* Template name */}
-                  <div className="text-center">
-                    <span
-                      className="text-white font-medium"
-                      style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
-                    >
-                      {isKurdish ? tpl.name : tpl.nameEn} {!tpl.isFree && '🔒'}
-                    </span>
-                    {isKurdish && <span className="text-purple-400 text-sm mr-2">— {tpl.nameEn}</span>}
-                  </div>
+                    </>
+                  )}
+                  {tpl.id === "classic" && (
+                    <div className="border-2 border-amber-500/60 inset-2 absolute rounded-lg p-3 flex flex-col justify-between">
+                      <div>
+                        <div className="w-20 h-2.5 bg-gray-700/60 rounded mb-2" />
+                        <div className="w-14 h-2 bg-gray-500/50 rounded" />
+                      </div>
+                      <div>
+                        <div className="w-16 h-1.5 bg-gray-500/40 rounded mb-1" />
+                        <div className="w-20 h-1.5 bg-gray-500/40 rounded" />
+                      </div>
+                    </div>
+                  )}
+                  {tpl.id === "bold" && (
+                    <>
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-yellow-400" />
+                      <div>
+                        <div className="w-28 h-4 bg-white/90 rounded mb-2" />
+                        <div className="w-20 h-2.5 bg-yellow-400/80 rounded" />
+                      </div>
+                      <div>
+                        <div className="w-20 h-2 bg-white/40 rounded mb-1" />
+                        <div className="w-24 h-2 bg-white/40 rounded" />
+                      </div>
+                    </>
+                  )}
+                  {tpl.id === "minimal" && (
+                    <>
+                      <div>
+                        <div className="w-24 h-3 bg-gray-700/70 rounded mb-2" />
+                        <div className="w-16 h-2 bg-gray-500/50 rounded" />
+                      </div>
+                      <div>
+                        <div className="w-full h-px bg-gray-300/60 mb-2" />
+                        <div className="w-20 h-1.5 bg-gray-400/50 rounded mb-1" />
+                        <div className="w-24 h-1.5 bg-gray-400/50 rounded" />
+                      </div>
+                    </>
+                  )}
                 </div>
-              </TemplateCard>
-            );
-          })}
+                </div>
+
+                {/* Template name */}
+                <div className="text-center">
+                  <span
+                    className="text-white font-medium"
+                    style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+                  >
+                    {isKurdish ? tpl.name : tpl.nameEn}
+                  </span>
+                  {isKurdish && <span className="text-purple-400 text-sm mr-2">— {tpl.nameEn}</span>}
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 

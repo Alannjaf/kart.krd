@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, Suspense } from 'react';
+import { useState, useRef, useCallback, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CardData, TemplateId, defaultCardData, TEMPLATES } from '@/types/card';
@@ -9,32 +9,104 @@ import CardPreview from '@/components/CardPreview';
 import TemplateSelector from '@/components/TemplateSelector';
 import { generatePdf } from '@/lib/generatePdf';
 
+const STORAGE_KEY = 'kart-krd-card-data';
+
+function loadCardData(): CardData | null {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return null;
+    const parsed = JSON.parse(stored);
+    // Validate it has the expected shape
+    if (parsed && typeof parsed.name === 'string' && typeof parsed.template === 'string') {
+      return { ...defaultCardData, ...parsed };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function saveCardData(data: CardData) {
+  try {
+    // Don't persist logoUrl to localStorage (too large as data URL)
+    const { logoUrl, ...rest } = data;
+    void logoUrl;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(rest));
+  } catch {
+    // Silently fail if storage is full
+  }
+}
+
+export interface FormErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
+export function validateCardData(data: CardData): FormErrors {
+  const errors: FormErrors = {};
+
+  if (!data.name.trim()) {
+    errors.name = 'ناو پێویستە';
+  }
+
+  if (data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+    errors.email = 'فۆرماتی ئیمەیل هەڵەیە';
+  }
+
+  if (data.phone.trim() && !/^[0-9+\-\s()]+$/.test(data.phone.trim())) {
+    errors.phone = 'تەنها ژمارە، +، - ڕێگەپێدراوە';
+  }
+
+  return errors;
+}
+
 function EditorContent() {
   const searchParams = useSearchParams();
   const urlTemplate = searchParams.get('template') as TemplateId;
 
-  // Check if the requested template is free, otherwise default to 'modern'
-  const template = TEMPLATES.find(t => t.id === urlTemplate);
-  const initialTemplate = (template && template.isFree) ? urlTemplate : 'modern';
+  // Accept any valid template from URL
+  const validTemplate = TEMPLATES.find(t => t.id === urlTemplate);
+  const initialTemplate = validTemplate ? urlTemplate : 'modern';
 
-  const [cardData, setCardData] = useState<CardData>({
-    ...defaultCardData,
-    template: initialTemplate,
+  const [cardData, setCardData] = useState<CardData>(() => {
+    const stored = loadCardData();
+    if (stored) {
+      // URL template overrides stored template
+      return { ...stored, template: validTemplate ? urlTemplate : stored.template };
+    }
+    return { ...defaultCardData, template: initialTemplate };
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [pdfSuccess, setPdfSuccess] = useState(false);
   const [showBack, setShowBack] = useState(false);
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // Save to localStorage on every change
+  useEffect(() => {
+    saveCardData(cardData);
+  }, [cardData]);
+
+  const handleClear = useCallback(() => {
+    const cleared = { ...defaultCardData, template: cardData.template };
+    setCardData(cleared);
+    setFormErrors({});
+    localStorage.removeItem(STORAGE_KEY);
+  }, [cardData.template]);
+
   const handleDownloadPdf = useCallback(async () => {
+    // Validate before generating
+    const errors = validateCardData(cardData);
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
     if (!cardRef.current) return;
     setIsGenerating(true);
     setPdfSuccess(false);
     try {
-      // Callback to switch between front/back views during PDF generation
       const showBackCallback = async (showBackView: boolean) => {
         setShowBack(showBackView);
-        // Wait for state update and re-render
         await new Promise(resolve => setTimeout(resolve, 200));
       };
 
@@ -48,6 +120,20 @@ function EditorContent() {
       setIsGenerating(false);
     }
   }, [cardData]);
+
+  const handleCardChange = useCallback((newData: CardData) => {
+    setCardData(newData);
+    // Clear errors for fields that are now valid
+    if (formErrors.name && newData.name.trim()) {
+      setFormErrors(prev => ({ ...prev, name: undefined }));
+    }
+    if (formErrors.email && (!newData.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newData.email.trim()))) {
+      setFormErrors(prev => ({ ...prev, email: undefined }));
+    }
+    if (formErrors.phone && (!newData.phone.trim() || /^[0-9+\-\s()]+$/.test(newData.phone.trim()))) {
+      setFormErrors(prev => ({ ...prev, phone: undefined }));
+    }
+  }, [formErrors]);
 
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
@@ -100,13 +186,22 @@ function EditorContent() {
           {/* Left panel: Form */}
           <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-20 max-h-[calc(100vh-90px)] overflow-y-auto">
-              <h2
-                className="text-base font-bold text-gray-800 mb-4 pb-3 border-b border-gray-100"
-                style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
-              >
-                زانیاریەکانت داخڵ بکە
-              </h2>
-              <CardForm data={cardData} onChange={setCardData} />
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+                <h2
+                  className="text-base font-bold text-gray-800"
+                  style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                >
+                  زانیاریەکانت داخڵ بکە
+                </h2>
+                <button
+                  onClick={handleClear}
+                  className="text-xs text-red-500 hover:text-red-700 border border-red-200 hover:border-red-300 px-2 py-1 rounded-lg transition-all"
+                  style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                >
+                  پاککردنەوە
+                </button>
+              </div>
+              <CardForm data={cardData} onChange={handleCardChange} errors={formErrors} />
             </div>
           </div>
 
@@ -156,12 +251,12 @@ function EditorContent() {
                 </div>
               </div>
 
-              {/* Card preview — constrained to business card aspect ratio */}
+              {/* Card preview */}
               <div className="max-w-lg mx-auto">
                 <CardPreview ref={cardRef} data={cardData} showBack={showBack} />
               </div>
 
-              {/* Download button (mobile friendly, below card) */}
+              {/* Download button */}
               <div className="mt-4 flex justify-center">
                 <button
                   onClick={handleDownloadPdf}
