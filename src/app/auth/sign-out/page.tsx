@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth/client";
 
 export default function AuthSignOutPage() {
   const router = useRouter();
@@ -14,11 +13,14 @@ export default function AuthSignOutPage() {
 
     const runSignOut = async () => {
       try {
-        await authClient.signOut({
-          fetchOptions: {
-            cache: "no-store",
-          },
+        const res = await fetch("/api/auth/sign-out", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+          credentials: "include",
         });
+
+        if (!res.ok) throw new Error(`sign-out failed: ${res.status}`);
       } catch {
         if (isMounted) {
           setErrorMessage("نەتوانرا دەرچوون انجام بدرێت. تکایە دووبارە هەوڵبدە.");
@@ -28,7 +30,7 @@ export default function AuthSignOutPage() {
       }
 
       if (!isMounted) return;
-      router.replace("/?signed_out=1");
+      router.replace("/");
       router.refresh();
     };
 
