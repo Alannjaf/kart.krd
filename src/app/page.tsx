@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useState, useEffect } from 'react';
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -31,6 +32,51 @@ const templateComponents = [
   { id: 'corporate' as const, Component: CorporateCard },
   { id: 'gradient' as const, Component: GradientCard },
 ];
+
+const CARD_NATURAL_WIDTH = 350;
+const CARD_NATURAL_HEIGHT = 200;
+
+function ScaledCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => {
+      setScale(entry.contentRect.width / CARD_NATURAL_WIDTH);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className={className}
+      style={{
+        position: 'relative',
+        width: '100%',
+        aspectRatio: `${CARD_NATURAL_WIDTH} / ${CARD_NATURAL_HEIGHT}`,
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          width: `${CARD_NATURAL_WIDTH}px`,
+          height: `${CARD_NATURAL_HEIGHT}px`,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   const { locale, dir, t } = useLanguage();
@@ -106,11 +152,10 @@ export default function HomePage() {
 
           {/* Hero card preview — tilted on desktop */}
           <div className="flex-shrink-0 w-full md:w-[340px]">
-            <div
-              className="md:-rotate-3 md:hover:rotate-0 transition-transform duration-300 rounded-md overflow-hidden shadow-lg"
-              style={{ aspectRatio: '3.5/2' }}
-            >
-              <ModernCard data={sampleData} />
+            <div className="md:-rotate-3 md:hover:rotate-0 transition-transform duration-300 shadow-lg">
+              <ScaledCard className="rounded-md">
+                <ModernCard data={sampleData} />
+              </ScaledCard>
             </div>
           </div>
         </div>
@@ -129,12 +174,9 @@ export default function HomePage() {
         <div className="flex gap-4 overflow-x-auto scroll-hidden pb-3 md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible md:pb-0 md:gap-5">
           {templateComponents.map(({ id, Component }) => (
             <Link href={`/editor?template=${id}`} key={id} className="flex-shrink-0 w-60 md:w-auto group">
-              <div
-                className="rounded-md overflow-hidden border border-[var(--color-border)] group-hover:border-[var(--color-accent)] group-hover:scale-[1.02] transition-all"
-                style={{ aspectRatio: '3.5/2' }}
-              >
+              <ScaledCard className="rounded-md border border-[var(--color-border)] group-hover:border-[var(--color-accent)] group-hover:scale-[1.02] transition-all">
                 <Component data={{ ...sampleData, template: id }} />
-              </div>
+              </ScaledCard>
               <p
                 className="text-sm font-medium text-[var(--color-text)] mt-2"
                 style={{ fontFamily }}
