@@ -1,7 +1,8 @@
-'use client';
+﻿'use client';
 
 import Link from "next/link";
 import React, { useState } from "react";
+import { UserButton } from "@neondatabase/auth/react";
 
 const templatePreviews = [
   {
@@ -152,14 +153,17 @@ export default function HomePage() {
             </span>
           </div>
 
-          {/* CTA Button */}
-          <Link
-            href="/editor"
-            className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold px-5 py-2 rounded-lg text-sm hover:from-yellow-300 hover:to-amber-400 transition-all"
-            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
-          >
-            {currentContent.createButton}
-          </Link>
+          {/* CTA + Auth */}
+          <div className="flex items-center gap-3">
+            <Link
+              href="/editor"
+              className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold px-5 py-2 rounded-lg text-sm hover:from-yellow-300 hover:to-amber-400 transition-all"
+              style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+            >
+              {currentContent.createButton}
+            </Link>
+            <UserButton />
+          </div>
         </div>
       </header>
 

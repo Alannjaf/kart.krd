@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -379,26 +379,6 @@ function EditorContent() {
                 </button>
               </div>
             )}
-            <span
-              className="text-sm text-gray-500 hidden sm:block"
-              style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
-            >
-              ئامێری دروستکردنی کارت
-            </span>
-            <button
-              onClick={handleDownloadPdf}
-              disabled={isGenerating}
-              className={`flex items-center gap-2 px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-md ${
-                pdfSuccess
-                  ? "bg-green-500 text-white shadow-green-200"
-                  : isGenerating
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-gradient-to-r from-yellow-400 to-amber-500 text-black hover:from-yellow-300 hover:to-amber-400 shadow-amber-200"
-              }`}
-              style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
-            >
-              {pdfSuccess ? <>✓ دابەزیندرا</> : isGenerating ? <>⏳ چاوەڕێبکە...</> : <>⬇ PDF دابەزێنە</>}
-            </button>
             <UserButton />
           </div>
         </div>
@@ -453,7 +433,7 @@ function EditorContent() {
           {/* Right panel: Preview + Template selector */}
           <div className="flex-1 min-w-0">
             {/* Live preview */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-6 mb-6">
               <div className="flex items-center justify-between mb-4">
                 <h2
                   className="text-base font-bold text-gray-800"
@@ -491,7 +471,7 @@ function EditorContent() {
                 </div>
               </div>
 
-              <div className="max-w-lg mx-auto">
+              <div className="w-full max-w-lg mx-auto overflow-x-auto">
                 <CardPreview ref={cardRef} data={cardData} showBack={showBack} />
               </div>
 
