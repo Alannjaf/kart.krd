@@ -7,7 +7,7 @@ export function getDirection(locale: Locale): Direction {
 }
 
 export function getFontFamily(locale: Locale): string {
-  return locale === 'en' ? "'Inter', sans-serif" : "'Noto Sans Arabic', sans-serif";
+  return locale === 'en' ? "'Geist', sans-serif" : "'Noto Sans Arabic', sans-serif";
 }
 
 export const translations = {
@@ -59,6 +59,8 @@ export const translations = {
     'editor.watermarkNote': 'تێبینی: "kart.krd" بە وتەی بچووک لە خوارەوە زیاد دەکرێت',
     'editor.pdfError': 'PDF دروستکردن سەرکەوتوو نەبوو. تکایە دووبارە هەوڵبدەرەوە.',
     'editor.loading': 'چاوەڕێبکە...',
+    'editor.tabEdit': 'دەستکاری',
+    'editor.tabPreview': 'پێشبینی',
 
     // Card form
     'form.cardLanguage': 'زمانی کارت',
@@ -66,6 +68,7 @@ export const translations = {
     'form.contactInfo': 'زانیاری پەیوەندی',
     'form.newFeatures': 'تایبەتمەندیەکانی نوێ',
     'form.socialMedia': 'میدیای کۆمەڵایەتی (ئیختیاری)',
+    'form.socialToggle': 'میدیای کۆمەڵایەتی',
     'form.fullName': 'ناوی تەواو',
     'form.jobTitle': 'پیشە',
     'form.company': 'ناوی کۆمپانیا',
@@ -161,6 +164,8 @@ export const translations = {
     'editor.watermarkNote': 'ملاحظة: يُضاف "kart.krd" بخط صغير في الأسفل',
     'editor.pdfError': 'فشل إنشاء PDF. يرجى المحاولة مرة أخرى.',
     'editor.loading': 'انتظر...',
+    'editor.tabEdit': 'تحرير',
+    'editor.tabPreview': 'معاينة',
 
     // Card form
     'form.cardLanguage': 'لغة البطاقة',
@@ -168,6 +173,7 @@ export const translations = {
     'form.contactInfo': 'معلومات الاتصال',
     'form.newFeatures': 'ميزات جديدة',
     'form.socialMedia': 'وسائل التواصل (اختياري)',
+    'form.socialToggle': 'وسائل التواصل',
     'form.fullName': 'الاسم الكامل',
     'form.jobTitle': 'المسمى الوظيفي',
     'form.company': 'اسم الشركة',
@@ -263,6 +269,8 @@ export const translations = {
     'editor.watermarkNote': 'Note: "kart.krd" is added in small text at the bottom',
     'editor.pdfError': 'PDF generation failed. Please try again.',
     'editor.loading': 'Loading...',
+    'editor.tabEdit': 'Edit',
+    'editor.tabPreview': 'Preview',
 
     // Card form
     'form.cardLanguage': 'Card Language',
@@ -270,6 +278,7 @@ export const translations = {
     'form.contactInfo': 'Contact Information',
     'form.newFeatures': 'New Features',
     'form.socialMedia': 'Social Media (Optional)',
+    'form.socialToggle': 'Social Media',
     'form.fullName': 'Full Name',
     'form.jobTitle': 'Job Title',
     'form.company': 'Company Name',

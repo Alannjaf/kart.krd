@@ -1,12 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --font-noto: 'Noto Sans Arabic', 'Inter', sans-serif;
-  --color-purple-deep: #1a0a2e;
-  --color-purple-dark: #2d1b69;
-  --color-purple-mid: #4a2c9e;
-  --color-gold: #f0b429;
-  --color-gold-light: #fcd34d;
+  --font-body: 'Geist', 'Noto Sans Arabic', sans-serif;
+  --font-arabic: 'Noto Sans Arabic', sans-serif;
+  --color-bg: #FAFAF8;
+  --color-text: #1C1917;
+  --color-text-secondary: #78716C;
+  --color-accent: #0D9488;
+  --color-accent-hover: #0F766E;
+  --color-surface: #F5F5F4;
+  --color-border: #E7E5E4;
+  --color-error: #DC2626;
 }
 
 * {
@@ -14,7 +18,9 @@
 }
 
 body {
-  font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+  font-family: 'Noto Sans Arabic', 'Geist', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 /* Kurdish/Arabic RTL font */
@@ -25,7 +31,7 @@ body {
 
 /* English LTR font */
 .font-en {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Geist', sans-serif;
 }
 
 /* Card preview aspect ratio */
@@ -36,4 +42,13 @@ body {
 /* Smooth transitions */
 .card-preview {
   transition: all 0.2s ease;
+}
+
+/* Hide scrollbar for horizontal scroll containers */
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scroll-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

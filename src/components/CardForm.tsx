@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { CardData, CardLanguage } from '@/types/card';
 import type { FormErrors } from '@/app/editor/page';
 import { useLanguage } from '@/context/LanguageContext';
@@ -10,14 +11,6 @@ interface Props {
   onChange: (data: CardData) => void;
   errors?: FormErrors;
 }
-
-const inputClass =
-  'w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all bg-white placeholder-gray-400';
-
-const inputErrorClass =
-  'w-full border border-red-400 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all bg-white placeholder-gray-400';
-
-const labelClass = 'block text-xs font-medium text-gray-600 mb-1';
 
 interface FieldProps {
   label: string;
@@ -33,7 +26,10 @@ interface FieldProps {
 function Field({ label, value, onChange, placeholder, type = 'text', dir, error, fontFamily }: FieldProps) {
   return (
     <div>
-      <label className={labelClass} style={{ fontFamily }}>
+      <label
+        className="block text-sm font-medium text-[var(--color-text-secondary)] mb-1"
+        style={{ fontFamily }}
+      >
         {label}
       </label>
       <input
@@ -42,11 +38,13 @@ function Field({ label, value, onChange, placeholder, type = 'text', dir, error,
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder || label}
         dir={dir}
-        className={error ? inputErrorClass : inputClass}
+        className={`w-full h-11 border rounded-md px-3 text-sm transition-colors bg-[var(--color-surface)] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent ${
+          error ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'
+        }`}
         style={{ fontFamily }}
       />
       {error && (
-        <p className="text-red-500 text-xs mt-1" style={{ fontFamily }}>
+        <p className="text-[var(--color-error)] text-xs mt-1" style={{ fontFamily }}>
           {error}
         </p>
       )}
@@ -63,29 +61,27 @@ const LANGUAGES: { value: CardLanguage; flag: string }[] = [
 export default function CardForm({ data, onChange, errors = {} }: Props) {
   const { locale, dir, t } = useLanguage();
   const fontFamily = getFontFamily(locale);
+  const [socialOpen, setSocialOpen] = useState(false);
 
   const set = (key: keyof CardData) => (value: string) =>
     onChange({ ...data, [key]: value });
 
   return (
-    <div className="space-y-4" dir={dir}>
-      {/* Language toggle */}
+    <div className="space-y-5" dir={dir}>
+      {/* Card language */}
       <div>
-        <label
-          className={labelClass}
-          style={{ fontFamily }}
-        >
+        <label className="block text-sm font-semibold text-[var(--color-text)] mb-2" style={{ fontFamily }}>
           {t('form.cardLanguage')}
         </label>
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           {LANGUAGES.map((lang) => (
             <button
               key={lang.value}
               onClick={() => onChange({ ...data, language: lang.value })}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all border ${
+              className={`flex-1 h-11 rounded-md text-sm font-medium transition-colors border ${
                 data.language === lang.value
-                  ? 'bg-purple-600 text-white border-purple-600 shadow-md'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-purple-300'
+                  ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]'
+                  : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-[var(--color-accent)]'
               }`}
               style={{ fontFamily }}
             >
@@ -95,121 +91,53 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
         </div>
       </div>
 
-      <div className="h-px bg-gray-100" />
+      <div className="h-px bg-[var(--color-border)]" />
 
       {/* Personal info */}
       <div className="space-y-3">
-        <h3
-          className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-          style={{ fontFamily }}
-        >
+        <h3 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
           {t('form.personalInfo')}
         </h3>
-
-        <Field
-          label={t('form.fullName')}
-          value={data.name}
-          onChange={set('name')}
-          placeholder={t('form.namePlaceholder')}
-          error={errors.name}
-          fontFamily={fontFamily}
-        />
-        <Field
-          label={t('form.jobTitle')}
-          value={data.title}
-          onChange={set('title')}
-          placeholder={t('form.titlePlaceholder')}
-          fontFamily={fontFamily}
-        />
-        <Field
-          label={t('form.company')}
-          value={data.company}
-          onChange={set('company')}
-          placeholder={t('form.companyPlaceholder')}
-          fontFamily={fontFamily}
-        />
+        <Field label={t('form.fullName')} value={data.name} onChange={set('name')} placeholder={t('form.namePlaceholder')} error={errors.name} fontFamily={fontFamily} />
+        <Field label={t('form.jobTitle')} value={data.title} onChange={set('title')} placeholder={t('form.titlePlaceholder')} fontFamily={fontFamily} />
+        <Field label={t('form.company')} value={data.company} onChange={set('company')} placeholder={t('form.companyPlaceholder')} fontFamily={fontFamily} />
       </div>
 
-      <div className="h-px bg-gray-100" />
+      <div className="h-px bg-[var(--color-border)]" />
 
       {/* Contact */}
       <div className="space-y-3">
-        <h3
-          className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-          style={{ fontFamily }}
-        >
+        <h3 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
           {t('form.contactInfo')}
         </h3>
-
-        <Field
-          label={t('form.phone')}
-          value={data.phone}
-          onChange={set('phone')}
-          placeholder={t('form.phonePlaceholder')}
-          type="tel"
-          dir="ltr"
-          error={errors.phone}
-          fontFamily={fontFamily}
-        />
-        <Field
-          label={t('form.email')}
-          value={data.email}
-          onChange={set('email')}
-          placeholder={t('form.emailPlaceholder')}
-          type="email"
-          dir="ltr"
-          error={errors.email}
-          fontFamily={fontFamily}
-        />
-        <Field
-          label={t('form.website')}
-          value={data.website}
-          onChange={set('website')}
-          placeholder={t('form.websitePlaceholder')}
-          dir="ltr"
-          fontFamily={fontFamily}
-        />
-        <Field
-          label={t('form.address')}
-          value={data.address}
-          onChange={set('address')}
-          placeholder={t('form.addressPlaceholder')}
-          fontFamily={fontFamily}
-        />
+        <Field label={t('form.phone')} value={data.phone} onChange={set('phone')} placeholder={t('form.phonePlaceholder')} type="tel" dir="ltr" error={errors.phone} fontFamily={fontFamily} />
+        <Field label={t('form.email')} value={data.email} onChange={set('email')} placeholder={t('form.emailPlaceholder')} type="email" dir="ltr" error={errors.email} fontFamily={fontFamily} />
+        <Field label={t('form.website')} value={data.website} onChange={set('website')} placeholder={t('form.websitePlaceholder')} dir="ltr" fontFamily={fontFamily} />
+        <Field label={t('form.address')} value={data.address} onChange={set('address')} placeholder={t('form.addressPlaceholder')} fontFamily={fontFamily} />
       </div>
 
-      <div className="h-px bg-gray-100" />
+      <div className="h-px bg-[var(--color-border)]" />
 
-      {/* V2 Features */}
+      {/* Features */}
       <div className="space-y-3">
-        <h3
-          className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-          style={{ fontFamily }}
-        >
+        <h3 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
           {t('form.newFeatures')}
         </h3>
 
-        {/* QR Code checkbox */}
-        <div className="flex items-center gap-3">
+        <label className="flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
-            id="qr-enabled"
             checked={data.qrEnabled}
             onChange={(e) => onChange({ ...data, qrEnabled: e.target.checked })}
-            className="w-4 h-4 text-purple-600 bg-white border-gray-300 rounded focus:ring-purple-500 focus:ring-2"
+            className="w-5 h-5 rounded border-[var(--color-border)] text-[var(--color-accent)] focus:ring-[var(--color-accent)]"
           />
-          <label
-            htmlFor="qr-enabled"
-            className="text-sm text-gray-700 cursor-pointer"
-            style={{ fontFamily }}
-          >
+          <span className="text-sm text-[var(--color-text)]" style={{ fontFamily }}>
             {t('form.qrCode')}
-          </label>
-        </div>
+          </span>
+        </label>
 
-        {/* Logo upload */}
         <div>
-          <label className={labelClass} style={{ fontFamily }}>
+          <label className="block text-sm font-medium text-[var(--color-text-secondary)] mb-1" style={{ fontFamily }}>
             {t('form.logo')}
           </label>
           <input
@@ -217,7 +145,7 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
             accept="image/*"
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file && file.size <= 2 * 1024 * 1024) { // 2MB limit
+              if (file && file.size <= 2 * 1024 * 1024) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                   const dataUrl = event.target?.result as string;
@@ -228,15 +156,15 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
                 alert(t('form.fileTooLarge'));
               }
             }}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all bg-white file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+            className="w-full h-11 border border-[var(--color-border)] rounded-md px-3 text-sm bg-[var(--color-surface)] file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-[var(--color-accent)]/10 file:text-[var(--color-accent)]"
             style={{ fontFamily }}
           />
           {data.logoUrl && (
             <div className="mt-2 flex items-center gap-2">
-              <img src={data.logoUrl} alt={t('alt.logoPreview')} className="w-12 h-12 object-contain border rounded-lg" />
+              <img src={data.logoUrl} alt={t('alt.logoPreview')} className="w-10 h-10 object-contain border border-[var(--color-border)] rounded-md" />
               <button
                 onClick={() => onChange({ ...data, logoUrl: '' })}
-                className="text-xs text-red-500 hover:text-red-700"
+                className="text-xs text-[var(--color-error)] hover:underline"
                 style={{ fontFamily }}
               >
                 {t('form.removeLogo')}
@@ -246,49 +174,32 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
         </div>
       </div>
 
-      <div className="h-px bg-gray-100" />
+      <div className="h-px bg-[var(--color-border)]" />
 
-      {/* Social links */}
-      <div className="space-y-3">
-        <h3
-          className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
+      {/* Social — collapsible */}
+      <div>
+        <button
+          onClick={() => setSocialOpen(!socialOpen)}
+          className="flex items-center justify-between w-full text-sm font-semibold text-[var(--color-text)] py-1"
           style={{ fontFamily }}
         >
-          {t('form.socialMedia')}
-        </h3>
+          <span>{t('form.socialToggle')}</span>
+          <svg
+            className={`w-4 h-4 text-[var(--color-text-secondary)] transition-transform ${socialOpen ? 'rotate-180' : ''}`}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
 
-        <Field
-          label={t('form.facebook')}
-          value={data.facebook}
-          onChange={set('facebook')}
-          placeholder={t('form.facebookPlaceholder')}
-          dir="ltr"
-          fontFamily={fontFamily}
-        />
-        <Field
-          label={t('form.instagram')}
-          value={data.instagram}
-          onChange={set('instagram')}
-          placeholder={t('form.instagramPlaceholder')}
-          dir="ltr"
-          fontFamily={fontFamily}
-        />
-        <Field
-          label={t('form.linkedin')}
-          value={data.linkedin}
-          onChange={set('linkedin')}
-          placeholder={t('form.linkedinPlaceholder')}
-          dir="ltr"
-          fontFamily={fontFamily}
-        />
-        <Field
-          label={t('form.twitter')}
-          value={data.twitter}
-          onChange={set('twitter')}
-          placeholder={t('form.twitterPlaceholder')}
-          dir="ltr"
-          fontFamily={fontFamily}
-        />
+        {socialOpen && (
+          <div className="space-y-3 mt-3">
+            <Field label={t('form.facebook')} value={data.facebook} onChange={set('facebook')} placeholder={t('form.facebookPlaceholder')} dir="ltr" fontFamily={fontFamily} />
+            <Field label={t('form.instagram')} value={data.instagram} onChange={set('instagram')} placeholder={t('form.instagramPlaceholder')} dir="ltr" fontFamily={fontFamily} />
+            <Field label={t('form.linkedin')} value={data.linkedin} onChange={set('linkedin')} placeholder={t('form.linkedinPlaceholder')} dir="ltr" fontFamily={fontFamily} />
+            <Field label={t('form.twitter')} value={data.twitter} onChange={set('twitter')} placeholder={t('form.twitterPlaceholder')} dir="ltr" fontFamily={fontFamily} />
+          </div>
+        )}
       </div>
     </div>
   );

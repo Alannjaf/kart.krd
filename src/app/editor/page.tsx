@@ -19,7 +19,6 @@ function loadCardData(): CardData | null {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return null;
     const parsed = JSON.parse(stored);
-    // Validate it has the expected shape
     if (parsed && typeof parsed.name === 'string' && typeof parsed.template === 'string') {
       return { ...defaultCardData, ...parsed };
     }
@@ -31,13 +30,10 @@ function loadCardData(): CardData | null {
 
 function saveCardData(data: CardData) {
   try {
-    // Don't persist logoUrl to localStorage (too large as data URL)
     const { logoUrl, ...rest } = data;
     void logoUrl;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(rest));
-  } catch {
-    // Silently fail if storage is full
-  }
+  } catch {}
 }
 
 export interface FormErrors {
@@ -52,14 +48,12 @@ function EditorContent() {
   const fontFamily = getFontFamily(locale);
   const urlTemplate = searchParams.get('template') as TemplateId;
 
-  // Accept any valid template from URL
   const validTemplate = TEMPLATES.find(t => t.id === urlTemplate);
   const initialTemplate = validTemplate ? urlTemplate : 'modern';
 
   const [cardData, setCardData] = useState<CardData>(() => {
     const stored = loadCardData();
     if (stored) {
-      // URL template overrides stored template
       return { ...stored, template: validTemplate ? urlTemplate : stored.template };
     }
     return { ...defaultCardData, template: initialTemplate };
@@ -68,24 +62,18 @@ function EditorContent() {
   const [pdfSuccess, setPdfSuccess] = useState(false);
   const [showBack, setShowBack] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Save to localStorage on every change
   useEffect(() => {
     saveCardData(cardData);
   }, [cardData]);
 
   const validateCardData = useCallback((data: CardData): FormErrors => {
     const errors: FormErrors = {};
-    if (!data.name.trim()) {
-      errors.name = t('validation.nameRequired');
-    }
-    if (data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
-      errors.email = t('validation.emailInvalid');
-    }
-    if (data.phone.trim() && !/^[0-9+\-\s()]+$/.test(data.phone.trim())) {
-      errors.phone = t('validation.phoneInvalid');
-    }
+    if (!data.name.trim()) errors.name = t('validation.nameRequired');
+    if (data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) errors.email = t('validation.emailInvalid');
+    if (data.phone.trim() && !/^[0-9+\-\s()]+$/.test(data.phone.trim())) errors.phone = t('validation.phoneInvalid');
     return errors;
   }, [t]);
 
@@ -97,11 +85,12 @@ function EditorContent() {
   }, [cardData.template]);
 
   const handleDownloadPdf = useCallback(async () => {
-    // Validate before generating
     const errors = validateCardData(cardData);
     setFormErrors(errors);
-    if (Object.keys(errors).length > 0) return;
-
+    if (Object.keys(errors).length > 0) {
+      setActiveTab('edit');
+      return;
+    }
     if (!cardRef.current) return;
     setIsGenerating(true);
     setPdfSuccess(false);
@@ -110,7 +99,6 @@ function EditorContent() {
         setShowBack(showBackView);
         await new Promise(resolve => setTimeout(resolve, 200));
       };
-
       await generatePdf(cardRef.current, cardData, showBackCallback);
       setPdfSuccess(true);
       setTimeout(() => setPdfSuccess(false), 3000);
@@ -124,80 +112,147 @@ function EditorContent() {
 
   const handleCardChange = useCallback((newData: CardData) => {
     setCardData(newData);
-    // Clear errors for fields that are now valid
-    if (formErrors.name && newData.name.trim()) {
-      setFormErrors(prev => ({ ...prev, name: undefined }));
-    }
-    if (formErrors.email && (!newData.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newData.email.trim()))) {
-      setFormErrors(prev => ({ ...prev, email: undefined }));
-    }
-    if (formErrors.phone && (!newData.phone.trim() || /^[0-9+\-\s()]+$/.test(newData.phone.trim()))) {
-      setFormErrors(prev => ({ ...prev, phone: undefined }));
-    }
+    if (formErrors.name && newData.name.trim()) setFormErrors(prev => ({ ...prev, name: undefined }));
+    if (formErrors.email && (!newData.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newData.email.trim()))) setFormErrors(prev => ({ ...prev, email: undefined }));
+    if (formErrors.phone && (!newData.phone.trim() || /^[0-9+\-\s()]+$/.test(newData.phone.trim()))) setFormErrors(prev => ({ ...prev, phone: undefined }));
   }, [formErrors]);
 
+  const downloadButton = (
+    <button
+      onClick={handleDownloadPdf}
+      disabled={isGenerating}
+      className={`inline-flex items-center justify-center h-11 px-6 rounded-md text-sm font-semibold transition-colors ${
+        pdfSuccess
+          ? 'bg-green-600 text-white'
+          : isGenerating
+          ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+          : 'bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]'
+      }`}
+      style={{ fontFamily }}
+    >
+      {pdfSuccess ? t('editor.downloaded') : isGenerating ? t('editor.downloading') : t('editor.downloadPdf')}
+    </button>
+  );
+
   return (
-    <div className="min-h-screen bg-gray-50" dir={dir}>
+    <div className="min-h-screen bg-[var(--color-bg)]" dir={dir}>
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <header className="bg-white border-b border-[var(--color-border)] sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center">
-              <span className="text-black font-bold text-xs">K</span>
-            </div>
-            <span className="font-bold text-gray-900" style={{ fontFamily }}>
+            <div className="w-2 h-2 rounded-full bg-[var(--color-accent)]" />
+            <span className="font-bold text-[var(--color-text)]" style={{ fontFamily }}>
               kart.krd
             </span>
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSwitcher className="!bg-gray-100 !border-gray-200" />
-            <span
-              className="text-sm text-gray-500 hidden sm:block"
-              style={{ fontFamily }}
-            >
-              {t('nav.cardMaker')}
-            </span>
-            <button
-              onClick={handleDownloadPdf}
-              disabled={isGenerating}
-              className={`flex items-center gap-2 px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-md ${
-                pdfSuccess
-                  ? 'bg-green-500 text-white shadow-green-200'
-                  : isGenerating
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black hover:from-yellow-300 hover:to-amber-400 shadow-amber-200'
-              }`}
-              style={{ fontFamily }}
-            >
-              {pdfSuccess ? (
-                <>{t('editor.downloaded')}</>
-              ) : isGenerating ? (
-                <>{t('editor.downloading')}</>
-              ) : (
-                <>{t('editor.downloadPdf')}</>
-              )}
-            </button>
+            <LanguageSwitcher compact />
+            <div className="hidden lg:block">
+              {downloadButton}
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Main content */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left panel: Form */}
-          <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-20 max-h-[calc(100vh-90px)] overflow-y-auto">
-              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
-                <h2
-                  className="text-base font-bold text-gray-800"
-                  style={{ fontFamily }}
-                >
+      {/* Desktop layout */}
+      <div className="hidden lg:block">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex gap-6">
+            {/* Left: Form */}
+            <div className="w-[380px] flex-shrink-0">
+              <div className="bg-white rounded-md border border-[var(--color-border)] p-5 sticky top-20 max-h-[calc(100vh-100px)] overflow-y-auto">
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-[var(--color-border)]">
+                  <h2 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
+                    {t('editor.enterInfo')}
+                  </h2>
+                  <button
+                    onClick={handleClear}
+                    className="text-xs text-[var(--color-error)] hover:underline"
+                    style={{ fontFamily }}
+                  >
+                    {t('editor.clear')}
+                  </button>
+                </div>
+                <CardForm data={cardData} onChange={handleCardChange} errors={formErrors} />
+              </div>
+            </div>
+
+            {/* Right: Preview + Templates */}
+            <div className="flex-1 min-w-0">
+              <div className="bg-white rounded-md border border-[var(--color-border)] p-6 mb-5">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
+                    {t('editor.livePreview')}
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <div className="flex bg-[var(--color-surface)] rounded-md p-0.5 border border-[var(--color-border)]">
+                      <button
+                        onClick={() => setShowBack(false)}
+                        className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                          !showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
+                        }`}
+                        style={{ fontFamily }}
+                      >
+                        {t('editor.front')}
+                      </button>
+                      <button
+                        onClick={() => setShowBack(true)}
+                        className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                          showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
+                        }`}
+                        style={{ fontFamily }}
+                      >
+                        {t('editor.back')}
+                      </button>
+                    </div>
+                    <span className="text-xs text-[var(--color-text-secondary)]" style={{ fontFamily }}>
+                      3.5&quot; × 2&quot;
+                    </span>
+                  </div>
+                </div>
+
+                <div className="max-w-md mx-auto">
+                  <CardPreview ref={cardRef} data={cardData} showBack={showBack} />
+                </div>
+
+                <p className="text-center text-xs text-[var(--color-text-secondary)] mt-4" style={{ fontFamily }}>
+                  {t('editor.watermarkNote')}
+                </p>
+              </div>
+
+              <div className="bg-white rounded-md border border-[var(--color-border)] p-5">
+                <TemplateSelector
+                  selected={cardData.template}
+                  onChange={(tpl) => setCardData({ ...cardData, template: tpl })}
+                  cardData={cardData}
+                  layout="grid"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile layout with tab bar */}
+      <div className="lg:hidden pb-16">
+        {/* Tab content */}
+        {activeTab === 'edit' ? (
+          <div className="px-4 py-4 space-y-4">
+            <TemplateSelector
+              selected={cardData.template}
+              onChange={(tpl) => setCardData({ ...cardData, template: tpl })}
+              cardData={cardData}
+              layout="scroll"
+            />
+            <div className="bg-white rounded-md border border-[var(--color-border)] p-4">
+              <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--color-border)]">
+                <h2 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
                   {t('editor.enterInfo')}
                 </h2>
                 <button
                   onClick={handleClear}
-                  className="text-xs text-red-500 hover:text-red-700 border border-red-200 hover:border-red-300 px-2 py-1 rounded-lg transition-all"
+                  className="text-xs text-[var(--color-error)] hover:underline"
                   style={{ fontFamily }}
                 >
                   {t('editor.clear')}
@@ -206,94 +261,71 @@ function EditorContent() {
               <CardForm data={cardData} onChange={handleCardChange} errors={formErrors} />
             </div>
           </div>
-
-          {/* Right panel: Preview + Template selector */}
-          <div className="flex-1 min-w-0">
-            {/* Live preview */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2
-                  className="text-base font-bold text-gray-800"
-                  style={{ fontFamily }}
-                >
-                  {t('editor.livePreview')}
-                </h2>
-                <div className="flex items-center gap-3">
-                  {/* Front/Back toggle */}
-                  <div className="flex bg-gray-100 rounded-lg p-1">
-                    <button
-                      onClick={() => setShowBack(false)}
-                      className={`px-3 py-1 text-xs font-medium rounded transition-all ${
-                        !showBack
-                          ? 'bg-white text-gray-900 shadow-sm'
-                          : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                      style={{ fontFamily }}
-                    >
-                      {t('editor.front')}
-                    </button>
-                    <button
-                      onClick={() => setShowBack(true)}
-                      className={`px-3 py-1 text-xs font-medium rounded transition-all ${
-                        showBack
-                          ? 'bg-white text-gray-900 shadow-sm'
-                          : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                      style={{ fontFamily }}
-                    >
-                      {t('editor.back')}
-                    </button>
-                  </div>
-                  <span
-                    className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full"
-                    style={{ fontFamily }}
-                  >
-                    3.5&quot; × 2&quot;
-                  </span>
-                </div>
-              </div>
-
-              {/* Card preview */}
-              <div className="max-w-lg mx-auto">
-                <CardPreview ref={cardRef} data={cardData} showBack={showBack} />
-              </div>
-
-              {/* Download button */}
-              <div className="mt-4 flex justify-center">
+        ) : (
+          <div className="px-4 py-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex bg-[var(--color-surface)] rounded-md p-0.5 border border-[var(--color-border)]">
                 <button
-                  onClick={handleDownloadPdf}
-                  disabled={isGenerating}
-                  className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg w-full max-w-xs justify-center ${
-                    pdfSuccess
-                      ? 'bg-green-500 text-white'
-                      : isGenerating
-                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:from-purple-600 hover:to-purple-800 shadow-purple-200'
+                  onClick={() => setShowBack(false)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                    !showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
                   }`}
                   style={{ fontFamily }}
                 >
-                  {pdfSuccess ? t('editor.downloaded') : isGenerating ? t('editor.wait') : t('editor.downloadPdfFree')}
+                  {t('editor.front')}
+                </button>
+                <button
+                  onClick={() => setShowBack(true)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                    showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
+                  }`}
+                  style={{ fontFamily }}
+                >
+                  {t('editor.back')}
                 </button>
               </div>
-
-              {/* Watermark note */}
-              <p
-                className="text-center text-xs text-gray-400 mt-3"
-                style={{ fontFamily }}
-              >
-                {t('editor.watermarkNote')}
-              </p>
+              <span className="text-xs text-[var(--color-text-secondary)]" style={{ fontFamily }}>
+                3.5&quot; × 2&quot;
+              </span>
             </div>
 
-            {/* Template selector */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-              <TemplateSelector
-                selected={cardData.template}
-                onChange={(tpl) => setCardData({ ...cardData, template: tpl })}
-                cardData={cardData}
-              />
+            <CardPreview ref={cardRef} data={cardData} showBack={showBack} />
+
+            <div className="flex justify-center">
+              {downloadButton}
             </div>
+
+            <p className="text-center text-xs text-[var(--color-text-secondary)]" style={{ fontFamily }}>
+              {t('editor.watermarkNote')}
+            </p>
           </div>
+        )}
+
+        {/* Bottom tab bar */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[var(--color-border)] z-50 flex">
+          <button
+            onClick={() => setActiveTab('edit')}
+            className={`flex-1 flex flex-col items-center justify-center h-14 gap-0.5 transition-colors ${
+              activeTab === 'edit' ? 'text-[var(--color-accent)]' : 'text-[var(--color-text-secondary)]'
+            }`}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span className="text-[10px] font-medium" style={{ fontFamily }}>{t('editor.tabEdit')}</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('preview')}
+            className={`flex-1 flex flex-col items-center justify-center h-14 gap-0.5 transition-colors ${
+              activeTab === 'preview' ? 'text-[var(--color-accent)]' : 'text-[var(--color-text-secondary)]'
+            }`}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <span className="text-[10px] font-medium" style={{ fontFamily }}>{t('editor.tabPreview')}</span>
+          </button>
         </div>
       </div>
     </div>
@@ -305,11 +337,8 @@ export default function EditorPage() {
 
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div
-          className="text-gray-500"
-          style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
-        >
+      <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center">
+        <div className="text-[var(--color-text-secondary)]" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
           {t('editor.loading')}
         </div>
       </div>
