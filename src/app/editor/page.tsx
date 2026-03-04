@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { UserMenu } from '@/components/UserMenu';
 import { CardData, TemplateId, defaultCardData, TEMPLATES } from '@/types/card';
 import CardForm from '@/components/CardForm';
 import CardPreview from '@/components/CardPreview';
@@ -149,7 +150,7 @@ function EditorContent() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">`n            <UserMenu />
             <span
               className="text-sm text-gray-500 hidden sm:block"
               style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
@@ -216,7 +217,7 @@ function EditorContent() {
                 >
                   پێشبینی زیندوو
                 </h2>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3">`n            <UserMenu />
                   {/* Front/Back toggle */}
                   <div className="flex bg-gray-100 rounded-lg p-1">
                     <button
@@ -314,3 +315,4 @@ export default function EditorPage() {
     </Suspense>
   );
 }
+
