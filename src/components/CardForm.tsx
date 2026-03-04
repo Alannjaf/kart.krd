@@ -10,10 +10,10 @@ interface Props {
 }
 
 const inputClass =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all bg-white placeholder-gray-500';
+  'w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all bg-white placeholder-gray-400';
 
 const inputErrorClass =
-  'w-full border border-red-400 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all bg-white placeholder-gray-500';
+  'w-full border border-red-400 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all bg-white placeholder-gray-400';
 
 const labelClass = 'block text-xs font-medium text-gray-600 mb-1';
 
@@ -223,7 +223,7 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
                 alert('پەڕگەکە گەورەترە لە 2MB. تکایە پەڕگەیەکی بچووکتر هەڵبژێرە.');
               }
             }}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all bg-white file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all bg-white file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
             style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
           />
           {data.logoUrl && (

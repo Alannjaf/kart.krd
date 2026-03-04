@@ -1,8 +1,6 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { authClient } from "@/lib/auth/client";
-import { NeonAuthUIProvider } from "@neondatabase/auth/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ku" dir="rtl" suppressHydrationWarning>
+    <html lang="ku" dir="rtl">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -45,16 +43,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={`${inter.variable} antialiased`}>
-        <NeonAuthUIProvider
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          authClient={authClient as any}
-          redirectTo="/editor"
-          social={{ providers: ["google"] }}
-        >
-          {children}
-        </NeonAuthUIProvider>
-      </body>
+      <body className={`${inter.variable} antialiased`}>{children}</body>
     </html>
   );
 }

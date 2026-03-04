@@ -1,5 +1,4 @@
-﻿@import "tailwindcss";
-@import "@neondatabase/auth/ui/tailwind";
+@import "tailwindcss";
 
 :root {
   --font-noto: 'Noto Sans Arabic', 'Inter', sans-serif;
