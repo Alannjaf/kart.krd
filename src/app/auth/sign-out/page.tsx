@@ -30,8 +30,8 @@ export default function AuthSignOutPage() {
       }
 
       if (!isMounted) return;
-      router.replace("/");
-      router.refresh();
+      // Full page navigation to clear React state + NeonAuthUIProvider session cache
+      window.location.href = "/";
     };
 
     void runSignOut();
