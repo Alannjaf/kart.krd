@@ -79,7 +79,7 @@ export default function BoldCard({ data }: Props) {
         </div>
 
         {/* Contact info */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {data.phone && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-300">
               <PhoneIcon />
@@ -112,7 +112,7 @@ export default function BoldCard({ data }: Props) {
               flexWrap: 'wrap',
               alignItems: 'center',
               gap: '8px',
-              marginTop: '4px',
+              marginTop: '2px',
             }}>
               {data.facebook && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: socialSize }} className="text-gray-400">
