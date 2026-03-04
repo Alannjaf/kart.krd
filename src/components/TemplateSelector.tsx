@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useEffect, useState, type ComponentType } from 'react';
 import { TemplateId, TEMPLATES, CardData } from '@/types/card';
 import ModernCard from './templates/ModernCard';
 import ClassicCard from './templates/ClassicCard';
@@ -15,7 +16,31 @@ interface Props {
   layout?: 'grid' | 'scroll';
 }
 
+const CARD_WIDTH = 350;
+const CARD_HEIGHT = 200;
+
+const templateComponents: Record<TemplateId, ComponentType<{ data: CardData }>> = {
+  modern: ModernCard,
+  classic: ClassicCard,
+  bold: BoldCard,
+  minimal: MinimalCard,
+};
+
 function MiniPreview({ templateId, data, t }: { templateId: TemplateId; data: CardData; t: (key: TranslationKey) => string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0].contentRect.width;
+      if (width > 0) setScale(width / CARD_WIDTH);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const previewData = {
     ...data,
     template: templateId,
@@ -23,12 +48,30 @@ function MiniPreview({ templateId, data, t }: { templateId: TemplateId; data: Ca
     title: data.title || t('preview.title'),
   };
 
-  switch (templateId) {
-    case 'modern': return <ModernCard data={previewData} />;
-    case 'classic': return <ClassicCard data={previewData} />;
-    case 'bold': return <BoldCard data={previewData} />;
-    case 'minimal': return <MinimalCard data={previewData} />;
-  }
+  const Card = templateComponents[templateId];
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        position: 'relative',
+        width: '100%',
+        aspectRatio: `${CARD_WIDTH}/${CARD_HEIGHT}`,
+        overflow: 'hidden',
+      }}
+    >
+      <div style={{
+        position: 'absolute',
+        width: `${CARD_WIDTH}px`,
+        height: `${CARD_HEIGHT}px`,
+        transform: `scale(${scale})`,
+        transformOrigin: 'top left',
+        opacity: scale > 0 ? 1 : 0,
+      }}>
+        <Card data={previewData} />
+      </div>
+    </div>
+  );
 }
 
 export default function TemplateSelector({ selected, onChange, cardData, layout = 'grid' }: Props) {
@@ -56,7 +99,6 @@ export default function TemplateSelector({ selected, onChange, cardData, layout 
                       ? 'border-[var(--color-accent)] scale-[1.02]'
                       : 'border-[var(--color-border)] hover:border-[var(--color-accent)]/50'
                   }`}
-                  style={{ aspectRatio: '3.5/2' }}
                 >
                   <MiniPreview templateId={tpl.id} data={cardData} t={t} />
                 </div>
@@ -96,7 +138,6 @@ export default function TemplateSelector({ selected, onChange, cardData, layout 
                     ? 'border-[var(--color-accent)] scale-[1.02]'
                     : 'border-[var(--color-border)] hover:border-[var(--color-accent)]/50'
                 }`}
-                style={{ aspectRatio: '3.5/2' }}
               >
                 <MiniPreview templateId={tpl.id} data={cardData} t={t} />
               </div>
