@@ -3,6 +3,7 @@
 import { CardData, TemplateId } from '@/types/card';
 import { useState, useEffect } from 'react';
 import { generateVCardQR } from '@/lib/qrUtils';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Props {
   data: CardData;
@@ -11,6 +12,7 @@ interface Props {
 
 export default function BackCard({ data, template }: Props) {
   const [qrCode, setQrCode] = useState<string>('');
+  const { t } = useLanguage();
   const isRTL = data.language !== 'en';
   const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif";
 
@@ -38,7 +40,7 @@ export default function BackCard({ data, template }: Props) {
           <div className="mb-4">
             <img
               src={data.logoUrl}
-              alt="Logo"
+              alt={t('alt.logo')}
               className="w-[100px] h-[100px] object-contain"
             />
           </div>
@@ -59,7 +61,7 @@ export default function BackCard({ data, template }: Props) {
           <div className="mb-4">
             <img
               src={qrCode}
-              alt="QR Code"
+              alt={t('alt.qrCode')}
               className="w-[120px] h-[120px] bg-white p-2 rounded"
             />
           </div>
@@ -96,7 +98,7 @@ export default function BackCard({ data, template }: Props) {
           <div className="mb-4">
             <img
               src={data.logoUrl}
-              alt="Logo"
+              alt={t('alt.logo')}
               className="w-[100px] h-[100px] object-contain"
             />
           </div>
@@ -120,7 +122,7 @@ export default function BackCard({ data, template }: Props) {
           <div className="mb-4">
             <img
               src={qrCode}
-              alt="QR Code"
+              alt={t('alt.qrCode')}
               className="w-[120px] h-[120px] bg-transparent rounded"
             />
           </div>
@@ -158,7 +160,7 @@ export default function BackCard({ data, template }: Props) {
           <div className="mb-4">
             <img
               src={data.logoUrl}
-              alt="Logo"
+              alt={t('alt.logo')}
               className="w-[100px] h-[100px] object-contain"
             />
           </div>
@@ -184,7 +186,7 @@ export default function BackCard({ data, template }: Props) {
           <div className="mb-4">
             <img
               src={qrCode}
-              alt="QR Code"
+              alt={t('alt.qrCode')}
               className="w-[120px] h-[120px] bg-white p-2 rounded"
             />
           </div>

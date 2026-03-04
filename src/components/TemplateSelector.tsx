@@ -14,12 +14,12 @@ interface Props {
   cardData: CardData;
 }
 
-function MiniPreview({ templateId, data }: { templateId: TemplateId; data: CardData }) {
+function MiniPreview({ templateId, data, t }: { templateId: TemplateId; data: CardData; t: (key: TranslationKey) => string }) {
   const previewData = {
     ...data,
     template: templateId,
-    name: data.name || 'ئەحمەد عەلی',
-    title: data.title || 'بەڕێوەبەر',
+    name: data.name || t('preview.name'),
+    title: data.title || t('preview.title'),
   };
 
   switch (templateId) {
@@ -61,7 +61,7 @@ export default function TemplateSelector({ selected, onChange, cardData }: Props
               style={{ aspectRatio: '3.5/2' }}
               title={templateName}
             >
-              <MiniPreview templateId={tpl.id} data={cardData} />
+              <MiniPreview templateId={tpl.id} data={cardData} t={t} />
 
               {/* Selected indicator */}
               {selected === tpl.id && (

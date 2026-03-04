@@ -89,6 +89,19 @@ export const translations = {
     'form.linkedin': 'لینکدین',
     'form.twitter': 'ئێکس / تویتەر',
     'form.selectTemplate': 'شێواز هەڵبژێرە',
+    'form.facebookPlaceholder': 'facebook.com/ناوی بەکارهێنەر',
+    'form.instagramPlaceholder': '@ناوی بەکارهێنەر',
+    'form.linkedinPlaceholder': 'linkedin.com/in/ناوی بەکارهێنەر',
+    'form.twitterPlaceholder': '@ناوی بەکارهێنەر',
+
+    // Accessibility
+    'alt.logo': 'لۆگۆ',
+    'alt.qrCode': 'QR کۆد',
+    'alt.logoPreview': 'پێشبینی لۆگۆ',
+
+    // Preview fallbacks
+    'preview.name': 'ئەحمەد عەلی',
+    'preview.title': 'بەڕێوەبەر',
 
     // Validation
     'validation.nameRequired': 'ناو پێویستە',
@@ -178,6 +191,19 @@ export const translations = {
     'form.linkedin': 'لينكدإن',
     'form.twitter': 'إكس / تويتر',
     'form.selectTemplate': 'اختر النمط',
+    'form.facebookPlaceholder': 'facebook.com/اسم المستخدم',
+    'form.instagramPlaceholder': '@اسم المستخدم',
+    'form.linkedinPlaceholder': 'linkedin.com/in/اسم المستخدم',
+    'form.twitterPlaceholder': '@اسم المستخدم',
+
+    // Accessibility
+    'alt.logo': 'الشعار',
+    'alt.qrCode': 'رمز QR',
+    'alt.logoPreview': 'معاينة الشعار',
+
+    // Preview fallbacks
+    'preview.name': 'أحمد علي',
+    'preview.title': 'مدير',
 
     // Validation
     'validation.nameRequired': 'الاسم مطلوب',
@@ -267,6 +293,19 @@ export const translations = {
     'form.linkedin': 'LinkedIn',
     'form.twitter': 'X / Twitter',
     'form.selectTemplate': 'Choose Template',
+    'form.facebookPlaceholder': 'facebook.com/username',
+    'form.instagramPlaceholder': '@username',
+    'form.linkedinPlaceholder': 'linkedin.com/in/username',
+    'form.twitterPlaceholder': '@username',
+
+    // Accessibility
+    'alt.logo': 'Logo',
+    'alt.qrCode': 'QR Code',
+    'alt.logoPreview': 'Logo preview',
+
+    // Preview fallbacks
+    'preview.name': 'Ahmed Ali',
+    'preview.title': 'Manager',
 
     // Validation
     'validation.nameRequired': 'Name is required',

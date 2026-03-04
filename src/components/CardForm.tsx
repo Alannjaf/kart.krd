@@ -233,7 +233,7 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
           />
           {data.logoUrl && (
             <div className="mt-2 flex items-center gap-2">
-              <img src={data.logoUrl} alt="Logo preview" className="w-12 h-12 object-contain border rounded-lg" />
+              <img src={data.logoUrl} alt={t('alt.logoPreview')} className="w-12 h-12 object-contain border rounded-lg" />
               <button
                 onClick={() => onChange({ ...data, logoUrl: '' })}
                 className="text-xs text-red-500 hover:text-red-700"
@@ -261,7 +261,7 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
           label={t('form.facebook')}
           value={data.facebook}
           onChange={set('facebook')}
-          placeholder="facebook.com/username"
+          placeholder={t('form.facebookPlaceholder')}
           dir="ltr"
           fontFamily={fontFamily}
         />
@@ -269,7 +269,7 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
           label={t('form.instagram')}
           value={data.instagram}
           onChange={set('instagram')}
-          placeholder="@username"
+          placeholder={t('form.instagramPlaceholder')}
           dir="ltr"
           fontFamily={fontFamily}
         />
@@ -277,7 +277,7 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
           label={t('form.linkedin')}
           value={data.linkedin}
           onChange={set('linkedin')}
-          placeholder="linkedin.com/in/username"
+          placeholder={t('form.linkedinPlaceholder')}
           dir="ltr"
           fontFamily={fontFamily}
         />
@@ -285,7 +285,7 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
           label={t('form.twitter')}
           value={data.twitter}
           onChange={set('twitter')}
-          placeholder="@username"
+          placeholder={t('form.twitterPlaceholder')}
           dir="ltr"
           fontFamily={fontFamily}
         />

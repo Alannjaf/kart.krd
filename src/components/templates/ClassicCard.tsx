@@ -1,6 +1,7 @@
 'use client';
 
 import { CardData } from '@/types/card';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Props {
   data: CardData;
@@ -34,6 +35,7 @@ const LocationIcon = () => (
 );
 
 export default function ClassicCard({ data }: Props) {
+  const { t } = useLanguage();
   const isRTL = data.language !== 'en';
   const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif";
   const contactSize = '13px';
@@ -155,7 +157,7 @@ export default function ClassicCard({ data }: Props) {
           <div className="flex items-center justify-center ms-6">
             <img
               src={data.logoUrl}
-              alt="Logo"
+              alt={t('alt.logo')}
               className="w-[60px] h-[60px] object-contain"
             />
           </div>
