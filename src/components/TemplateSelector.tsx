@@ -5,6 +5,10 @@ import ModernCard from './templates/ModernCard';
 import ClassicCard from './templates/ClassicCard';
 import BoldCard from './templates/BoldCard';
 import MinimalCard from './templates/MinimalCard';
+import ElegantCard from './templates/ElegantCard';
+import CreativeCard from './templates/CreativeCard';
+import CorporateCard from './templates/CorporateCard';
+import GradientCard from './templates/GradientCard';
 
 interface Props {
   selected: TemplateId;
@@ -29,6 +33,14 @@ function MiniPreview({ templateId, data }: { templateId: TemplateId; data: CardD
       return <BoldCard data={previewData} />;
     case 'minimal':
       return <MinimalCard data={previewData} />;
+    case 'elegant':
+      return <ElegantCard data={previewData} />;
+    case 'creative':
+      return <CreativeCard data={previewData} />;
+    case 'corporate':
+      return <CorporateCard data={previewData} />;
+    case 'gradient':
+      return <GradientCard data={previewData} />;
   }
 }
 
@@ -41,7 +53,7 @@ export default function TemplateSelector({ selected, onChange, cardData }: Props
       >
         شێواز هەڵبژێرە
       </label>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {TEMPLATES.map((tpl) => (
           <button
             key={tpl.id}
