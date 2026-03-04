@@ -22,7 +22,7 @@ jobs:
         env:
           NEON_AUTH_BASE_URL: ${{ secrets.NEON_AUTH_BASE_URL }}
           NEON_AUTH_COOKIE_SECRET: ${{ secrets.NEON_AUTH_COOKIE_SECRET }}
-          NEXT_PUBLIC_NEON_AUTH_URL: https://kart-krd.pages.dev/api/auth
+          NEXT_PUBLIC_NEON_AUTH_URL: https://kart-krd.alann-jaf.workers.dev/api/auth
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
