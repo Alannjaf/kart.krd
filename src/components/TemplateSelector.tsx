@@ -6,6 +6,10 @@ import ModernCard from './templates/ModernCard';
 import ClassicCard from './templates/ClassicCard';
 import BoldCard from './templates/BoldCard';
 import MinimalCard from './templates/MinimalCard';
+import ElegantCard from './templates/ElegantCard';
+import CreativeCard from './templates/CreativeCard';
+import CorporateCard from './templates/CorporateCard';
+import GradientCard from './templates/GradientCard';
 import { useLanguage } from '@/context/LanguageContext';
 import { getFontFamily, type TranslationKey } from '@/lib/i18n';
 
@@ -24,6 +28,10 @@ const templateComponents: Record<TemplateId, ComponentType<{ data: CardData }>> 
   classic: ClassicCard,
   bold: BoldCard,
   minimal: MinimalCard,
+  elegant: ElegantCard,
+  creative: CreativeCard,
+  corporate: CorporateCard,
+  gradient: GradientCard,
 };
 
 function MiniPreview({ templateId, data, t }: { templateId: TemplateId; data: CardData; t: (key: TranslationKey) => string }) {

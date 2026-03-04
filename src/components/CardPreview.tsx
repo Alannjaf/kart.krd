@@ -6,6 +6,10 @@ import ModernCard from './templates/ModernCard';
 import ClassicCard from './templates/ClassicCard';
 import BoldCard from './templates/BoldCard';
 import MinimalCard from './templates/MinimalCard';
+import ElegantCard from './templates/ElegantCard';
+import CreativeCard from './templates/CreativeCard';
+import CorporateCard from './templates/CorporateCard';
+import GradientCard from './templates/GradientCard';
 import BackCard from './BackCard';
 
 interface Props {
@@ -28,6 +32,14 @@ const CardPreview = forwardRef<HTMLDivElement, Props>(({ data, showBack = false 
         return <BoldCard data={data} />;
       case 'minimal':
         return <MinimalCard data={data} />;
+      case 'elegant':
+        return <ElegantCard data={data} />;
+      case 'creative':
+        return <CreativeCard data={data} />;
+      case 'corporate':
+        return <CorporateCard data={data} />;
+      case 'gradient':
+        return <GradientCard data={data} />;
       default:
         return <ModernCard data={data} />;
     }

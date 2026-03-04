@@ -8,6 +8,10 @@ import ModernCard from "@/components/templates/ModernCard";
 import ClassicCard from "@/components/templates/ClassicCard";
 import BoldCard from "@/components/templates/BoldCard";
 import MinimalCard from "@/components/templates/MinimalCard";
+import ElegantCard from "@/components/templates/ElegantCard";
+import CreativeCard from "@/components/templates/CreativeCard";
+import CorporateCard from "@/components/templates/CorporateCard";
+import GradientCard from "@/components/templates/GradientCard";
 import { CardData } from "@/types/card";
 
 const sampleCard: CardData = {
@@ -22,6 +26,10 @@ const templateComponents = [
   { id: 'classic' as const, Component: ClassicCard },
   { id: 'bold' as const, Component: BoldCard },
   { id: 'minimal' as const, Component: MinimalCard },
+  { id: 'elegant' as const, Component: ElegantCard },
+  { id: 'creative' as const, Component: CreativeCard },
+  { id: 'corporate' as const, Component: CorporateCard },
+  { id: 'gradient' as const, Component: GradientCard },
 ];
 
 export default function HomePage() {
@@ -127,7 +135,7 @@ export default function HomePage() {
         </h2>
 
         {/* Mobile: horizontal scroll, Desktop: 2x2 grid */}
-        <div className="flex gap-4 overflow-x-auto scroll-hidden pb-3 md:grid md:grid-cols-2 md:overflow-visible md:pb-0 md:gap-5">
+        <div className="flex gap-4 overflow-x-auto scroll-hidden pb-3 md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible md:pb-0 md:gap-5">
           {templateComponents.map(({ id, Component }) => (
             <Link href={`/editor?template=${id}`} key={id} className="flex-shrink-0 w-60 md:w-auto group">
               <div

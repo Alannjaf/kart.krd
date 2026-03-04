@@ -206,6 +206,189 @@ export default function BackCard({ data, template }: Props) {
     );
   }
 
+  // Elegant template back
+  if (template === 'elegant') {
+    return (
+      <div
+        className="w-full h-full relative overflow-hidden flex flex-col items-center justify-center"
+        dir={isRTL ? 'rtl' : 'ltr'}
+        style={{ fontFamily, backgroundColor: '#1C1C28' }}
+      >
+        {/* Thin gold top line */}
+        <div style={{ position: 'absolute', top: 0, left: '20%', right: '20%', height: '1px', backgroundColor: '#B8965A', opacity: 0.5 }} />
+
+        {/* Logo */}
+        {data.logoUrl && (
+          <div className="mb-4">
+            <img src={data.logoUrl} alt="Logo" className="w-[100px] h-[100px] object-contain" />
+          </div>
+        )}
+
+        {/* Company name */}
+        {data.company && (
+          <h2
+            className="text-center mb-6"
+            style={{ fontSize: '18px', fontWeight: 600, color: '#ffffff', letterSpacing: '1px' }}
+          >
+            {data.company}
+          </h2>
+        )}
+
+        {/* QR Code */}
+        {data.qrEnabled && qrCode && (
+          <div className="mb-4">
+            <img src={qrCode} alt="QR Code" className="w-[120px] h-[120px] bg-white p-2 rounded" />
+          </div>
+        )}
+
+        {/* Website */}
+        {data.website && data.qrEnabled && qrCode && (
+          <p className="text-center" style={{ fontSize: '12px', color: '#8B8B9E' }} dir="ltr">
+            {data.website}
+          </p>
+        )}
+
+        {/* Thin gold bottom line */}
+        <div style={{ position: 'absolute', bottom: 0, left: '20%', right: '20%', height: '1px', backgroundColor: '#B8965A', opacity: 0.5 }} />
+      </div>
+    );
+  }
+
+  // Creative template back
+  if (template === 'creative') {
+    return (
+      <div
+        className="w-full h-full relative overflow-hidden flex flex-col items-center justify-center"
+        dir={isRTL ? 'rtl' : 'ltr'}
+        style={{ fontFamily, backgroundColor: '#8B3A3A' }}
+      >
+        {/* Decorative circle */}
+        <div style={{ position: 'absolute', bottom: -40, left: -40, width: '120px', height: '120px', borderRadius: '50%', backgroundColor: '#A04848', opacity: 0.5 }} />
+
+        {/* Logo */}
+        {data.logoUrl && (
+          <div className="mb-4" style={{ position: 'relative', zIndex: 1 }}>
+            <img src={data.logoUrl} alt="Logo" className="w-[100px] h-[100px] object-contain" />
+          </div>
+        )}
+
+        {/* Company name */}
+        {data.company && (
+          <h2
+            className="text-center mb-6"
+            style={{ fontSize: '18px', fontWeight: 700, color: '#FFF5EB', position: 'relative', zIndex: 1 }}
+          >
+            {data.company}
+          </h2>
+        )}
+
+        {/* QR Code */}
+        {data.qrEnabled && qrCode && (
+          <div className="mb-4" style={{ position: 'relative', zIndex: 1 }}>
+            <img src={qrCode} alt="QR Code" className="w-[120px] h-[120px] bg-white p-2 rounded" />
+          </div>
+        )}
+
+        {/* Website */}
+        {data.website && data.qrEnabled && qrCode && (
+          <p className="text-center" style={{ fontSize: '12px', color: '#D4A0A0', position: 'relative', zIndex: 1 }} dir="ltr">
+            {data.website}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  // Corporate template back
+  if (template === 'corporate') {
+    return (
+      <div
+        className="w-full h-full relative overflow-hidden flex flex-col items-center justify-center"
+        dir={isRTL ? 'rtl' : 'ltr'}
+        style={{ fontFamily, backgroundColor: '#0C2340' }}
+      >
+        {/* Logo */}
+        {data.logoUrl && (
+          <div className="mb-4">
+            <img src={data.logoUrl} alt="Logo" className="w-[100px] h-[100px] object-contain" />
+          </div>
+        )}
+
+        {/* Company name */}
+        {data.company && (
+          <h2
+            className="text-center mb-6"
+            style={{ fontSize: '18px', fontWeight: 600, color: '#ffffff', letterSpacing: '1px' }}
+          >
+            {data.company}
+          </h2>
+        )}
+
+        {/* Thin divider */}
+        <div style={{ width: '40px', height: '1px', backgroundColor: '#4A6FA5', marginBottom: '20px' }} />
+
+        {/* QR Code */}
+        {data.qrEnabled && qrCode && (
+          <div className="mb-4">
+            <img src={qrCode} alt="QR Code" className="w-[120px] h-[120px] bg-white p-2 rounded" />
+          </div>
+        )}
+
+        {/* Website */}
+        {data.website && data.qrEnabled && qrCode && (
+          <p className="text-center" style={{ fontSize: '12px', color: '#4A6FA5' }} dir="ltr">
+            {data.website}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  // Gradient template back
+  if (template === 'gradient') {
+    return (
+      <div
+        className="w-full h-full relative overflow-hidden flex flex-col items-center justify-center"
+        dir={isRTL ? 'rtl' : 'ltr'}
+        style={{ fontFamily, background: 'linear-gradient(135deg, #0D9488 0%, #115E59 50%, #134E4A 100%)' }}
+      >
+        {/* Decorative dot */}
+        <div style={{ position: 'absolute', top: '16px', right: '16px', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#A7F3D0' }} />
+
+        {/* Logo */}
+        {data.logoUrl && (
+          <div className="mb-4">
+            <img src={data.logoUrl} alt="Logo" className="w-[100px] h-[100px] object-contain" />
+          </div>
+        )}
+
+        {/* Company name */}
+        {data.company && (
+          <h2
+            className="text-center mb-6"
+            style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff' }}
+          >
+            {data.company}
+          </h2>
+        )}
+
+        {/* QR Code */}
+        {data.qrEnabled && qrCode && (
+          <div className="mb-4">
+            <img src={qrCode} alt="QR Code" className="w-[120px] h-[120px] bg-white p-2 rounded" />
+          </div>
+        )}
+
+        {/* Website */}
+        {data.website && data.qrEnabled && qrCode && (
+          <p className="text-center" style={{ fontSize: '12px', color: '#A7F3D0' }} dir="ltr">
+            {data.website}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   // Minimal template back (default)
   return (
     <div
