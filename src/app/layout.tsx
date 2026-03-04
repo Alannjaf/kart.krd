@@ -1,9 +1,8 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
-import { NeonAuthProviderWrapper } from "@/components/NeonAuthProviderWrapper";
-import { UserMenu } from "@/components/UserMenu";
+import { authClient } from "@/lib/auth/client";
+import { NeonAuthUIProvider, UserButton } from "@neondatabase/auth/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -47,25 +46,28 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} antialiased`}>
-        <NeonAuthProviderWrapper>
-          <AuthProvider>
-            <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 bg-purple-950/80 backdrop-blur-md border-b border-purple-800/40">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-md">
-                  <span className="text-black font-bold text-sm">K</span>
-                </div>
-                <span
-                  className="text-white font-bold text-lg hidden sm:block"
-                  style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
-                >
-                  kart.krd
-                </span>
+        <NeonAuthUIProvider
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          authClient={authClient as any}
+          redirectTo="/editor"
+          social={{ providers: ["google"] }}
+        >
+          <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 bg-purple-950/80 backdrop-blur-md border-b border-purple-800/40">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-md">
+                <span className="text-black font-bold text-sm">K</span>
               </div>
-              <UserMenu />
-            </header>
-            <div className="pt-14">{children}</div>
-          </AuthProvider>
-        </NeonAuthProviderWrapper>
+              <span
+                className="text-white font-bold text-lg hidden sm:block"
+                style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+              >
+                kart.krd
+              </span>
+            </div>
+            <UserButton size="icon" />
+          </header>
+          <div className="pt-14">{children}</div>
+        </NeonAuthUIProvider>
       </body>
     </html>
   );
