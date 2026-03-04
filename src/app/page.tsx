@@ -61,16 +61,7 @@ export default function HomePage() {
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
-            <LanguageSwitcher compact />
-            <Link
-              href="/editor"
-              className="h-10 px-5 inline-flex items-center rounded-md bg-[var(--color-accent)] text-white text-sm font-semibold hover:bg-[var(--color-accent-hover)] transition-colors"
-              style={{ fontFamily }}
-            >
-              {t('nav.createButton')}
-            </Link>
-          </div>
+          <LanguageSwitcher compact />
         </div>
       </header>
 
