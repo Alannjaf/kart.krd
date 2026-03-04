@@ -1,37 +1,36 @@
 'use client';
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { getFontFamily } from "@/lib/i18n";
 
 const templatePreviews = [
   {
     id: "modern",
-    name: "مۆدێرن",
-    nameEn: "Modern",
+    nameKey: "template.modern" as const,
     bg: "from-violet-900 to-purple-800",
     accent: "bg-gradient-to-b from-yellow-400 to-amber-500",
     textColor: "text-white",
   },
   {
     id: "classic",
-    name: "کلاسیک",
-    nameEn: "Classic",
+    nameKey: "template.classic" as const,
     bg: "from-gray-50 to-gray-100",
     accent: "border-2 border-amber-500",
     textColor: "text-gray-800",
   },
   {
     id: "bold",
-    name: "بۆڵد",
-    nameEn: "Bold",
+    nameKey: "template.bold" as const,
     bg: "from-gray-950 to-gray-900",
     accent: "bg-yellow-400",
     textColor: "text-white",
   },
   {
     id: "minimal",
-    name: "مینیمال",
-    nameEn: "Minimal",
+    nameKey: "template.minimal" as const,
     bg: "from-white to-gray-50",
     accent: "border-b border-gray-300",
     textColor: "text-gray-700",
@@ -39,115 +38,29 @@ const templatePreviews = [
 ];
 
 export default function HomePage() {
-  const [language, setLanguage] = useState<'ku' | 'en'>('ku');
-  const isKurdish = language === 'ku';
+  const { locale, dir, t } = useLanguage();
+  const fontFamily = getFontFamily(locale);
 
-  const content = {
-    ku: {
-      badge: "✦ بەخۆڕایی — بەبێ تۆمارکردن",
-      heroTitle: "کارتی بزنسی ئامادەکە",
-      heroSubtitle: "لە چەند چرکەیەکدا",
-      heroDesc: "کارتی بزنسی پیشەیی بۆ خۆت ئامادەبکە — بەکوردی، عەرەبی، یان ئینگلیزی. پی‌دی‌ئێف دابەزێنە، بەبێ هیچ تۆمارکردنێک.",
-      ctaButton: "🎨 دروستی بکە — بەخۆڕایی",
-      ctaSubtext: "هیچ تۆمارکردنێک پێویست نییە",
-      templatesTitle: "چوار شێوازی جیاواز",
-      templatesDesc: "شێوازێک هەڵبژێرە کە لە خۆت نوێنەرایەتی بکات",
-      features: [
-        {
-          icon: "🌐",
-          title: "سێ زمان",
-          desc: "کوردی، عەرەبی، ئینگلیزی — هەموو لەگەڵ پشتگیری چەپ‌بەراستەوە و ڕاست‌بەچەپەوە",
-        },
-        {
-          icon: "⚡",
-          title: "خێرا و ئاسان",
-          desc: "زانیاریت داخڵ بکە، پێشبینی زیندوو ببینە، PIF دابەزێنە — هەمووی لەسەر وێب",
-        },
-        {
-          icon: "🎨",
-          title: "چوار شێواز",
-          desc: "مۆدێرن، کلاسیک، بۆڵد، مینیمال — شێوازێک هەڵبژێرە کە لە پیشەی خۆت نوێنەرایەتی بکات",
-        },
-      ],
-      ctaBottomTitle: "ئەمڕۆ کارتەکەت ئامادەبکە",
-      ctaBottomDesc: "بەخۆڕایی — بەبێ تۆمارکردن — PIF دابەزێنە",
-      ctaBottomButton: "دروستی بکە — ئیستا",
-      footerText: "© 2026 kart.krd — دروستکراوە لە کوردستان 🏔️",
-      createButton: "دروستی بکە"
-    },
-    en: {
-      badge: "✦ Free — No Registration Required",
-      heroTitle: "Create Professional",
-      heroSubtitle: "Business Cards in Seconds",
-      heroDesc: "Generate professional business cards in Kurdish, Arabic, or English. Download as PDF instantly, no account required.",
-      ctaButton: "🎨 Create Free Card",
-      ctaSubtext: "No registration required",
-      templatesTitle: "Four Different Styles",
-      templatesDesc: "Choose a template that represents your profession",
-      features: [
-        {
-          icon: "🌐",
-          title: "3 Languages",
-          desc: "Kurdish, Arabic, English — all with full RTL and LTR text support",
-        },
-        {
-          icon: "⚡",
-          title: "Fast & Easy",
-          desc: "Enter your details, see live preview, download PDF — all in your browser",
-        },
-        {
-          icon: "🎨",
-          title: "4 Templates",
-          desc: "Modern, Classic, Bold, Minimal — choose a style that represents your profession",
-        },
-      ],
-      ctaBottomTitle: "Create Your Card Today",
-      ctaBottomDesc: "Free — No Registration — Download PDF",
-      ctaBottomButton: "Create Now",
-      footerText: "© 2026 kart.krd — Made in Kurdistan 🏔️",
-      createButton: "Create"
-    }
-  };
-
-  const currentContent = content[language];
+  const features = [
+    { icon: t('landing.feature1Icon'), title: t('landing.feature1Title'), desc: t('landing.feature1Desc') },
+    { icon: t('landing.feature2Icon'), title: t('landing.feature2Title'), desc: t('landing.feature2Desc') },
+    { icon: t('landing.feature3Icon'), title: t('landing.feature3Title'), desc: t('landing.feature3Desc') },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#0f0520] text-white" dir={isKurdish ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-[#0f0520] text-white" dir={dir}>
       {/* Header */}
       <header className="border-b border-purple-900/40 bg-[#0f0520]/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          {/* Language Toggle */}
-          <div className="flex items-center gap-3">
-            <div className="bg-purple-900/30 border border-purple-700/50 rounded-lg p-1 flex">
-              <button
-                onClick={() => setLanguage('ku')}
-                className={`px-3 py-1 rounded text-sm font-medium transition-all ${
-                  isKurdish
-                    ? 'bg-yellow-400 text-black'
-                    : 'text-purple-300 hover:text-white'
-                }`}
-              >
-                KU
-              </button>
-              <button
-                onClick={() => setLanguage('en')}
-                className={`px-3 py-1 rounded text-sm font-medium transition-all ${
-                  !isKurdish
-                    ? 'bg-yellow-400 text-black'
-                    : 'text-purple-300 hover:text-white'
-                }`}
-              >
-                EN
-              </button>
-            </div>
-          </div>
+          {/* Language Switcher */}
+          <LanguageSwitcher />
 
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center">
               <span className="text-black font-bold text-sm">K</span>
             </div>
-            <span className="font-bold text-xl text-white" style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}>
+            <span className="font-bold text-xl text-white" style={{ fontFamily }}>
               kart.krd
             </span>
           </div>
@@ -156,9 +69,9 @@ export default function HomePage() {
           <Link
             href="/editor"
             className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold px-5 py-2 rounded-lg text-sm hover:from-yellow-300 hover:to-amber-400 transition-all"
-            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+            style={{ fontFamily }}
           >
-            {currentContent.createButton}
+            {t('nav.createButton')}
           </Link>
         </div>
       </header>
@@ -174,42 +87,42 @@ export default function HomePage() {
         <div className="relative max-w-6xl mx-auto px-4 pt-24 pb-20 text-center">
           <div
             className="inline-block bg-purple-900/40 border border-purple-700/50 text-purple-300 text-sm px-4 py-2 rounded-full mb-8"
-            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+            style={{ fontFamily }}
           >
-            {currentContent.badge}
+            {t('landing.badge')}
           </div>
 
           <h1
             className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6"
-            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+            style={{ fontFamily }}
           >
-            {currentContent.heroTitle}
+            {t('landing.heroTitle')}
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">
-              {currentContent.heroSubtitle}
+              {t('landing.heroSubtitle')}
             </span>
           </h1>
 
           <p
             className="text-purple-200 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
-            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+            style={{ fontFamily }}
           >
-            {currentContent.heroDesc}
+            {t('landing.heroDesc')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/editor"
               className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold px-8 py-4 rounded-xl text-lg hover:from-yellow-300 hover:to-amber-400 transition-all shadow-lg shadow-amber-500/20 w-full sm:w-auto"
-              style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+              style={{ fontFamily }}
             >
-              {currentContent.ctaButton}
+              {t('landing.ctaButton')}
             </Link>
             <span
               className="text-purple-400 text-sm"
-              style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+              style={{ fontFamily }}
             >
-              {currentContent.ctaSubtext}
+              {t('landing.ctaSubtext')}
             </span>
           </div>
         </div>
@@ -219,15 +132,15 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-4 py-16">
         <h2
           className="text-2xl md:text-3xl font-bold text-center text-white mb-4"
-          style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+          style={{ fontFamily }}
         >
-          {currentContent.templatesTitle}
+          {t('landing.templatesTitle')}
         </h2>
         <p
           className="text-purple-300 text-center mb-12"
-          style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+          style={{ fontFamily }}
         >
-          {currentContent.templatesDesc}
+          {t('landing.templatesDesc')}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -299,11 +212,10 @@ export default function HomePage() {
                 <div className="text-center">
                   <span
                     className="text-white font-medium"
-                    style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+                    style={{ fontFamily }}
                   >
-                    {isKurdish ? tpl.name : tpl.nameEn}
+                    {t(tpl.nameKey)}
                   </span>
-                  {isKurdish && <span className="text-purple-400 text-sm mr-2">— {tpl.nameEn}</span>}
                 </div>
               </div>
             </Link>
@@ -314,7 +226,7 @@ export default function HomePage() {
       {/* Features */}
       <section className="max-w-6xl mx-auto px-4 py-16 border-t border-purple-900/30">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {currentContent.features.map((f, i) => (
+          {features.map((f, i) => (
             <div
               key={i}
               className="bg-purple-900/20 border border-purple-800/30 rounded-2xl p-6 text-center"
@@ -322,13 +234,13 @@ export default function HomePage() {
               <div className="text-4xl mb-4">{f.icon}</div>
               <h3
                 className="text-white font-bold text-xl mb-2"
-                style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+                style={{ fontFamily }}
               >
                 {f.title}
               </h3>
               <p
                 className="text-purple-300 text-sm leading-relaxed"
-                style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+                style={{ fontFamily }}
               >
                 {f.desc}
               </p>
@@ -342,30 +254,30 @@ export default function HomePage() {
         <div className="bg-gradient-to-r from-purple-900/60 to-indigo-900/60 border border-purple-700/40 rounded-3xl p-12">
           <h2
             className="text-3xl md:text-4xl font-extrabold text-white mb-4"
-            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+            style={{ fontFamily }}
           >
-            {currentContent.ctaBottomTitle}
+            {t('landing.ctaBottomTitle')}
           </h2>
           <p
             className="text-purple-200 mb-8"
-            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+            style={{ fontFamily }}
           >
-            {currentContent.ctaBottomDesc}
+            {t('landing.ctaBottomDesc')}
           </p>
           <Link
             href="/editor"
             className="inline-block bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold px-10 py-4 rounded-xl text-lg hover:from-yellow-300 hover:to-amber-400 transition-all shadow-xl shadow-amber-500/20"
-            style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+            style={{ fontFamily }}
           >
-            {currentContent.ctaBottomButton}
+            {t('landing.ctaBottomButton')}
           </Link>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-purple-900/30 py-8 text-center text-purple-500 text-sm">
-        <p style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}>
-          {currentContent.footerText}
+        <p style={{ fontFamily }}>
+          {t('landing.footerText')}
         </p>
       </footer>
     </div>

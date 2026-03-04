@@ -2,6 +2,8 @@
 
 import { CardData, CardLanguage } from '@/types/card';
 import type { FormErrors } from '@/app/editor/page';
+import { useLanguage } from '@/context/LanguageContext';
+import { getFontFamily } from '@/lib/i18n';
 
 interface Props {
   data: CardData;
@@ -19,20 +21,20 @@ const labelClass = 'block text-xs font-medium text-gray-600 mb-1';
 
 interface FieldProps {
   label: string;
-  labelEn: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   type?: string;
   dir?: string;
   error?: string;
+  fontFamily: string;
 }
 
-function Field({ label, labelEn, value, onChange, placeholder, type = 'text', dir, error }: FieldProps) {
+function Field({ label, value, onChange, placeholder, type = 'text', dir, error, fontFamily }: FieldProps) {
   return (
     <div>
-      <label className={labelClass} style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
-        {label} <span className="text-gray-400 font-normal">— {labelEn}</span>
+      <label className={labelClass} style={{ fontFamily }}>
+        {label}
       </label>
       <input
         type={type}
@@ -41,10 +43,10 @@ function Field({ label, labelEn, value, onChange, placeholder, type = 'text', di
         placeholder={placeholder || label}
         dir={dir}
         className={error ? inputErrorClass : inputClass}
-        style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+        style={{ fontFamily }}
       />
       {error && (
-        <p className="text-red-500 text-xs mt-1" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
+        <p className="text-red-500 text-xs mt-1" style={{ fontFamily }}>
           {error}
         </p>
       )}
@@ -52,25 +54,28 @@ function Field({ label, labelEn, value, onChange, placeholder, type = 'text', di
   );
 }
 
-const LANGUAGES: { value: CardLanguage; label: string; flag: string }[] = [
-  { value: 'ku', label: 'کوردی', flag: '🏔️' },
-  { value: 'ar', label: 'عەرەبی', flag: '🌙' },
-  { value: 'en', label: 'English', flag: '🌍' },
+const LANGUAGES: { value: CardLanguage; flag: string }[] = [
+  { value: 'ku', flag: '🏔️' },
+  { value: 'ar', flag: '🌙' },
+  { value: 'en', flag: '🌍' },
 ];
 
 export default function CardForm({ data, onChange, errors = {} }: Props) {
+  const { locale, dir, t } = useLanguage();
+  const fontFamily = getFontFamily(locale);
+
   const set = (key: keyof CardData) => (value: string) =>
     onChange({ ...data, [key]: value });
 
   return (
-    <div className="space-y-4" dir="rtl">
+    <div className="space-y-4" dir={dir}>
       {/* Language toggle */}
       <div>
         <label
           className={labelClass}
-          style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+          style={{ fontFamily }}
         >
-          زمانی کارت — Card Language
+          {t('form.cardLanguage')}
         </label>
         <div className="flex gap-2">
           {LANGUAGES.map((lang) => (
@@ -82,9 +87,9 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
                   ? 'bg-purple-600 text-white border-purple-600 shadow-md'
                   : 'bg-white text-gray-600 border-gray-200 hover:border-purple-300'
               }`}
-              style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+              style={{ fontFamily }}
             >
-              {lang.flag} {lang.label}
+              {lang.flag} {t(`cardLang.${lang.value}` as const)}
             </button>
           ))}
         </div>
@@ -96,32 +101,32 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
       <div className="space-y-3">
         <h3
           className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-          style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+          style={{ fontFamily }}
         >
-          زانیاری کەسی
+          {t('form.personalInfo')}
         </h3>
 
         <Field
-          label="ناوی تەواو"
-          labelEn="Full Name"
+          label={t('form.fullName')}
           value={data.name}
           onChange={set('name')}
-          placeholder="ناوی تەواو"
+          placeholder={t('form.namePlaceholder')}
           error={errors.name}
+          fontFamily={fontFamily}
         />
         <Field
-          label="پیشە"
-          labelEn="Job Title"
+          label={t('form.jobTitle')}
           value={data.title}
           onChange={set('title')}
-          placeholder="بەڕێوەبەر، دیزاینەر، ..."
+          placeholder={t('form.titlePlaceholder')}
+          fontFamily={fontFamily}
         />
         <Field
-          label="ناوی کۆمپانیا"
-          labelEn="Company"
+          label={t('form.company')}
           value={data.company}
           onChange={set('company')}
-          placeholder="ناوی کۆمپانیا (ئیختیاری)"
+          placeholder={t('form.companyPlaceholder')}
+          fontFamily={fontFamily}
         />
       </div>
 
@@ -131,45 +136,45 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
       <div className="space-y-3">
         <h3
           className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-          style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+          style={{ fontFamily }}
         >
-          زانیاری پەیوەندی
+          {t('form.contactInfo')}
         </h3>
 
         <Field
-          label="ژمارەی مۆبایل"
-          labelEn="Phone"
+          label={t('form.phone')}
           value={data.phone}
           onChange={set('phone')}
-          placeholder="+964 750 000 0000"
+          placeholder={t('form.phonePlaceholder')}
           type="tel"
           dir="ltr"
           error={errors.phone}
+          fontFamily={fontFamily}
         />
         <Field
-          label="ئیمەیل"
-          labelEn="Email"
+          label={t('form.email')}
           value={data.email}
           onChange={set('email')}
-          placeholder="name@example.com"
+          placeholder={t('form.emailPlaceholder')}
           type="email"
           dir="ltr"
           error={errors.email}
+          fontFamily={fontFamily}
         />
         <Field
-          label="وێبسایت"
-          labelEn="Website"
+          label={t('form.website')}
           value={data.website}
           onChange={set('website')}
-          placeholder="www.example.com"
+          placeholder={t('form.websitePlaceholder')}
           dir="ltr"
+          fontFamily={fontFamily}
         />
         <Field
-          label="ناونیشان"
-          labelEn="Address"
+          label={t('form.address')}
           value={data.address}
           onChange={set('address')}
-          placeholder="شار، کوی، ..."
+          placeholder={t('form.addressPlaceholder')}
+          fontFamily={fontFamily}
         />
       </div>
 
@@ -179,9 +184,9 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
       <div className="space-y-3">
         <h3
           className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-          style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+          style={{ fontFamily }}
         >
-          تایبەتمەندیەکانی نوێ
+          {t('form.newFeatures')}
         </h3>
 
         {/* QR Code checkbox */}
@@ -196,16 +201,16 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
           <label
             htmlFor="qr-enabled"
             className="text-sm text-gray-700 cursor-pointer"
-            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+            style={{ fontFamily }}
           >
-            QR کۆد — QR Code
+            {t('form.qrCode')}
           </label>
         </div>
 
         {/* Logo upload */}
         <div>
-          <label className={labelClass} style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
-            لۆگۆ — Upload Logo
+          <label className={labelClass} style={{ fontFamily }}>
+            {t('form.logo')}
           </label>
           <input
             type="file"
@@ -220,11 +225,11 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
                 };
                 reader.readAsDataURL(file);
               } else if (file) {
-                alert('پەڕگەکە گەورەترە لە 2MB. تکایە پەڕگەیەکی بچووکتر هەڵبژێرە.');
+                alert(t('form.fileTooLarge'));
               }
             }}
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all bg-white file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
-            style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+            style={{ fontFamily }}
           />
           {data.logoUrl && (
             <div className="mt-2 flex items-center gap-2">
@@ -232,9 +237,9 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
               <button
                 onClick={() => onChange({ ...data, logoUrl: '' })}
                 className="text-xs text-red-500 hover:text-red-700"
-                style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                style={{ fontFamily }}
               >
-                سڕینەوە
+                {t('form.removeLogo')}
               </button>
             </div>
           )}
@@ -247,42 +252,42 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
       <div className="space-y-3">
         <h3
           className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-          style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+          style={{ fontFamily }}
         >
-          میدیای کۆمەڵایەتی (ئیختیاری)
+          {t('form.socialMedia')}
         </h3>
 
         <Field
-          label="فەیسبووک"
-          labelEn="Facebook"
+          label={t('form.facebook')}
           value={data.facebook}
           onChange={set('facebook')}
           placeholder="facebook.com/username"
           dir="ltr"
+          fontFamily={fontFamily}
         />
         <Field
-          label="ئینستاگرام"
-          labelEn="Instagram"
+          label={t('form.instagram')}
           value={data.instagram}
           onChange={set('instagram')}
           placeholder="@username"
           dir="ltr"
+          fontFamily={fontFamily}
         />
         <Field
-          label="لینکدین"
-          labelEn="LinkedIn"
+          label={t('form.linkedin')}
           value={data.linkedin}
           onChange={set('linkedin')}
           placeholder="linkedin.com/in/username"
           dir="ltr"
+          fontFamily={fontFamily}
         />
         <Field
-          label="ئێکس / تویتەر"
-          labelEn="X / Twitter"
+          label={t('form.twitter')}
           value={data.twitter}
           onChange={set('twitter')}
           placeholder="@username"
           dir="ltr"
+          fontFamily={fontFamily}
         />
       </div>
     </div>

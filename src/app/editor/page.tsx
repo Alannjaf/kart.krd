@@ -7,7 +7,10 @@ import { CardData, TemplateId, defaultCardData, TEMPLATES } from '@/types/card';
 import CardForm from '@/components/CardForm';
 import CardPreview from '@/components/CardPreview';
 import TemplateSelector from '@/components/TemplateSelector';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { generatePdf } from '@/lib/generatePdf';
+import { useLanguage } from '@/context/LanguageContext';
+import { getFontFamily } from '@/lib/i18n';
 
 const STORAGE_KEY = 'kart-krd-card-data';
 
@@ -43,26 +46,10 @@ export interface FormErrors {
   phone?: string;
 }
 
-export function validateCardData(data: CardData): FormErrors {
-  const errors: FormErrors = {};
-
-  if (!data.name.trim()) {
-    errors.name = 'ناو پێویستە';
-  }
-
-  if (data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
-    errors.email = 'فۆرماتی ئیمەیل هەڵەیە';
-  }
-
-  if (data.phone.trim() && !/^[0-9+\-\s()]+$/.test(data.phone.trim())) {
-    errors.phone = 'تەنها ژمارە، +، - ڕێگەپێدراوە';
-  }
-
-  return errors;
-}
-
 function EditorContent() {
   const searchParams = useSearchParams();
+  const { locale, dir, t } = useLanguage();
+  const fontFamily = getFontFamily(locale);
   const urlTemplate = searchParams.get('template') as TemplateId;
 
   // Accept any valid template from URL
@@ -87,6 +74,20 @@ function EditorContent() {
   useEffect(() => {
     saveCardData(cardData);
   }, [cardData]);
+
+  const validateCardData = useCallback((data: CardData): FormErrors => {
+    const errors: FormErrors = {};
+    if (!data.name.trim()) {
+      errors.name = t('validation.nameRequired');
+    }
+    if (data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+      errors.email = t('validation.emailInvalid');
+    }
+    if (data.phone.trim() && !/^[0-9+\-\s()]+$/.test(data.phone.trim())) {
+      errors.phone = t('validation.phoneInvalid');
+    }
+    return errors;
+  }, [t]);
 
   const handleClear = useCallback(() => {
     const cleared = { ...defaultCardData, template: cardData.template };
@@ -115,11 +116,11 @@ function EditorContent() {
       setTimeout(() => setPdfSuccess(false), 3000);
     } catch (err) {
       console.error('PDF generation failed:', err);
-      alert('PDF دروستکردن سەرکەوتوو نەبوو. تکایە دووبارە هەوڵبدەرەوە.');
+      alert(t('editor.pdfError'));
     } finally {
       setIsGenerating(false);
     }
-  }, [cardData]);
+  }, [cardData, validateCardData, t]);
 
   const handleCardChange = useCallback((newData: CardData) => {
     setCardData(newData);
@@ -136,7 +137,7 @@ function EditorContent() {
   }, [formErrors]);
 
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
+    <div className="min-h-screen bg-gray-50" dir={dir}>
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -144,17 +145,18 @@ function EditorContent() {
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center">
               <span className="text-black font-bold text-xs">K</span>
             </div>
-            <span className="font-bold text-gray-900" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
+            <span className="font-bold text-gray-900" style={{ fontFamily }}>
               kart.krd
             </span>
           </Link>
 
           <div className="flex items-center gap-3">
+            <LanguageSwitcher className="!bg-gray-100 !border-gray-200" />
             <span
               className="text-sm text-gray-500 hidden sm:block"
-              style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+              style={{ fontFamily }}
             >
-              ئامێری دروستکردنی کارت
+              {t('nav.cardMaker')}
             </span>
             <button
               onClick={handleDownloadPdf}
@@ -166,14 +168,14 @@ function EditorContent() {
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black hover:from-yellow-300 hover:to-amber-400 shadow-amber-200'
               }`}
-              style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+              style={{ fontFamily }}
             >
               {pdfSuccess ? (
-                <>✓ دابەزیندرا</>
+                <>{t('editor.downloaded')}</>
               ) : isGenerating ? (
-                <>⏳ چاوەڕێبکە...</>
+                <>{t('editor.downloading')}</>
               ) : (
-                <>⬇ PDF دابەزێنە</>
+                <>{t('editor.downloadPdf')}</>
               )}
             </button>
           </div>
@@ -189,16 +191,16 @@ function EditorContent() {
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
                 <h2
                   className="text-base font-bold text-gray-800"
-                  style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                  style={{ fontFamily }}
                 >
-                  زانیاریەکانت داخڵ بکە
+                  {t('editor.enterInfo')}
                 </h2>
                 <button
                   onClick={handleClear}
                   className="text-xs text-red-500 hover:text-red-700 border border-red-200 hover:border-red-300 px-2 py-1 rounded-lg transition-all"
-                  style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                  style={{ fontFamily }}
                 >
-                  پاککردنەوە
+                  {t('editor.clear')}
                 </button>
               </div>
               <CardForm data={cardData} onChange={handleCardChange} errors={formErrors} />
@@ -212,9 +214,9 @@ function EditorContent() {
               <div className="flex items-center justify-between mb-4">
                 <h2
                   className="text-base font-bold text-gray-800"
-                  style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                  style={{ fontFamily }}
                 >
-                  پێشبینی زیندوو
+                  {t('editor.livePreview')}
                 </h2>
                 <div className="flex items-center gap-3">
                   {/* Front/Back toggle */}
@@ -226,9 +228,9 @@ function EditorContent() {
                           ? 'bg-white text-gray-900 shadow-sm'
                           : 'text-gray-500 hover:text-gray-700'
                       }`}
-                      style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                      style={{ fontFamily }}
                     >
-                      پێشەوە
+                      {t('editor.front')}
                     </button>
                     <button
                       onClick={() => setShowBack(true)}
@@ -237,14 +239,14 @@ function EditorContent() {
                           ? 'bg-white text-gray-900 shadow-sm'
                           : 'text-gray-500 hover:text-gray-700'
                       }`}
-                      style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                      style={{ fontFamily }}
                     >
-                      پشتەوە
+                      {t('editor.back')}
                     </button>
                   </div>
                   <span
                     className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full"
-                    style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                    style={{ fontFamily }}
                   >
                     3.5&quot; × 2&quot;
                   </span>
@@ -268,18 +270,18 @@ function EditorContent() {
                       ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-purple-700 to-purple-900 text-white hover:from-purple-600 hover:to-purple-800 shadow-purple-200'
                   }`}
-                  style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                  style={{ fontFamily }}
                 >
-                  {pdfSuccess ? '✓ PDF دابەزیندرا' : isGenerating ? 'چاوەڕێبکە...' : '⬇ PDF دابەزێنە — بەخۆڕایی'}
+                  {pdfSuccess ? t('editor.downloaded') : isGenerating ? t('editor.wait') : t('editor.downloadPdfFree')}
                 </button>
               </div>
 
               {/* Watermark note */}
               <p
                 className="text-center text-xs text-gray-400 mt-3"
-                style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                style={{ fontFamily }}
               >
-                تێبینی: "kart.krd" بە وتەی بچووک لە خوارەوە زیاد دەکرێت
+                {t('editor.watermarkNote')}
               </p>
             </div>
 
@@ -287,7 +289,7 @@ function EditorContent() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <TemplateSelector
                 selected={cardData.template}
-                onChange={(t) => setCardData({ ...cardData, template: t })}
+                onChange={(tpl) => setCardData({ ...cardData, template: tpl })}
                 cardData={cardData}
               />
             </div>
@@ -299,6 +301,8 @@ function EditorContent() {
 }
 
 export default function EditorPage() {
+  const { t } = useLanguage();
+
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -306,7 +310,7 @@ export default function EditorPage() {
           className="text-gray-500"
           style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
         >
-          چاوەڕێبکە...
+          {t('editor.loading')}
         </div>
       </div>
     }>
