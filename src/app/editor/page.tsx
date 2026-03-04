@@ -4,8 +4,8 @@ import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { UserButton } from "@neondatabase/auth/react";
-import { authClient } from "@/lib/auth/client";
 import { useAuthResync } from "@/lib/auth/useAuthResync";
+import { useAuthSessionState } from "@/lib/auth/useAuthSessionState";
 import { CardData, TemplateId, defaultCardData, TEMPLATES } from "@/types/card";
 import CardForm from "@/components/CardForm";
 import CardPreview from "@/components/CardPreview";
@@ -226,13 +226,11 @@ function MyCardsModal({
 
 function EditorContent() {
   useAuthResync();
+  const { isSignedIn } = useAuthSessionState();
   const searchParams = useSearchParams();
   const urlTemplate = searchParams.get("template") as TemplateId;
   const validTemplate = TEMPLATES.find((t) => t.id === urlTemplate);
   const initialTemplate = validTemplate ? urlTemplate : "modern";
-
-  const { data: sessionData } = authClient.useSession();
-  const isSignedIn = !!sessionData?.user?.id;
 
   const [cardData, setCardData] = useState<CardData>(() => {
     const stored = loadCardData();
@@ -498,7 +496,7 @@ function EditorContent() {
                 className="text-center text-xs text-gray-400 mt-3"
                 style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
               >
-                تێبینی: "kart.krd" بە وتەی بچووک لە خوارەوە زیاد دەکرێت
+                تێبینی: &quot;kart.krd&quot; بە وتەی بچووک لە خوارەوە زیاد دەکرێت
               </p>
             </div>
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { UserButton } from "@neondatabase/auth/react";
 import { useAuthResync } from "@/lib/auth/useAuthResync";
+import { useAuthSessionState } from "@/lib/auth/useAuthSessionState";
 
 const templatePreviews = [
   {
@@ -42,6 +43,7 @@ const templatePreviews = [
 
 export default function HomePage() {
   useAuthResync();
+  const { isSignedIn } = useAuthSessionState();
   const [language, setLanguage] = useState<'ku' | 'en'>('ku');
   const isKurdish = language === 'ku';
 
@@ -164,7 +166,17 @@ export default function HomePage() {
             >
               {currentContent.createButton}
             </Link>
-            <UserButton />
+            {isSignedIn ? (
+              <UserButton />
+            ) : (
+              <Link
+                href="/auth/sign-in"
+                className="border border-purple-600/70 text-purple-200 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-purple-900/40 transition-all"
+                style={{ fontFamily: isKurdish ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif" }}
+              >
+                {isKurdish ? "چوونەژوورەوە" : "Sign in"}
+              </Link>
+            )}
           </div>
         </div>
       </header>
