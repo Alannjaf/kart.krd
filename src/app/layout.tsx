@@ -1,7 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { NeonAuthProviderWrapper } from "@/components/NeonAuthProviderWrapper";
+import { UserMenu } from "@/components/UserMenu";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ku" dir="rtl">
+    <html lang="ku" dir="rtl" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -45,7 +47,25 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+        <NeonAuthProviderWrapper>
+          <AuthProvider>
+            <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 bg-purple-950/80 backdrop-blur-md border-b border-purple-800/40">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-md">
+                  <span className="text-black font-bold text-sm">K</span>
+                </div>
+                <span
+                  className="text-white font-bold text-lg hidden sm:block"
+                  style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}
+                >
+                  kart.krd
+                </span>
+              </div>
+              <UserMenu />
+            </header>
+            <div className="pt-14">{children}</div>
+          </AuthProvider>
+        </NeonAuthProviderWrapper>
       </body>
     </html>
   );

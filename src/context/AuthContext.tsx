@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { authClient } from '@/lib/auth';
+import { authClient } from '@/lib/auth/client';
 
 interface User {
   id: string;
@@ -25,17 +25,17 @@ export function useAuth() {
   return ctx;
 }
 
-// Inner component that uses the hook (must be inside the context of the auth client)
 function AuthProviderInner({ children }: { children: ReactNode }) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const sessionHook = (authClient as any).useSession?.();
-  const user: User | null = sessionHook?.data?.user ?? null;
-  const isPending: boolean = sessionHook?.isPending ?? false;
+  const { data: session, isPending } = authClient.useSession();
+  const rawUser = session?.user;
+  const user: User | null = rawUser
+    ? { id: rawUser.id, email: rawUser.email, name: rawUser.name ?? undefined }
+    : null;
 
   async function signIn(email: string, password: string): Promise<{ error?: string }> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (authClient as any).signIn.email({ email, password });
+      const result = await authClient.signIn.email({ email, password });
+      if (result.error) return { error: result.error.message ?? 'هەڵەیەک ڕوویدا' };
       return {};
     } catch (e: unknown) {
       return { error: e instanceof Error ? e.message : 'هەڵەیەک ڕوویدا' };
@@ -44,8 +44,8 @@ function AuthProviderInner({ children }: { children: ReactNode }) {
 
   async function signUp(email: string, password: string, name?: string): Promise<{ error?: string }> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (authClient as any).signUp.email({ email, password, name });
+      const result = await authClient.signUp.email({ email, password, name: name ?? '' });
+      if (result.error) return { error: result.error.message ?? 'هەڵەیەک ڕوویدا' };
       return {};
     } catch (e: unknown) {
       return { error: e instanceof Error ? e.message : 'هەڵەیەک ڕوویدا' };
