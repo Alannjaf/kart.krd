@@ -22,7 +22,7 @@ jobs:
         env:
           NEON_AUTH_BASE_URL: ${{ secrets.NEON_AUTH_BASE_URL }}
           NEON_AUTH_COOKIE_SECRET: ${{ secrets.NEON_AUTH_COOKIE_SECRET }}
-          NEXT_PUBLIC_NEON_AUTH_URL: /api/auth
+          NEXT_PUBLIC_NEON_AUTH_URL: https://kart-krd.pages.dev/api/auth
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
@@ -30,3 +30,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+
