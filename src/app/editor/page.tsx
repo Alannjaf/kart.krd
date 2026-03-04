@@ -1,10 +1,11 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { UserButton } from "@neondatabase/auth/react";
 import { authClient } from "@/lib/auth/client";
+import { useAuthResync } from "@/lib/auth/useAuthResync";
 import { CardData, TemplateId, defaultCardData, TEMPLATES } from "@/types/card";
 import CardForm from "@/components/CardForm";
 import CardPreview from "@/components/CardPreview";
@@ -224,6 +225,7 @@ function MyCardsModal({
 }
 
 function EditorContent() {
+  useAuthResync();
   const searchParams = useSearchParams();
   const urlTemplate = searchParams.get("template") as TemplateId;
   const validTemplate = TEMPLATES.find((t) => t.id === urlTemplate);

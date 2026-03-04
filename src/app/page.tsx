@@ -1,8 +1,9 @@
-﻿'use client';
+'use client';
 
 import Link from "next/link";
 import React, { useState } from "react";
 import { UserButton } from "@neondatabase/auth/react";
+import { useAuthResync } from "@/lib/auth/useAuthResync";
 
 const templatePreviews = [
   {
@@ -40,6 +41,7 @@ const templatePreviews = [
 ];
 
 export default function HomePage() {
+  useAuthResync();
   const [language, setLanguage] = useState<'ku' | 'en'>('ku');
   const isKurdish = language === 'ku';
 
