@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 
@@ -31,9 +32,19 @@ export function UserMenu() {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 px-3 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 transition-colors border border-purple-100"
       >
-        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-xs font-bold">
-          {user.email[0].toUpperCase()}
-        </div>
+        {user.image ? (
+          <Image
+            src={user.image}
+            alt={user.name || user.email}
+            width={28}
+            height={28}
+            className="w-7 h-7 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-xs font-bold">
+            {user.email[0].toUpperCase()}
+          </div>
+        )}
         <span
           className="text-sm text-gray-700 hidden sm:block max-w-[120px] truncate"
           style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { createContext, useContext, ReactNode } from 'react';
 import { authClient } from '@/lib/auth/client';
@@ -7,6 +7,7 @@ interface User {
   id: string;
   email: string;
   name?: string;
+  image?: string;
 }
 
 interface AuthContextValue {
@@ -29,7 +30,12 @@ function AuthProviderInner({ children }: { children: ReactNode }) {
   const { data: session, isPending } = authClient.useSession();
   const rawUser = session?.user;
   const user: User | null = rawUser
-    ? { id: rawUser.id, email: rawUser.email, name: rawUser.name ?? undefined }
+    ? {
+        id: rawUser.id,
+        email: rawUser.email,
+        name: rawUser.name ?? undefined,
+        image: (rawUser as { image?: string }).image ?? undefined,
+      }
     : null;
 
   async function signIn(email: string, password: string): Promise<{ error?: string }> {
