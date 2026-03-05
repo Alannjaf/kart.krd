@@ -42,7 +42,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0D9488" />
       </head>
       <body className="antialiased">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-white focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:text-[var(--color-accent)]">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-[var(--color-panel)] focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:text-[var(--color-accent)]">
           Skip to content
         </a>
         <LanguageProvider>{children}</LanguageProvider>

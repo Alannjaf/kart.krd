@@ -202,7 +202,7 @@ function EditorContent() {
         </div>
       )}
       {/* Header */}
-      <header className="bg-white border-b border-[var(--color-border)] sticky top-0 z-50">
+      <header className="bg-[var(--color-panel)] border-b border-[var(--color-border)] sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="w-2 h-2 rounded-full bg-[var(--color-accent)]" />
@@ -227,7 +227,7 @@ function EditorContent() {
           <div className="flex gap-6">
             {/* Left: Form */}
             <div className="w-[380px] flex-shrink-0">
-              <div className="bg-white rounded-md border border-[var(--color-border)] p-5 sticky top-20 max-h-[calc(100vh-100px)] overflow-y-auto">
+              <div className="bg-[var(--color-panel)] rounded-md border border-[var(--color-border)] p-5 sticky top-20 max-h-[calc(100vh-100px)] overflow-y-auto">
                 <div className="flex items-center justify-between mb-4 pb-3 border-b border-[var(--color-border)]">
                   <h2 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
                     {t('editor.enterInfo')}
@@ -246,7 +246,7 @@ function EditorContent() {
 
             {/* Right: Preview + Templates */}
             <div className="flex-1 min-w-0">
-              <div className="bg-white rounded-md border border-[var(--color-border)] p-6 mb-5">
+              <div className="bg-[var(--color-panel)] rounded-md border border-[var(--color-border)] p-6 mb-5">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
                     {t('editor.livePreview')}
@@ -268,7 +268,7 @@ function EditorContent() {
                 </p>
               </div>
 
-              <div className="bg-white rounded-md border border-[var(--color-border)] p-5">
+              <div className="bg-[var(--color-panel)] rounded-md border border-[var(--color-border)] p-5">
                 <TemplateSelector
                   selected={cardData.template}
                   onChange={(tpl) => setCardData({ ...cardData, template: tpl })}
@@ -291,7 +291,7 @@ function EditorContent() {
             cardData={cardData}
             layout="scroll"
           />
-          <div className="bg-white rounded-md border border-[var(--color-border)] p-4">
+          <div className="bg-[var(--color-panel)] rounded-md border border-[var(--color-border)] p-4">
             <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--color-border)]">
               <h2 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
                 {t('editor.enterInfo')}
@@ -329,7 +329,7 @@ function EditorContent() {
         </div>
 
         {/* Bottom tab bar */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[var(--color-border)] z-50 flex" role="tablist">
+        <div className="fixed bottom-0 left-0 right-0 bg-[var(--color-panel)] border-t border-[var(--color-border)] z-50 flex" role="tablist">
           <button
             role="tab"
             aria-selected={activeTab === 'edit'}

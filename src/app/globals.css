@@ -11,6 +11,21 @@
   --color-surface: #F5F5F4;
   --color-border: #E7E5E4;
   --color-error: #DC2626;
+  --color-panel: #FFFFFF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1C1917;
+    --color-text: #FAFAF8;
+    --color-text-secondary: #A8A29E;
+    --color-accent: #14B8A6;
+    --color-accent-hover: #2DD4BF;
+    --color-surface: #292524;
+    --color-border: #44403C;
+    --color-error: #EF4444;
+    --color-panel: #1C1917;
+  }
 }
 
 body {

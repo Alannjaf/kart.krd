@@ -98,7 +98,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[var(--color-bg)]" dir={dir}>
       {/* Header */}
-      <header className="border-b border-[var(--color-border)] bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-[var(--color-border)] bg-[var(--color-panel)]/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-[var(--color-accent)]" />
