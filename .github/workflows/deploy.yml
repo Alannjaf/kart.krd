@@ -4,6 +4,13 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,8 +24,11 @@ jobs:
 
       - run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
       - name: Build with OpenNext
-        run: npx opennextjs-cloudflare build
+        run: npm run build:worker
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
