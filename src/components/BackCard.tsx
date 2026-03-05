@@ -175,14 +175,14 @@ export default function BackCard({ data, template }: Props) {
         {/* Logo */}
         {data.logoUrl && (
           <div style={{ marginBottom: '8px' }}>
-            <img src={data.logoUrl} alt="Logo" style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
+            <img src={data.logoUrl} alt={t('alt.logo')} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
           </div>
         )}
 
         {/* QR Code */}
         {data.qrEnabled && qrCode && (
           <div style={{ marginBottom: '8px' }}>
-            <img src={qrCode} alt="QR Code" style={{ width: '88px', height: '88px', backgroundColor: 'white', padding: '6px', borderRadius: '4px' }} />
+            <img src={qrCode} alt={t('alt.qrCode')} style={{ width: '88px', height: '88px', backgroundColor: 'white', padding: '6px', borderRadius: '4px' }} />
           </div>
         )}
 
@@ -212,14 +212,14 @@ export default function BackCard({ data, template }: Props) {
         {/* Logo */}
         {data.logoUrl && (
           <div style={{ marginBottom: '8px', position: 'relative', zIndex: 1 }}>
-            <img src={data.logoUrl} alt="Logo" style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
+            <img src={data.logoUrl} alt={t('alt.logo')} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
           </div>
         )}
 
         {/* QR Code */}
         {data.qrEnabled && qrCode && (
           <div style={{ marginBottom: '8px', position: 'relative', zIndex: 1 }}>
-            <img src={qrCode} alt="QR Code" style={{ width: '88px', height: '88px', backgroundColor: 'white', padding: '6px', borderRadius: '4px' }} />
+            <img src={qrCode} alt={t('alt.qrCode')} style={{ width: '88px', height: '88px', backgroundColor: 'white', padding: '6px', borderRadius: '4px' }} />
           </div>
         )}
 
@@ -243,14 +243,14 @@ export default function BackCard({ data, template }: Props) {
         {/* Logo */}
         {data.logoUrl && (
           <div style={{ marginBottom: '8px' }}>
-            <img src={data.logoUrl} alt="Logo" style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
+            <img src={data.logoUrl} alt={t('alt.logo')} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
           </div>
         )}
 
         {/* QR Code */}
         {data.qrEnabled && qrCode && (
           <div style={{ marginBottom: '8px' }}>
-            <img src={qrCode} alt="QR Code" style={{ width: '88px', height: '88px', backgroundColor: 'white', padding: '6px', borderRadius: '4px' }} />
+            <img src={qrCode} alt={t('alt.qrCode')} style={{ width: '88px', height: '88px', backgroundColor: 'white', padding: '6px', borderRadius: '4px' }} />
           </div>
         )}
 
@@ -277,14 +277,14 @@ export default function BackCard({ data, template }: Props) {
         {/* Logo */}
         {data.logoUrl && (
           <div style={{ marginBottom: '8px' }}>
-            <img src={data.logoUrl} alt="Logo" style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
+            <img src={data.logoUrl} alt={t('alt.logo')} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
           </div>
         )}
 
         {/* QR Code */}
         {data.qrEnabled && qrCode && (
           <div style={{ marginBottom: '8px' }}>
-            <img src={qrCode} alt="QR Code" style={{ width: '88px', height: '88px', backgroundColor: 'white', padding: '6px', borderRadius: '4px' }} />
+            <img src={qrCode} alt={t('alt.qrCode')} style={{ width: '88px', height: '88px', backgroundColor: 'white', padding: '6px', borderRadius: '4px' }} />
           </div>
         )}
 
@@ -312,7 +312,7 @@ export default function BackCard({ data, template }: Props) {
         <div style={{ marginBottom: '8px' }}>
           <img
             src={data.logoUrl}
-            alt="Logo"
+            alt={t('alt.logo')}
             style={{ width: '64px', height: '64px', objectFit: 'contain' }}
           />
         </div>
@@ -323,7 +323,7 @@ export default function BackCard({ data, template }: Props) {
         <div style={{ marginBottom: '8px' }}>
           <img
             src={qrCode}
-            alt="QR Code"
+            alt={t('alt.qrCode')}
             style={{ width: '88px', height: '88px', borderRadius: '4px' }}
           />
         </div>
