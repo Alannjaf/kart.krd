@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { CardData, CardLanguage } from '@/types/card';
 import type { FormErrors } from '@/app/editor/page';
 import { useLanguage } from '@/context/LanguageContext';
@@ -24,15 +24,18 @@ interface FieldProps {
 }
 
 function Field({ label, value, onChange, placeholder, type = 'text', dir, error, fontFamily }: FieldProps) {
+  const id = useId();
   return (
     <div>
       <label
+        htmlFor={id}
         className="block text-sm font-medium text-[var(--color-text-secondary)] mb-1"
         style={{ fontFamily }}
       >
         {label}
       </label>
       <input
+        id={id}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
