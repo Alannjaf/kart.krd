@@ -85,21 +85,21 @@ export default function MinimalCard({ data }: Props) {
             </div>
           )}
           {data.email && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-400">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
               <EmailIcon />
-              <span style={{ whiteSpace: 'nowrap', fontWeight: 300 }} dir="ltr">{data.email}</span>
+              <span style={{ whiteSpace: 'nowrap', fontWeight: 400 }} dir="ltr">{data.email}</span>
             </div>
           )}
           {data.website && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-400">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
               <WebIcon />
-              <span style={{ whiteSpace: 'nowrap', fontWeight: 300 }} dir="ltr">{data.website}</span>
+              <span style={{ whiteSpace: 'nowrap', fontWeight: 400 }} dir="ltr">{data.website}</span>
             </div>
           )}
           {data.address && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-400">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
               <LocationIcon />
-              <span style={{ whiteSpace: 'nowrap', fontWeight: 300, unicodeBidi: 'plaintext' as React.CSSProperties['unicodeBidi'] }}>{data.address}</span>
+              <span style={{ whiteSpace: 'nowrap', fontWeight: 400, unicodeBidi: 'plaintext' as React.CSSProperties['unicodeBidi'] }}>{data.address}</span>
             </div>
           )}
 
