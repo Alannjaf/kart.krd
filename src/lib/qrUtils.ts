@@ -1,20 +1,25 @@
 import QRCode from 'qrcode';
 import { CardData } from '@/types/card';
 
+function escapeVCard(value: string): string {
+  return value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,');
+}
+
 export async function generateVCardQR(data: CardData): Promise<string> {
   // Build vCard format
   const vcard = [
     'BEGIN:VCARD',
     'VERSION:3.0',
-    data.name ? `FN:${data.name}` : '',
-    data.title ? `TITLE:${data.title}` : '',
-    data.company ? `ORG:${data.company}` : '',
+    data.name ? `FN:${escapeVCard(data.name)}` : '',
+    data.name ? `N:;${escapeVCard(data.name)};;;` : '',
+    data.title ? `TITLE:${escapeVCard(data.title)}` : '',
+    data.company ? `ORG:${escapeVCard(data.company)}` : '',
     data.phone ? `TEL:${data.phone}` : '',
     data.email ? `EMAIL:${data.email}` : '',
     data.website ? `URL:${data.website}` : '',
-    data.address ? `ADR:;;${data.address};;;;` : '',
+    data.address ? `ADR:;;${escapeVCard(data.address)};;;;` : '',
     'END:VCARD'
-  ].filter(Boolean).join('\n');
+  ].filter(Boolean).join('\r\n');
 
   try {
     return await QRCode.toDataURL(vcard, {
