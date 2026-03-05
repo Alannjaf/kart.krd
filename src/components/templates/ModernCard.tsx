@@ -43,12 +43,12 @@ export default function ModernCard({ data }: Props) {
         <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
         {/* Top: Name & title */}
         <div>
-          <h1
+          <div
             className="text-white font-bold leading-tight"
             style={{ fontSize: '20px', marginBottom: '3px' }}
           >
             {data.name || 'ناوی تەواو'}
-          </h1>
+          </div>
           <p
             className="text-yellow-400 font-medium"
             style={{ fontSize: '13px' }}

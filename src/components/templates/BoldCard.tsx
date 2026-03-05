@@ -54,12 +54,12 @@ export default function BoldCard({ data }: Props) {
         <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
         {/* Name & title — large and prominent */}
         <div>
-          <h1
+          <div
             className="text-white font-extrabold leading-none tracking-tight"
             style={{ fontSize: '26px', marginBottom: '6px' }}
           >
             {data.name || 'ناوی تەواو'}
-          </h1>
+          </div>
           <div className="flex items-center gap-2">
             <div className="h-0.5 w-6 bg-yellow-400" />
             <p

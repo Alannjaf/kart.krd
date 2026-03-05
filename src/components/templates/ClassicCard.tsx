@@ -55,12 +55,12 @@ export default function ClassicCard({ data }: Props) {
         <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
         {/* Top: Name section */}
         <div className="text-center pt-3">
-          <h1
+          <div
             className="text-gray-900 font-bold leading-tight"
             style={{ fontSize: '22px', fontFamily: isRTL ? "'Noto Sans Arabic', serif" : "Georgia, serif", marginBottom: '4px' }}
           >
             {data.name || 'ناوی تەواو'}
-          </h1>
+          </div>
           <div className="flex items-center justify-center gap-3 my-1">
             <div className="h-px bg-amber-600/50 flex-1" />
             <p

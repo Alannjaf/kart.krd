@@ -51,12 +51,12 @@ export default function MinimalCard({ data }: Props) {
         <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
         {/* Top: Name & title */}
         <div>
-          <h1
+          <div
             className="text-gray-900 font-light tracking-wide leading-tight"
             style={{ fontSize: '22px', marginBottom: '4px' }}
           >
             {data.name || 'ناوی تەواو'}
-          </h1>
+          </div>
           <p
             className="text-gray-500 font-light"
             style={{ fontSize: '12px' }}
