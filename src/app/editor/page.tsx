@@ -30,12 +30,15 @@ function loadCardData(): CardData | null {
   }
 }
 
-function saveCardData(data: CardData) {
+function saveCardData(data: CardData): boolean {
   try {
     const { logoUrl, ...rest } = data;
     void logoUrl;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(rest));
-  } catch {}
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export interface FormErrors {
@@ -65,12 +68,15 @@ function EditorContent() {
   const [pdfError, setPdfError] = useState(false);
   const [showBack, setShowBack] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [saveError, setSaveError] = useState(false);
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    saveCardData(cardData);
-  }, [cardData]);
+    const ok = saveCardData(cardData);
+    if (!ok && !saveError) setSaveError(true);
+    else if (ok && saveError) setSaveError(false);
+  }, [cardData, saveError]);
 
   const validateCardData = useCallback((data: CardData): FormErrors => {
     const errors: FormErrors = {};
@@ -144,6 +150,12 @@ function EditorContent() {
       {pdfError && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-red-600 text-white px-4 py-2 rounded-md shadow-lg text-sm font-medium" role="alert">
           {t('editor.pdfError')}
+        </div>
+      )}
+      {/* Save Error Banner */}
+      {saveError && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-xs text-amber-800" role="alert">
+          {locale === 'en' ? 'Unable to save — storage may be full or unavailable' : locale === 'ar' ? 'تعذر الحفظ — قد يكون التخزين ممتلئًا' : 'پاشەکەوتکردن سەرنەکەوت — بیرگە پڕ بووە'}
         </div>
       )}
       {/* Header */}
