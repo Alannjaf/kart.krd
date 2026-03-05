@@ -100,7 +100,7 @@ export default function BoldCard({ data }: Props) {
             </div>
           )}
           {data.address && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-500">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-400">
               <LocationIcon />
               <span style={{ whiteSpace: 'nowrap', unicodeBidi: 'plaintext' as React.CSSProperties['unicodeBidi'] }}>{data.address}</span>
             </div>
