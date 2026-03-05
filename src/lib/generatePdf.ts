@@ -35,7 +35,7 @@ export async function generatePdf(
     });
 
     // Add front page
-    pdf.addImage(frontDataUrl, 'PNG', 0, 0, CARD_WIDTH_IN, CARD_HEIGHT_IN, undefined, 'FAST');
+    pdf.addImage(frontDataUrl, 'PNG', 0, 0, CARD_WIDTH_IN, CARD_HEIGHT_IN, undefined, 'MEDIUM');
 
     // Watermark for front
     pdf.setFontSize(6);
@@ -64,13 +64,19 @@ export async function generatePdf(
 
       // Add new page for back
       pdf.addPage();
-      pdf.addImage(backDataUrl, 'PNG', 0, 0, CARD_WIDTH_IN, CARD_HEIGHT_IN, undefined, 'FAST');
+      pdf.addImage(backDataUrl, 'PNG', 0, 0, CARD_WIDTH_IN, CARD_HEIGHT_IN, undefined, 'MEDIUM');
 
       // Watermark for back
       pdf.setFontSize(6);
       pdf.setTextColor(180, 180, 180);
       pdf.text('kart.krd', CARD_WIDTH_IN - 0.05, CARD_HEIGHT_IN - 0.05, { align: 'right' });
     }
+
+    pdf.setProperties({
+      title: cardData.name || 'Business Card',
+      creator: 'kart.krd',
+      subject: 'Business Card',
+    });
 
     const safeName = cardData.name
       ? cardData.name.replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g, '').trim().replace(/\s+/g, '-')
