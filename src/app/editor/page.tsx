@@ -145,7 +145,11 @@ function EditorContent() {
     try {
       const showBackCallback = async (showBackView: boolean) => {
         setShowBack(showBackView);
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise<void>(resolve => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => resolve());
+          });
+        });
       };
       await generatePdf(cardRef.current, cardData, showBackCallback);
       setPdfSuccess(true);

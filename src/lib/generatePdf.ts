@@ -47,8 +47,13 @@ export async function generatePdf(
       // Switch to back view
       await showBackCallback(true);
 
-      // Wait a bit for the component to re-render
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Wait for React re-render and fonts to be ready
+      await new Promise<void>(resolve => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => resolve());
+        });
+      });
+      await document.fonts.ready;
 
       // Capture back side
       const backDataUrl = await toPng(element, {
