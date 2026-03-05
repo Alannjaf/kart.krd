@@ -10,7 +10,7 @@ import TemplateSelector from '@/components/TemplateSelector';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { generatePdf } from '@/lib/generatePdf';
 import { useLanguage } from '@/context/LanguageContext';
-import { getFontFamily } from '@/lib/i18n';
+import { getFontFamily, TranslationKey } from '@/lib/i18n';
 
 const STORAGE_KEY = 'kart-krd-card-data';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -45,6 +45,44 @@ export interface FormErrors {
   name?: string;
   email?: string;
   phone?: string;
+}
+
+function CardSideToggle({ showBack, onToggle, fontFamily, t }: {
+  showBack: boolean;
+  onToggle: (back: boolean) => void;
+  fontFamily: string;
+  t: (key: TranslationKey) => string;
+}) {
+  return (
+    <div
+      className="flex bg-[var(--color-surface)] rounded-md p-0.5 border border-[var(--color-border)]"
+      role="radiogroup"
+      aria-label={t('editor.cardSide')}
+    >
+      <button
+        role="radio"
+        aria-checked={!showBack}
+        onClick={() => onToggle(false)}
+        className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+          !showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
+        }`}
+        style={{ fontFamily }}
+      >
+        {t('editor.front')}
+      </button>
+      <button
+        role="radio"
+        aria-checked={showBack}
+        onClick={() => onToggle(true)}
+        className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+          showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
+        }`}
+        style={{ fontFamily }}
+      >
+        {t('editor.back')}
+      </button>
+    </div>
+  );
 }
 
 function EditorContent() {
@@ -210,26 +248,7 @@ function EditorContent() {
                     {t('editor.livePreview')}
                   </h2>
                   <div className="flex items-center gap-3">
-                    <div className="flex bg-[var(--color-surface)] rounded-md p-0.5 border border-[var(--color-border)]">
-                      <button
-                        onClick={() => setShowBack(false)}
-                        className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
-                          !showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
-                        }`}
-                        style={{ fontFamily }}
-                      >
-                        {t('editor.front')}
-                      </button>
-                      <button
-                        onClick={() => setShowBack(true)}
-                        className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
-                          showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
-                        }`}
-                        style={{ fontFamily }}
-                      >
-                        {t('editor.back')}
-                      </button>
-                    </div>
+                    <CardSideToggle showBack={showBack} onToggle={setShowBack} fontFamily={fontFamily} t={t} />
                     <span className="text-xs text-[var(--color-text-secondary)]" style={{ fontFamily }}>
                       3.5&quot; × 2&quot;
                     </span>
@@ -288,26 +307,7 @@ function EditorContent() {
         ) : (
           <div className="px-4 py-4 space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex bg-[var(--color-surface)] rounded-md p-0.5 border border-[var(--color-border)]">
-                <button
-                  onClick={() => setShowBack(false)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
-                    !showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
-                  }`}
-                  style={{ fontFamily }}
-                >
-                  {t('editor.front')}
-                </button>
-                <button
-                  onClick={() => setShowBack(true)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
-                    showBack ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-text-secondary)]'
-                  }`}
-                  style={{ fontFamily }}
-                >
-                  {t('editor.back')}
-                </button>
-              </div>
+              <CardSideToggle showBack={showBack} onToggle={setShowBack} fontFamily={fontFamily} t={t} />
               <span className="text-xs text-[var(--color-text-secondary)]" style={{ fontFamily }}>
                 3.5&quot; × 2&quot;
               </span>
