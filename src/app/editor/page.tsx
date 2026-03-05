@@ -48,7 +48,7 @@ function EditorContent() {
   const fontFamily = getFontFamily(locale);
   const urlTemplate = searchParams.get('template') as TemplateId;
 
-  const validTemplate = TEMPLATES.find(t => t.id === urlTemplate);
+  const validTemplate = TEMPLATES.find(tpl => tpl.id === urlTemplate);
   const initialTemplate = validTemplate ? urlTemplate : 'modern';
 
   const [cardData, setCardData] = useState<CardData>(() => {
