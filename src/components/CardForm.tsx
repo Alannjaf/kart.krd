@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useId } from 'react';
+import { useState, useId, useCallback } from 'react';
 import { CardData, CardLanguage } from '@/types/card';
 import type { FormErrors } from '@/app/editor/page';
 import { useLanguage } from '@/context/LanguageContext';
@@ -65,6 +65,7 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
   const { locale, dir, t } = useLanguage();
   const fontFamily = getFontFamily(locale);
   const [socialOpen, setSocialOpen] = useState(false);
+  const [logoError, setLogoError] = useState('');
 
   const set = (key: keyof CardData) => (value: string) =>
     onChange({ ...data, [key]: value });
@@ -156,12 +157,16 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
                 };
                 reader.readAsDataURL(file);
               } else if (file) {
-                alert(t('form.fileTooLarge'));
+                setLogoError(t('form.fileTooLarge'));
+                setTimeout(() => setLogoError(''), 4000);
               }
             }}
             className="w-full h-11 border border-[var(--color-border)] rounded-md px-3 text-sm bg-[var(--color-surface)] file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-[var(--color-accent)]/10 file:text-[var(--color-accent)]"
             style={{ fontFamily }}
           />
+          {logoError && (
+            <p className="text-xs text-[var(--color-error)] mt-1">{logoError}</p>
+          )}
           {data.logoUrl && (
             <div className="mt-2 flex items-center gap-2">
               <img src={data.logoUrl} alt={t('alt.logoPreview')} className="w-10 h-10 object-contain border border-[var(--color-border)] rounded-md" />

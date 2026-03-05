@@ -62,6 +62,7 @@ function EditorContent() {
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [pdfSuccess, setPdfSuccess] = useState(false);
+  const [pdfError, setPdfError] = useState(false);
   const [showBack, setShowBack] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
@@ -106,7 +107,8 @@ function EditorContent() {
       setTimeout(() => setPdfSuccess(false), 3000);
     } catch (err) {
       console.error('PDF generation failed:', err);
-      alert(t('editor.pdfError'));
+      setPdfError(true);
+      setTimeout(() => setPdfError(false), 4000);
     } finally {
       setIsGenerating(false);
     }
@@ -138,6 +140,12 @@ function EditorContent() {
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)]" dir={dir}>
+      {/* PDF Error Toast */}
+      {pdfError && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-red-600 text-white px-4 py-2 rounded-md shadow-lg text-sm font-medium" role="alert">
+          {t('editor.pdfError')}
+        </div>
+      )}
       {/* Header */}
       <header className="bg-white border-b border-[var(--color-border)] sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
