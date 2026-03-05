@@ -70,6 +70,8 @@ function MiniPreview({ templateId, data, t }: { templateId: TemplateId; data: Ca
     >
       <div style={{
         position: 'absolute',
+        top: 0,
+        left: 0,
         width: `${CARD_WIDTH}px`,
         height: `${CARD_HEIGHT}px`,
         transform: `scale(${scale})`,
