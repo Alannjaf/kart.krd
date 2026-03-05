@@ -55,6 +55,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(() => ({ locale, dir, t, setLocale }), [locale, dir, t, setLocale]);
 
+  if (!mounted) {
+    return (
+      <LanguageContext.Provider value={value}>
+        <div style={{ visibility: 'hidden' }}>{children}</div>
+      </LanguageContext.Provider>
+    );
+  }
+
   return (
     <LanguageContext.Provider value={value}>
       {children}
