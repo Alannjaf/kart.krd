@@ -2,18 +2,20 @@
 
 import { useRef, useState, useEffect } from 'react';
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { getFontFamily } from "@/lib/i18n";
 import ModernCard from "@/components/templates/ModernCard";
-import ClassicCard from "@/components/templates/ClassicCard";
-import BoldCard from "@/components/templates/BoldCard";
-import MinimalCard from "@/components/templates/MinimalCard";
-import ElegantCard from "@/components/templates/ElegantCard";
-import CreativeCard from "@/components/templates/CreativeCard";
-import CorporateCard from "@/components/templates/CorporateCard";
-import GradientCard from "@/components/templates/GradientCard";
 import { CardData } from "@/types/card";
+
+const ClassicCard = dynamic(() => import("@/components/templates/ClassicCard"));
+const BoldCard = dynamic(() => import("@/components/templates/BoldCard"));
+const MinimalCard = dynamic(() => import("@/components/templates/MinimalCard"));
+const ElegantCard = dynamic(() => import("@/components/templates/ElegantCard"));
+const CreativeCard = dynamic(() => import("@/components/templates/CreativeCard"));
+const CorporateCard = dynamic(() => import("@/components/templates/CorporateCard"));
+const GradientCard = dynamic(() => import("@/components/templates/GradientCard"));
 
 const sampleCard: CardData = {
   name: '', title: '', company: '', phone: '+964 750 123 4567',
