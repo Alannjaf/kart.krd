@@ -335,7 +335,7 @@ export const translations = {
 
     // Card language names
     'cardLang.ku': 'کوردی',
-    'cardLang.ar': 'عربی',
+    'cardLang.ar': 'العربية',
     'cardLang.en': 'English',
   },
 } as const;
