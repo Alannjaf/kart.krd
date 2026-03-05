@@ -69,7 +69,7 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
   const [socialOpen, setSocialOpen] = useState(false);
   const [logoError, setLogoError] = useState('');
 
-  const set = (key: keyof CardData) => (value: string) =>
+  const set = (key: {[K in keyof CardData]: CardData[K] extends string ? K : never}[keyof CardData]) => (value: string) =>
     onChange({ ...data, [key]: value });
 
   return (
