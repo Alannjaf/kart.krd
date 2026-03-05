@@ -155,6 +155,7 @@ function EditorContent() {
         </div>
       </header>
 
+      <main id="main-content">
       {/* Desktop layout */}
       <div className="hidden lg:block">
         <div className="max-w-7xl mx-auto px-4 py-6">
@@ -328,6 +329,7 @@ function EditorContent() {
           </button>
         </div>
       </div>
+      </main>
     </div>
   );
 }

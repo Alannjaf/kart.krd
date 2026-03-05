@@ -111,6 +111,7 @@ export default function HomePage() {
         </div>
       </header>
 
+      <main id="main-content">
       {/* Hero — asymmetric */}
       <section className="max-w-5xl mx-auto px-4 pt-16 pb-12 md:pt-24 md:pb-20">
         <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16">
@@ -229,6 +230,8 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      </main>
 
       {/* Footer */}
       <footer className="max-w-5xl mx-auto px-4 py-6">
