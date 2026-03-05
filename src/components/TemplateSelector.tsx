@@ -94,12 +94,14 @@ export default function TemplateSelector({ selected, onChange, cardData, layout 
         <label className="block text-sm font-semibold text-[var(--color-text)] mb-2" style={{ fontFamily }}>
           {t('form.selectTemplate')}
         </label>
-        <div className="flex gap-3 overflow-x-auto scroll-hidden pb-2">
+        <div role="radiogroup" aria-label={t('form.selectTemplate')} className="flex gap-3 overflow-x-auto scroll-hidden pb-2">
           {TEMPLATES.map((tpl) => {
             const templateName = t(`template.${tpl.id}` as TranslationKey);
             return (
               <button
                 key={tpl.id}
+                role="radio"
+                aria-checked={selected === tpl.id}
                 onClick={() => onChange(tpl.id)}
                 className="flex-shrink-0 flex flex-col items-center gap-1.5"
               >
@@ -133,12 +135,14 @@ export default function TemplateSelector({ selected, onChange, cardData, layout 
       <label className="block text-sm font-semibold text-[var(--color-text)] mb-2" style={{ fontFamily }}>
         {t('form.selectTemplate')}
       </label>
-      <div className="grid grid-cols-4 gap-3">
+      <div role="radiogroup" aria-label={t('form.selectTemplate')} className="grid grid-cols-4 gap-3">
         {TEMPLATES.map((tpl) => {
           const templateName = t(`template.${tpl.id}` as TranslationKey);
           return (
             <button
               key={tpl.id}
+              role="radio"
+              aria-checked={selected === tpl.id}
               onClick={() => onChange(tpl.id)}
               className="flex flex-col items-center gap-1.5"
             >

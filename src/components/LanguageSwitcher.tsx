@@ -13,10 +13,12 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
   const { locale, setLocale } = useLanguage();
 
   return (
-    <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-md p-0.5 gap-0.5">
+    <div role="radiogroup" aria-label="UI Language" className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-md p-0.5 gap-0.5">
       {LOCALES.map((loc) => (
         <button
           key={loc.value}
+          role="radio"
+          aria-checked={locale === loc.value}
           onClick={() => setLocale(loc.value)}
           title={loc.title}
           className={`${compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'} rounded font-medium transition-colors ${

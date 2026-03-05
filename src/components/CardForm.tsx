@@ -79,10 +79,12 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
         <label className="block text-sm font-semibold text-[var(--color-text)] mb-2" style={{ fontFamily }}>
           {t('form.cardLanguage')}
         </label>
-        <div className="flex gap-1.5">
+        <div role="radiogroup" aria-label={t('form.cardLanguage')} className="flex gap-1.5">
           {LANGUAGES.map((lang) => (
             <button
               key={lang.value}
+              role="radio"
+              aria-checked={data.language === lang.value}
               onClick={() => onChange({ ...data, language: lang.value })}
               className={`flex-1 h-11 rounded-md text-sm font-medium transition-colors border ${
                 data.language === lang.value
