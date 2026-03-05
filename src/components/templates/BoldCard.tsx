@@ -8,27 +8,27 @@ interface Props {
 }
 
 const PhoneIcon = () => (
-  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400 flex-shrink-0">
+  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#facc15', flexShrink: 0 }}>
     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
   </svg>
 );
 
 const EmailIcon = () => (
-  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400 flex-shrink-0">
+  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#facc15', flexShrink: 0 }}>
     <rect width="20" height="16" x="2" y="4" rx="2"/>
     <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/>
   </svg>
 );
 
 const WebIcon = () => (
-  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400 flex-shrink-0">
+  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#facc15', flexShrink: 0 }}>
     <circle cx="12" cy="12" r="10"/>
     <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
   </svg>
 );
 
 const LocationIcon = () => (
-  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400 flex-shrink-0">
+  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#facc15', flexShrink: 0 }}>
     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/>
     <circle cx="12" cy="10" r="3"/>
   </svg>
@@ -42,37 +42,33 @@ export default function BoldCard({ data }: Props) {
 
   return (
     <div
-      className="w-full h-full bg-gray-950 relative overflow-hidden flex flex-col justify-between"
       dir={isRTL ? 'rtl' : 'ltr'}
-      style={{ fontFamily }}
+      style={{ width: '100%', height: '100%', backgroundColor: '#030712', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', fontFamily }}
     >
       {/* Top accent bar */}
-      <div className="w-full h-1.5 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 flex-shrink-0" />
+      <div style={{ width: '100%', height: '6px', background: 'linear-gradient(to right, #facc15, #fbbf24, #eab308)', flexShrink: 0 }} />
 
       {/* Content */}
-      <div className="flex-1 flex items-center px-6 py-4">
-        <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
+      <div style={{ flex: '1 1 0%', display: 'flex', alignItems: 'center', paddingLeft: '24px', paddingRight: '24px', paddingTop: '16px', paddingBottom: '16px' }}>
+        <div style={{ flex: '1 1 0%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', minHeight: '140px' }}>
         {/* Name & title — large and prominent */}
         <div>
           <div
-            className="text-white font-extrabold leading-none tracking-tight"
-            style={{ fontSize: '26px', marginBottom: '6px' }}
+            style={{ color: 'white', fontWeight: 800, lineHeight: '1', letterSpacing: '-0.025em', fontSize: '26px', marginBottom: '6px' }}
           >
             {data.name || (data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو')}
           </div>
-          <div className="flex items-center gap-2">
-            <div className="h-0.5 w-6 bg-yellow-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ height: '2px', width: '24px', backgroundColor: '#facc15' }} />
             <p
-              className="text-yellow-400 font-semibold uppercase"
-              style={{ fontSize: '11px', letterSpacing: isRTL ? 'normal' : '0.1em' }}
+              style={{ color: '#facc15', fontWeight: 600, textTransform: 'uppercase', fontSize: '11px', letterSpacing: isRTL ? 'normal' : '0.1em' }}
             >
               {data.title || (data.language === 'en' ? 'Job Title' : data.language === 'ar' ? 'المسمى الوظيفي' : 'پیشە')}
             </p>
           </div>
           {data.company && (
             <p
-              className="text-gray-400 mt-1"
-              style={{ fontSize: '10px' }}
+              style={{ color: '#9ca3af', marginTop: '4px', fontSize: '10px' }}
             >
               {data.company}
             </p>
@@ -82,25 +78,25 @@ export default function BoldCard({ data }: Props) {
         {/* Contact info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {data.phone && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-300">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#d1d5db' }}>
               <PhoneIcon />
               <span style={{ whiteSpace: 'nowrap' }} dir="ltr">{data.phone}</span>
             </div>
           )}
           {data.email && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-400">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#9ca3af' }}>
               <EmailIcon />
               <span style={{ whiteSpace: 'nowrap' }} dir="ltr">{data.email}</span>
             </div>
           )}
           {data.website && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-400">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#9ca3af' }}>
               <WebIcon />
               <span style={{ whiteSpace: 'nowrap' }} dir="ltr">{data.website}</span>
             </div>
           )}
           {data.address && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-400">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#9ca3af' }}>
               <LocationIcon />
               <span style={{ whiteSpace: 'nowrap', unicodeBidi: 'plaintext' as React.CSSProperties['unicodeBidi'] }}>{data.address}</span>
             </div>
@@ -140,18 +136,18 @@ export default function BoldCard({ data }: Props) {
 
         {/* Logo - vertically centered on opposite side of name */}
         {data.logoUrl && (
-          <div className="flex items-center justify-center ms-4">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginInlineStart: '16px' }}>
             <img
               src={data.logoUrl}
               alt={t('alt.logo')}
-              className="w-[60px] h-[60px] object-contain"
+              style={{ width: '60px', height: '60px', objectFit: 'contain' }}
             />
           </div>
         )}
       </div>
 
       {/* Bottom accent line */}
-      <div className="w-full h-0.5 bg-gray-800 flex-shrink-0" />
+      <div style={{ width: '100%', height: '2px', backgroundColor: '#1f2937', flexShrink: 0 }} />
 
       {/* watermark only in PDF */}
     </div>

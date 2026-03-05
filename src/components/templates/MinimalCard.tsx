@@ -8,27 +8,27 @@ interface Props {
 }
 
 const PhoneIcon = () => (
-  <svg aria-hidden="true"width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 flex-shrink-0">
+  <svg aria-hidden="true"width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#9ca3af', flexShrink: 0 }}>
     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
   </svg>
 );
 
 const EmailIcon = () => (
-  <svg aria-hidden="true"width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 flex-shrink-0">
+  <svg aria-hidden="true"width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#9ca3af', flexShrink: 0 }}>
     <rect width="20" height="16" x="2" y="4" rx="2"/>
     <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/>
   </svg>
 );
 
 const WebIcon = () => (
-  <svg aria-hidden="true"width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 flex-shrink-0">
+  <svg aria-hidden="true"width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#9ca3af', flexShrink: 0 }}>
     <circle cx="12" cy="12" r="10"/>
     <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
   </svg>
 );
 
 const LocationIcon = () => (
-  <svg aria-hidden="true"width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 flex-shrink-0">
+  <svg aria-hidden="true"width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#9ca3af', flexShrink: 0 }}>
     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/>
     <circle cx="12" cy="10" r="3"/>
   </svg>
@@ -42,31 +42,27 @@ export default function MinimalCard({ data }: Props) {
 
   return (
     <div
-      className="w-full h-full bg-white relative overflow-hidden flex flex-col justify-between"
       dir={isRTL ? 'rtl' : 'ltr'}
-      style={{ fontFamily }}
+      style={{ width: '100%', height: '100%', backgroundColor: 'white', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', fontFamily }}
     >
       {/* Content */}
-      <div className="flex-1 flex items-center px-7 py-5">
-        <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
+      <div style={{ flex: '1 1 0%', display: 'flex', alignItems: 'center', paddingLeft: '28px', paddingRight: '28px', paddingTop: '20px', paddingBottom: '20px' }}>
+        <div style={{ flex: '1 1 0%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', minHeight: '140px' }}>
         {/* Top: Name & title */}
         <div>
           <div
-            className="text-gray-900 font-light tracking-wide leading-tight"
-            style={{ fontSize: '22px', marginBottom: '4px' }}
+            style={{ color: '#111827', fontWeight: 300, letterSpacing: '0.025em', lineHeight: '1.25', fontSize: '22px', marginBottom: '4px' }}
           >
             {data.name || (data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو')}
           </div>
           <p
-            className="text-gray-500 font-light"
-            style={{ fontSize: '12px' }}
+            style={{ color: '#6b7280', fontWeight: 300, fontSize: '12px' }}
           >
             {data.title || (data.language === 'en' ? 'Job Title' : data.language === 'ar' ? 'المسمى الوظيفي' : 'پیشە')}
           </p>
           {data.company && (
             <p
-              className="text-gray-400 font-light"
-              style={{ fontSize: '10px', marginTop: '2px' }}
+              style={{ color: '#9ca3af', fontWeight: 300, fontSize: '10px', marginTop: '2px' }}
             >
               {data.company}
             </p>
@@ -74,30 +70,30 @@ export default function MinimalCard({ data }: Props) {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-gray-200 my-2" />
+        <div style={{ height: '1px', backgroundColor: '#e5e7eb', marginBlock: '8px' }} />
 
         {/* Bottom: Contact info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {data.phone && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-500">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#6b7280' }}>
               <PhoneIcon />
               <span style={{ whiteSpace: 'nowrap', fontWeight: 300 }} dir="ltr">{data.phone}</span>
             </div>
           )}
           {data.email && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#4b5563' }}>
               <EmailIcon />
               <span style={{ whiteSpace: 'nowrap', fontWeight: 400 }} dir="ltr">{data.email}</span>
             </div>
           )}
           {data.website && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#4b5563' }}>
               <WebIcon />
               <span style={{ whiteSpace: 'nowrap', fontWeight: 400 }} dir="ltr">{data.website}</span>
             </div>
           )}
           {data.address && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#4b5563' }}>
               <LocationIcon />
               <span style={{ whiteSpace: 'nowrap', fontWeight: 400, unicodeBidi: 'plaintext' as React.CSSProperties['unicodeBidi'] }}>{data.address}</span>
             </div>
@@ -137,11 +133,11 @@ export default function MinimalCard({ data }: Props) {
 
         {/* Logo - vertically centered on opposite side of name */}
         {data.logoUrl && (
-          <div className="flex items-center justify-center ms-6">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginInlineStart: '24px' }}>
             <img
               src={data.logoUrl}
               alt={t('alt.logo')}
-              className="w-[60px] h-[60px] object-contain"
+              style={{ width: '60px', height: '60px', objectFit: 'contain' }}
             />
           </div>
         )}

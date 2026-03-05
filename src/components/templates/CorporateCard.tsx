@@ -65,14 +65,16 @@ export default function CorporateCard({ data }: Props) {
 
   return (
     <div
-      className="w-full h-full flex overflow-hidden relative"
       dir={isRTL ? 'rtl' : 'ltr'}
-      style={{ fontFamily }}
+      style={{ width: '100%', height: '100%', display: 'flex', overflow: 'hidden', position: 'relative', fontFamily }}
     >
       {/* Left Navy Panel - 38% */}
       <div
-        className="flex flex-col items-center justify-between"
         style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           width: '38%',
           backgroundColor: '#0C2340',
           paddingTop: '20px',
@@ -80,7 +82,7 @@ export default function CorporateCard({ data }: Props) {
         }}
       >
         {/* Company Name - Vertical Text */}
-        <div className="flex-1 flex items-center justify-center">
+        <div style={{ flex: '1 1 0%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {data.company && (
             <span
               style={{
@@ -102,7 +104,7 @@ export default function CorporateCard({ data }: Props) {
 
         {/* Logo at Bottom */}
         {data.logoUrl && (
-          <div className="flex items-center justify-center" style={{ marginTop: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '8px' }}>
             <img
               src={data.logoUrl}
               alt="Logo"
@@ -118,8 +120,11 @@ export default function CorporateCard({ data }: Props) {
 
       {/* Right Off-White Panel - 62% */}
       <div
-        className="flex-1 flex flex-col justify-between"
         style={{
+          flex: '1 1 0%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
           backgroundColor: '#F7F7F5',
           padding: '16px 20px',
         }}
@@ -167,9 +172,9 @@ export default function CorporateCard({ data }: Props) {
         {/* Bottom: Contact Info + Social */}
         <div>
           {/* Contact Info */}
-          <div className="flex flex-col" style={{ gap: '4px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {data.phone && (
-              <div className="flex items-center" style={{ gap: '5px', color: '#4A6FA5' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#4A6FA5' }}>
                 <PhoneIcon />
                 <span dir="ltr" style={{ fontSize: '12px', fontFamily }}>
                   {data.phone}
@@ -177,7 +182,7 @@ export default function CorporateCard({ data }: Props) {
               </div>
             )}
             {data.email && (
-              <div className="flex items-center" style={{ gap: '5px', color: '#4A6FA5' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#4A6FA5' }}>
                 <EmailIcon />
                 <span dir="ltr" style={{ fontSize: '12px', fontFamily }}>
                   {data.email}
@@ -185,7 +190,7 @@ export default function CorporateCard({ data }: Props) {
               </div>
             )}
             {data.website && (
-              <div className="flex items-center" style={{ gap: '5px', color: '#4A6FA5' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#4A6FA5' }}>
                 <WebIcon />
                 <span dir="ltr" style={{ fontSize: '12px', fontFamily }}>
                   {data.website}
@@ -193,7 +198,7 @@ export default function CorporateCard({ data }: Props) {
               </div>
             )}
             {data.address && (
-              <div className="flex items-center" style={{ gap: '5px', color: '#4A6FA5' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#4A6FA5' }}>
                 <LocationIcon />
                 <span
                   style={{

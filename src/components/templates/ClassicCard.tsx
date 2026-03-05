@@ -8,27 +8,27 @@ interface Props {
 }
 
 const PhoneIcon = () => (
-  <svg aria-hidden="true"width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 flex-shrink-0">
+  <svg aria-hidden="true"width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#d97706', flexShrink: 0 }}>
     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
   </svg>
 );
 
 const EmailIcon = () => (
-  <svg aria-hidden="true"width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 flex-shrink-0">
+  <svg aria-hidden="true"width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#d97706', flexShrink: 0 }}>
     <rect width="20" height="16" x="2" y="4" rx="2"/>
     <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/>
   </svg>
 );
 
 const WebIcon = () => (
-  <svg aria-hidden="true"width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 flex-shrink-0">
+  <svg aria-hidden="true"width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#d97706', flexShrink: 0 }}>
     <circle cx="12" cy="12" r="10"/>
     <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
   </svg>
 );
 
 const LocationIcon = () => (
-  <svg aria-hidden="true"width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 flex-shrink-0">
+  <svg aria-hidden="true"width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#d97706', flexShrink: 0 }}>
     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/>
     <circle cx="12" cy="10" r="3"/>
   </svg>
@@ -42,39 +42,35 @@ export default function ClassicCard({ data }: Props) {
 
   return (
     <div
-      className="w-full h-full bg-gradient-to-br from-amber-50 to-stone-100 relative overflow-hidden flex items-center justify-center"
       dir={isRTL ? 'rtl' : 'ltr'}
-      style={{ fontFamily }}
+      style={{ width: '100%', height: '100%', background: 'linear-gradient(to bottom right, #fffbeb, #f5f5f4)', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily }}
     >
       {/* Outer border decoration */}
-      <div className="absolute inset-2 border-2 border-amber-600/40 rounded" />
-      <div className="absolute inset-3 border border-amber-600/20 rounded" />
+      <div style={{ position: 'absolute', inset: '8px', borderWidth: '2px', borderColor: 'rgba(217,119,6,0.4)', borderStyle: 'solid', borderRadius: '4px' }} />
+      <div style={{ position: 'absolute', inset: '12px', borderWidth: '1px', borderColor: 'rgba(217,119,6,0.2)', borderStyle: 'solid', borderRadius: '4px' }} />
 
       {/* Content */}
-      <div className="relative z-10 w-full px-8 py-4 flex items-center h-full">
-        <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', paddingInline: '32px', paddingBlock: '16px', display: 'flex', alignItems: 'center', height: '100%' }}>
+        <div style={{ flex: '1 1 0%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', minHeight: '140px' }}>
         {/* Top: Name section */}
-        <div className="text-center pt-3">
+        <div style={{ textAlign: 'center', paddingTop: '12px' }}>
           <div
-            className="text-gray-900 font-bold leading-tight"
-            style={{ fontSize: '22px', fontFamily: isRTL ? "'Noto Sans Arabic', serif" : "Georgia, serif", marginBottom: '4px' }}
+            style={{ color: '#111827', fontWeight: 700, lineHeight: '1.25', fontSize: '22px', fontFamily: isRTL ? "'Noto Sans Arabic', serif" : "Georgia, serif", marginBottom: '4px' }}
           >
             {data.name || (data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو')}
           </div>
-          <div className="flex items-center justify-center gap-3 my-1">
-            <div className="h-px bg-amber-600/50 flex-1" />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBlock: '4px' }}>
+            <div style={{ height: '1px', background: 'rgba(217,119,6,0.5)', flex: '1 1 0%' }} />
             <p
-              className="text-amber-700 font-medium"
-              style={{ fontSize: '12px' }}
+              style={{ color: '#b45309', fontWeight: 500, fontSize: '12px' }}
             >
               {data.title || (data.language === 'en' ? 'Job Title' : data.language === 'ar' ? 'المسمى الوظيفي' : 'پیشە')}
             </p>
-            <div className="h-px bg-amber-600/50 flex-1" />
+            <div style={{ height: '1px', background: 'rgba(217,119,6,0.5)', flex: '1 1 0%' }} />
           </div>
           {data.company && (
             <p
-              className="text-gray-600 italic"
-              style={{ fontSize: '11px' }}
+              style={{ color: '#4b5563', fontStyle: 'italic', fontSize: '11px' }}
             >
               {data.company}
             </p>
@@ -82,29 +78,29 @@ export default function ClassicCard({ data }: Props) {
         </div>
 
         {/* Bottom: Contact info */}
-        <div className="pb-3">
-          <div className="h-px bg-amber-600/30 mb-3" />
+        <div style={{ paddingBottom: '12px' }}>
+          <div style={{ height: '1px', background: 'rgba(217,119,6,0.3)', marginBottom: '12px' }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {data.phone && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#4b5563' }}>
                 <PhoneIcon />
                 <span style={{ whiteSpace: 'nowrap' }} dir="ltr">{data.phone}</span>
               </div>
             )}
             {data.email && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#4b5563' }}>
                 <EmailIcon />
                 <span style={{ whiteSpace: 'nowrap' }} dir="ltr">{data.email}</span>
               </div>
             )}
             {data.website && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#4b5563' }}>
                 <WebIcon />
                 <span style={{ whiteSpace: 'nowrap' }} dir="ltr">{data.website}</span>
               </div>
             )}
             {data.address && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize }} className="text-gray-600">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: contactSize, color: '#4b5563' }}>
                 <LocationIcon />
                 <span style={{ whiteSpace: 'nowrap', unicodeBidi: 'plaintext' as React.CSSProperties['unicodeBidi'] }}>{data.address}</span>
               </div>
@@ -145,11 +141,11 @@ export default function ClassicCard({ data }: Props) {
 
         {/* Logo - vertically centered on opposite side of name */}
         {data.logoUrl && (
-          <div className="flex items-center justify-center ms-6">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginInlineStart: '24px' }}>
             <img
               src={data.logoUrl}
               alt={t('alt.logo')}
-              className="w-[60px] h-[60px] object-contain"
+              style={{ width: '60px', height: '60px', objectFit: 'contain' }}
             />
           </div>
         )}

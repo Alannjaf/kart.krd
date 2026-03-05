@@ -14,12 +14,11 @@ export default function ElegantCard({ data }: Props) {
   return (
     <div
       dir={dir}
-      className="bg-[#1C1C28] w-full h-full flex flex-col justify-between p-6 relative overflow-hidden"
-      style={{ fontFamily }}
+      style={{ backgroundColor: '#1C1C28', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '24px', position: 'relative', overflow: 'hidden', fontFamily }}
     >
       {/* Top section: Name, Title, Company + Logo */}
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <div style={{ flex: '1 1 0%' }}>
           <h2
             style={{
               fontSize: '22px',
@@ -61,7 +60,7 @@ export default function ElegantCard({ data }: Props) {
           )}
         </div>
         {data.logoUrl && (
-          <div className="ms-4">
+          <div style={{ marginInlineStart: '16px' }}>
             <img
               src={data.logoUrl}
               alt="Logo"
@@ -88,9 +87,9 @@ export default function ElegantCard({ data }: Props) {
       {/* Bottom section: Contact info + Social */}
       <div>
         {/* Contact info */}
-        <div className="flex flex-col gap-[5px]">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
           {data.phone && (
-            <div className="flex items-center gap-2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="10"
@@ -110,7 +109,7 @@ export default function ElegantCard({ data }: Props) {
             </div>
           )}
           {data.email && (
-            <div className="flex items-center gap-2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="10"
@@ -131,7 +130,7 @@ export default function ElegantCard({ data }: Props) {
             </div>
           )}
           {data.website && (
-            <div className="flex items-center gap-2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="10"
@@ -152,7 +151,7 @@ export default function ElegantCard({ data }: Props) {
             </div>
           )}
           {data.address && (
-            <div className="flex items-center gap-2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="10"

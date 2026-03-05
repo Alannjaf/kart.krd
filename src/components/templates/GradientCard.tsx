@@ -7,27 +7,27 @@ interface Props {
 }
 
 const PhoneIcon = () => (
-  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0" style={{ color: '#A7F3D0' }}>
+  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, color: '#A7F3D0' }}>
     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
   </svg>
 );
 
 const EmailIcon = () => (
-  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0" style={{ color: '#A7F3D0' }}>
+  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, color: '#A7F3D0' }}>
     <rect width="20" height="16" x="2" y="4" rx="2" />
     <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7" />
   </svg>
 );
 
 const WebIcon = () => (
-  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0" style={{ color: '#A7F3D0' }}>
+  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, color: '#A7F3D0' }}>
     <circle cx="12" cy="12" r="10" />
     <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
   </svg>
 );
 
 const LocationIcon = () => (
-  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0" style={{ color: '#A7F3D0' }}>
+  <svg aria-hidden="true"width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, color: '#A7F3D0' }}>
     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z" />
     <circle cx="12" cy="10" r="3" />
   </svg>
@@ -66,9 +66,13 @@ export default function GradientCard({ data }: Props) {
 
   return (
     <div
-      className="w-full h-full relative overflow-hidden flex"
       dir={dir}
       style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
         fontFamily,
         background: 'linear-gradient(135deg, #0D9488 0%, #115E59 50%, #134E4A 100%)',
       }}
@@ -88,7 +92,6 @@ export default function GradientCard({ data }: Props) {
 
       {/* Decorative dot */}
       <div
-        className="rounded-full"
         style={{
           position: 'absolute',
           bottom: '16px',
@@ -96,12 +99,13 @@ export default function GradientCard({ data }: Props) {
           width: '6px',
           height: '6px',
           backgroundColor: '#A7F3D0',
+          borderRadius: '50%',
         }}
       />
 
       {/* Content */}
-      <div className="flex-1 flex items-center" style={{ padding: '16px 22px' }}>
-        <div className="flex-1 flex flex-col justify-between h-full" style={{ minHeight: '140px' }}>
+      <div style={{ flex: '1 1 0%', display: 'flex', alignItems: 'center', padding: '16px 22px' }}>
+        <div style={{ flex: '1 1 0%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', minHeight: '140px' }}>
           {/* Top: Name, Title, Company */}
           <div>
             <div
@@ -142,9 +146,9 @@ export default function GradientCard({ data }: Props) {
 
           {/* Bottom: Contact Info + Social Links */}
           <div>
-            <div className="flex flex-col gap-1">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {data.phone && (
-                <div className="flex items-center gap-1.5">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <PhoneIcon />
                   <span dir="ltr" style={{ fontSize: '13px', color: 'rgba(255,255,255,0.85)' }}>
                     {data.phone}
@@ -152,7 +156,7 @@ export default function GradientCard({ data }: Props) {
                 </div>
               )}
               {data.email && (
-                <div className="flex items-center gap-1.5">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <EmailIcon />
                   <span dir="ltr" style={{ fontSize: '13px', color: 'rgba(255,255,255,0.85)' }}>
                     {data.email}
@@ -160,7 +164,7 @@ export default function GradientCard({ data }: Props) {
                 </div>
               )}
               {data.website && (
-                <div className="flex items-center gap-1.5">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <WebIcon />
                   <span dir="ltr" style={{ fontSize: '13px', color: 'rgba(255,255,255,0.85)' }}>
                     {data.website}
@@ -168,7 +172,7 @@ export default function GradientCard({ data }: Props) {
                 </div>
               )}
               {data.address && (
-                <div className="flex items-center gap-1.5">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <LocationIcon />
                   <span
                     style={{
@@ -217,7 +221,7 @@ export default function GradientCard({ data }: Props) {
 
         {/* Logo */}
         {data.logoUrl && (
-          <div className="ms-4 flex-shrink-0">
+          <div style={{ marginInlineStart: '16px', flexShrink: 0 }}>
             <img
               src={data.logoUrl}
               alt="Logo"

@@ -13,9 +13,15 @@ export default function CreativeCard({ data }: Props) {
 
   return (
     <div
-      className="w-full h-full bg-[#8B3A3A] relative overflow-hidden"
       dir={dir}
-      style={{ fontFamily }}
+      style={{
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#8B3A3A',
+        position: 'relative',
+        overflow: 'hidden',
+        fontFamily,
+      }}
     >
       {/* Decorative circle */}
       <div
@@ -56,8 +62,11 @@ export default function CreativeCard({ data }: Props) {
 
       {/* Content area */}
       <div
-        className="flex-1 flex flex-col justify-between"
         style={{
+          flex: '1 1 0%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
           padding: '18px 22px',
           height: '100%',
           position: 'relative',
