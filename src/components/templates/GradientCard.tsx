@@ -59,7 +59,7 @@ const TwitterIcon = () => (
 
 export default function GradientCard({ data }: Props) {
   const isRTL = data.language !== 'en';
-  const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif";
+  const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Geist', sans-serif";
   const dir = isRTL ? 'rtl' : 'ltr';
 
   const hasSocials = data.facebook || data.instagram || data.linkedin || data.twitter;

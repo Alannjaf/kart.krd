@@ -37,7 +37,7 @@ const LocationIcon = () => (
 export default function BoldCard({ data }: Props) {
   const { t } = useLanguage();
   const isRTL = data.language !== 'en';
-  const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Inter', sans-serif";
+  const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Geist', sans-serif";
   const contactSize = '14px';
 
   return (
