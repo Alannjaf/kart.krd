@@ -183,6 +183,8 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
       <div>
         <button
           onClick={() => setSocialOpen(!socialOpen)}
+          aria-expanded={socialOpen}
+          aria-controls="social-section"
           className="flex items-center justify-between w-full text-sm font-semibold text-[var(--color-text)] py-1"
           style={{ fontFamily }}
         >
@@ -190,13 +192,14 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
           <svg
             className={`w-4 h-4 text-[var(--color-text-secondary)] transition-transform ${socialOpen ? 'rotate-180' : ''}`}
             fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            aria-hidden="true"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
         {socialOpen && (
-          <div className="space-y-3 mt-3">
+          <div id="social-section" className="space-y-3 mt-3">
             <Field label={t('form.facebook')} value={data.facebook} onChange={set('facebook')} placeholder={t('form.facebookPlaceholder')} dir="ltr" fontFamily={fontFamily} />
             <Field label={t('form.instagram')} value={data.instagram} onChange={set('instagram')} placeholder={t('form.instagramPlaceholder')} dir="ltr" fontFamily={fontFamily} />
             <Field label={t('form.linkedin')} value={data.linkedin} onChange={set('linkedin')} placeholder={t('form.linkedinPlaceholder')} dir="ltr" fontFamily={fontFamily} />
