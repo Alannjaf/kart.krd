@@ -37,7 +37,7 @@ export default function CreativeCard({ data }: Props) {
           style={{
             position: 'absolute',
             top: 10,
-            right: 12,
+            insetInlineEnd: 12,
             zIndex: 10,
           }}
         >

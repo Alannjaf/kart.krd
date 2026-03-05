@@ -61,7 +61,7 @@ export default function ElegantCard({ data }: Props) {
           )}
         </div>
         {data.logoUrl && (
-          <div className={isRTL ? 'me-4' : 'ms-4'}>
+          <div className="ms-4">
             <img
               src={data.logoUrl}
               alt="Logo"
