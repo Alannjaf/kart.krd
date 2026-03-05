@@ -283,51 +283,50 @@ function EditorContent() {
 
       {/* Mobile layout with tab bar */}
       <div className="lg:hidden pb-16">
-        {/* Tab content */}
-        {activeTab === 'edit' ? (
-          <div className="px-4 py-4 space-y-4">
-            <TemplateSelector
-              selected={cardData.template}
-              onChange={(tpl) => setCardData({ ...cardData, template: tpl })}
-              cardData={cardData}
-              layout="scroll"
-            />
-            <div className="bg-white rounded-md border border-[var(--color-border)] p-4">
-              <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--color-border)]">
-                <h2 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
-                  {t('editor.enterInfo')}
-                </h2>
-                <button
-                  onClick={handleClear}
-                  className="text-xs text-[var(--color-error)] hover:underline"
-                  style={{ fontFamily }}
-                >
-                  {t('editor.clear')}
-                </button>
-              </div>
-              <CardForm data={cardData} onChange={handleCardChange} errors={formErrors} />
+        {/* Edit tab */}
+        <div className={`px-4 py-4 space-y-4 ${activeTab !== 'edit' ? 'hidden' : ''}`} role="tabpanel">
+          <TemplateSelector
+            selected={cardData.template}
+            onChange={(tpl) => setCardData({ ...cardData, template: tpl })}
+            cardData={cardData}
+            layout="scroll"
+          />
+          <div className="bg-white rounded-md border border-[var(--color-border)] p-4">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--color-border)]">
+              <h2 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
+                {t('editor.enterInfo')}
+              </h2>
+              <button
+                onClick={handleClear}
+                className="text-xs text-[var(--color-error)] hover:underline"
+                style={{ fontFamily }}
+              >
+                {t('editor.clear')}
+              </button>
             </div>
+            <CardForm data={cardData} onChange={handleCardChange} errors={formErrors} />
           </div>
-        ) : (
-          <div className="px-4 py-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <CardSideToggle showBack={showBack} onToggle={setShowBack} fontFamily={fontFamily} t={t} />
-              <span className="text-xs text-[var(--color-text-secondary)]" style={{ fontFamily }}>
-                3.5&quot; × 2&quot;
-              </span>
-            </div>
+        </div>
 
-            <CardPreview ref={cardRef} data={cardData} showBack={showBack} />
-
-            <div className="flex justify-center">
-              {downloadButton}
-            </div>
-
-            <p className="text-center text-xs text-[var(--color-text-secondary)]" style={{ fontFamily }}>
-              {t('editor.watermarkNote')}
-            </p>
+        {/* Preview tab */}
+        <div className={`px-4 py-4 space-y-4 ${activeTab !== 'preview' ? 'hidden' : ''}`} role="tabpanel">
+          <div className="flex items-center justify-between">
+            <CardSideToggle showBack={showBack} onToggle={setShowBack} fontFamily={fontFamily} t={t} />
+            <span className="text-xs text-[var(--color-text-secondary)]" style={{ fontFamily }}>
+              3.5&quot; × 2&quot;
+            </span>
           </div>
-        )}
+
+          <CardPreview ref={cardRef} data={cardData} showBack={showBack} />
+
+          <div className="flex justify-center">
+            {downloadButton}
+          </div>
+
+          <p className="text-center text-xs text-[var(--color-text-secondary)]" style={{ fontFamily }}>
+            {t('editor.watermarkNote')}
+          </p>
+        </div>
 
         {/* Bottom tab bar */}
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[var(--color-border)] z-50 flex" role="tablist">
