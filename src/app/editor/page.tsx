@@ -87,6 +87,7 @@ function EditorContent() {
   }, [t]);
 
   const handleClear = useCallback(() => {
+    if (!window.confirm(t('editor.clearConfirm'))) return;
     const cleared = { ...defaultCardData, template: cardData.template };
     setCardData(cleared);
     setFormErrors({});
