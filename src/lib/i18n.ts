@@ -7,7 +7,7 @@ export function getDirection(locale: Locale): Direction {
 }
 
 export function getFontFamily(locale: Locale): string {
-  return locale === 'en' ? "'Geist', sans-serif" : "'Noto Sans Arabic', sans-serif";
+  return locale === 'en' ? "var(--font-geist), sans-serif" : "var(--font-noto-arabic), sans-serif";
 }
 
 export const translations = {

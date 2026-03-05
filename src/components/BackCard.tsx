@@ -14,7 +14,7 @@ export default function BackCard({ data, template }: Props) {
   const [qrCode, setQrCode] = useState<string>('');
   const { t } = useLanguage();
   const isRTL = data.language !== 'en';
-  const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Geist', sans-serif";
+  const fontFamily = isRTL ? "var(--font-noto-arabic), sans-serif" : "var(--font-geist), sans-serif";
 
   useEffect(() => {
     if (data.qrEnabled) {

@@ -370,7 +370,7 @@ export default function EditorPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center">
-        <div className="text-[var(--color-text-secondary)]" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
+        <div className="text-[var(--color-text-secondary)]" style={{ fontFamily: "var(--font-noto-arabic), sans-serif" }}>
           {t('editor.loading')}
         </div>
       </div>

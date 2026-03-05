@@ -59,7 +59,7 @@ const TwitterIcon = () => (
 
 export default function CorporateCard({ data }: Props) {
   const isRTL = data.language !== 'en';
-  const fontFamily = isRTL ? "'Noto Sans Arabic', sans-serif" : "'Geist', sans-serif";
+  const fontFamily = isRTL ? "var(--font-noto-arabic), sans-serif" : "var(--font-geist), sans-serif";
 
   const hasSocials = data.facebook || data.instagram || data.linkedin || data.twitter;
 
