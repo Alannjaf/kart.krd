@@ -24,7 +24,7 @@ export async function generatePdf(
         if (node.tagName === 'SCRIPT' || node.tagName === 'NOSCRIPT') return false;
         return true;
       },
-      skipFonts: true,
+      skipFonts: false,
     });
 
     const pdf = new jsPDF({
@@ -59,7 +59,7 @@ export async function generatePdf(
           if (node.tagName === 'SCRIPT' || node.tagName === 'NOSCRIPT') return false;
           return true;
         },
-        skipFonts: true,
+        skipFonts: false,
       });
 
       // Add new page for back
