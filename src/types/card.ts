@@ -42,13 +42,13 @@ export const defaultCardData: CardData = {
   logoUrl: '',
 };
 
-export const TEMPLATES: { id: TemplateId; label: string; labelKu: string }[] = [
-  { id: 'modern', label: 'Modern', labelKu: 'مۆدێرن' },
-  { id: 'classic', label: 'Classic', labelKu: 'کلاسیک' },
-  { id: 'bold', label: 'Bold', labelKu: 'بۆڵد' },
-  { id: 'minimal', label: 'Minimal', labelKu: 'مینیمال' },
-  { id: 'elegant', label: 'Elegant', labelKu: 'ئێلیگانت' },
-  { id: 'creative', label: 'Creative', labelKu: 'کریەیتیڤ' },
-  { id: 'corporate', label: 'Corporate', labelKu: 'کۆرپۆرەیت' },
-  { id: 'gradient', label: 'Gradient', labelKu: 'گرادیەنت' },
+export const TEMPLATES: { id: TemplateId }[] = [
+  { id: 'modern' },
+  { id: 'classic' },
+  { id: 'bold' },
+  { id: 'minimal' },
+  { id: 'elegant' },
+  { id: 'creative' },
+  { id: 'corporate' },
+  { id: 'gradient' },
 ];
