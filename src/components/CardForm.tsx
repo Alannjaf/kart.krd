@@ -172,16 +172,21 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
             <p className="text-xs text-[var(--color-error)] mt-1">{logoError}</p>
           )}
           {data.logoUrl && (
-            <div className="mt-2 flex items-center gap-2">
-              <img src={data.logoUrl} alt={t('alt.logoPreview')} className="w-10 h-10 object-contain border border-[var(--color-border)] rounded-md" />
-              <button
-                onClick={() => onChange({ ...data, logoUrl: '' })}
-                className="text-xs text-[var(--color-error)] hover:underline"
-                style={{ fontFamily }}
-              >
-                {t('form.removeLogo')}
-              </button>
-            </div>
+            <>
+              <div className="mt-2 flex items-center gap-2">
+                <img src={data.logoUrl} alt={t('alt.logoPreview')} className="w-10 h-10 object-contain border border-[var(--color-border)] rounded-md" />
+                <button
+                  onClick={() => onChange({ ...data, logoUrl: '' })}
+                  className="text-xs text-[var(--color-error)] hover:underline"
+                  style={{ fontFamily }}
+                >
+                  {t('form.removeLogo')}
+                </button>
+              </div>
+              <p className="mt-1.5 text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-2 py-1" style={{ fontFamily }}>
+                {t('form.logoWarning')}
+              </p>
+            </>
           )}
         </div>
       </div>
