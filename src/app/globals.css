@@ -13,25 +13,10 @@
   --color-error: #DC2626;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 body {
-  font-family: 'Noto Sans Arabic', 'Geist', sans-serif;
+  font-family: 'Geist', 'Noto Sans Arabic', sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
-}
-
-/* Kurdish/Arabic RTL font */
-.font-ku,
-.font-ar {
-  font-family: 'Noto Sans Arabic', sans-serif;
-}
-
-/* English LTR font */
-.font-en {
-  font-family: 'Geist', sans-serif;
 }
 
 /* Card preview aspect ratio */
@@ -41,7 +26,13 @@ body {
 
 /* Smooth transitions */
 .card-preview {
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-preview {
+    transition: none;
+  }
 }
 
 /* Hide scrollbar for horizontal scroll containers */
