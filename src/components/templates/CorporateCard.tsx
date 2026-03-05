@@ -207,44 +207,15 @@ export default function CorporateCard({ data }: Props) {
             )}
           </div>
 
-          {/* Social Links */}
+          {/* Social Links - icons only for compact layout */}
           {hasSocials && (
             <div
-              className="flex items-center flex-wrap"
-              style={{ gap: '6px', marginTop: '8px' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}
             >
-              {data.facebook && (
-                <div className="flex items-center" style={{ gap: '3px' }}>
-                  <FacebookIcon />
-                  <span style={{ fontSize: '9px', color: '#4A6FA5', fontFamily }}>
-                    {data.facebook}
-                  </span>
-                </div>
-              )}
-              {data.instagram && (
-                <div className="flex items-center" style={{ gap: '3px' }}>
-                  <InstagramIcon />
-                  <span style={{ fontSize: '9px', color: '#4A6FA5', fontFamily }}>
-                    {data.instagram}
-                  </span>
-                </div>
-              )}
-              {data.linkedin && (
-                <div className="flex items-center" style={{ gap: '3px' }}>
-                  <LinkedInIcon />
-                  <span style={{ fontSize: '9px', color: '#4A6FA5', fontFamily }}>
-                    {data.linkedin}
-                  </span>
-                </div>
-              )}
-              {data.twitter && (
-                <div className="flex items-center" style={{ gap: '3px' }}>
-                  <TwitterIcon />
-                  <span style={{ fontSize: '9px', color: '#4A6FA5', fontFamily }}>
-                    {data.twitter}
-                  </span>
-                </div>
-              )}
+              {data.facebook && <FacebookIcon />}
+              {data.instagram && <InstagramIcon />}
+              {data.linkedin && <LinkedInIcon />}
+              {data.twitter && <TwitterIcon />}
             </div>
           )}
         </div>

@@ -183,41 +183,13 @@ export default function GradientCard({ data }: Props) {
               )}
             </div>
 
-            {/* Social Links */}
+            {/* Social Links - icons only for compact layout */}
             {hasSocials && (
-              <div className="flex items-center gap-2 mt-2">
-                {data.facebook && (
-                  <div className="flex items-center gap-1">
-                    <FacebookIcon />
-                    <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)' }}>
-                      {data.facebook}
-                    </span>
-                  </div>
-                )}
-                {data.instagram && (
-                  <div className="flex items-center gap-1">
-                    <InstagramIcon />
-                    <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)' }}>
-                      {data.instagram}
-                    </span>
-                  </div>
-                )}
-                {data.linkedin && (
-                  <div className="flex items-center gap-1">
-                    <LinkedInIcon />
-                    <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)' }}>
-                      {data.linkedin}
-                    </span>
-                  </div>
-                )}
-                {data.twitter && (
-                  <div className="flex items-center gap-1">
-                    <TwitterIcon />
-                    <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)' }}>
-                      {data.twitter}
-                    </span>
-                  </div>
-                )}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+                {data.facebook && <FacebookIcon />}
+                {data.instagram && <InstagramIcon />}
+                {data.linkedin && <LinkedInIcon />}
+                {data.twitter && <TwitterIcon />}
               </div>
             )}
           </div>
