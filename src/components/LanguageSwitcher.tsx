@@ -3,10 +3,10 @@
 import { useLanguage } from '@/context/LanguageContext';
 import type { Locale } from '@/lib/i18n';
 
-const LOCALES: { value: Locale; label: string }[] = [
-  { value: 'ku', label: 'کو' },
-  { value: 'ar', label: 'عر' },
-  { value: 'en', label: 'EN' },
+const LOCALES: { value: Locale; label: string; title: string }[] = [
+  { value: 'ku', label: 'کو', title: 'کوردی' },
+  { value: 'ar', label: 'عر', title: 'العربية' },
+  { value: 'en', label: 'EN', title: 'English' },
 ];
 
 export default function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
@@ -18,6 +18,7 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
         <button
           key={loc.value}
           onClick={() => setLocale(loc.value)}
+          title={loc.title}
           className={`${compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'} rounded font-medium transition-colors ${
             locale === loc.value
               ? 'bg-[var(--color-accent)] text-white'
