@@ -14,43 +14,9 @@ export async function generatePdf(
   // Check if back side has content (logo or QR code)
   const hasBackContent = cardData.logoUrl || cardData.qrEnabled;
 
-  // Capture front side
-  const frontDataUrl = await toPng(element, {
-    pixelRatio: 3,
-    cacheBust: true,
-    includeQueryParams: true,
-    filter: (node: HTMLElement) => {
-      if (node.tagName === 'SCRIPT' || node.tagName === 'NOSCRIPT') return false;
-      return true;
-    },
-    skipFonts: true,
-  });
-
-  const pdf = new jsPDF({
-    orientation: 'landscape',
-    unit: 'in',
-    format: [CARD_WIDTH_IN, CARD_HEIGHT_IN],
-    compress: true,
-  });
-
-  // Add front page
-  pdf.addImage(frontDataUrl, 'PNG', 0, 0, CARD_WIDTH_IN, CARD_HEIGHT_IN, undefined, 'FAST');
-
-  // Watermark for front
-  pdf.setFontSize(6);
-  pdf.setTextColor(180, 180, 180);
-  pdf.text('kart.krd', CARD_WIDTH_IN - 0.05, CARD_HEIGHT_IN - 0.05, { align: 'right' });
-
-  // If back content exists and callback provided, capture back side
-  if (hasBackContent && showBackCallback) {
-    // Switch to back view
-    await showBackCallback(true);
-
-    // Wait a bit for the component to re-render
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // Capture back side
-    const backDataUrl = await toPng(element, {
+  try {
+    // Capture front side
+    const frontDataUrl = await toPng(element, {
       pixelRatio: 3,
       cacheBust: true,
       includeQueryParams: true,
@@ -61,22 +27,60 @@ export async function generatePdf(
       skipFonts: true,
     });
 
-    // Add new page for back
-    pdf.addPage();
-    pdf.addImage(backDataUrl, 'PNG', 0, 0, CARD_WIDTH_IN, CARD_HEIGHT_IN, undefined, 'FAST');
+    const pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'in',
+      format: [CARD_WIDTH_IN, CARD_HEIGHT_IN],
+      compress: true,
+    });
 
-    // Watermark for back
+    // Add front page
+    pdf.addImage(frontDataUrl, 'PNG', 0, 0, CARD_WIDTH_IN, CARD_HEIGHT_IN, undefined, 'FAST');
+
+    // Watermark for front
     pdf.setFontSize(6);
     pdf.setTextColor(180, 180, 180);
     pdf.text('kart.krd', CARD_WIDTH_IN - 0.05, CARD_HEIGHT_IN - 0.05, { align: 'right' });
 
-    // Switch back to front view
-    await showBackCallback(false);
+    // If back content exists and callback provided, capture back side
+    if (hasBackContent && showBackCallback) {
+      // Switch to back view
+      await showBackCallback(true);
+
+      // Wait a bit for the component to re-render
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Capture back side
+      const backDataUrl = await toPng(element, {
+        pixelRatio: 3,
+        cacheBust: true,
+        includeQueryParams: true,
+        filter: (node: HTMLElement) => {
+          if (node.tagName === 'SCRIPT' || node.tagName === 'NOSCRIPT') return false;
+          return true;
+        },
+        skipFonts: true,
+      });
+
+      // Add new page for back
+      pdf.addPage();
+      pdf.addImage(backDataUrl, 'PNG', 0, 0, CARD_WIDTH_IN, CARD_HEIGHT_IN, undefined, 'FAST');
+
+      // Watermark for back
+      pdf.setFontSize(6);
+      pdf.setTextColor(180, 180, 180);
+      pdf.text('kart.krd', CARD_WIDTH_IN - 0.05, CARD_HEIGHT_IN - 0.05, { align: 'right' });
+    }
+
+    const safeName = cardData.name
+      ? cardData.name.replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g, '').trim().replace(/\s+/g, '-')
+      : 'business-card';
+
+    pdf.save(`${safeName}-kart.krd.pdf`);
+  } finally {
+    // Always switch back to front view, even if capture fails
+    if (hasBackContent && showBackCallback) {
+      await showBackCallback(false);
+    }
   }
-
-  const safeName = cardData.name
-    ? cardData.name.replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g, '').trim().replace(/\s+/g, '-')
-    : 'business-card';
-
-  pdf.save(`${safeName}-kart.krd.pdf`);
 }
