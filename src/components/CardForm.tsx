@@ -212,14 +212,18 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
           </svg>
         </button>
 
-        {socialOpen && (
-          <div id="social-section" className="space-y-3 mt-3">
+        <div
+          id="social-section"
+          className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+          style={{ maxHeight: socialOpen ? '500px' : '0px' }}
+        >
+          <div className="space-y-3 pt-3">
             <Field label={t('form.facebook')} value={data.facebook} onChange={set('facebook')} placeholder={t('form.facebookPlaceholder')} dir="ltr" fontFamily={fontFamily} />
             <Field label={t('form.instagram')} value={data.instagram} onChange={set('instagram')} placeholder={t('form.instagramPlaceholder')} dir="ltr" fontFamily={fontFamily} />
             <Field label={t('form.linkedin')} value={data.linkedin} onChange={set('linkedin')} placeholder={t('form.linkedinPlaceholder')} dir="ltr" fontFamily={fontFamily} />
             <Field label={t('form.twitter')} value={data.twitter} onChange={set('twitter')} placeholder={t('form.twitterPlaceholder')} dir="ltr" fontFamily={fontFamily} />
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
