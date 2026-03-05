@@ -85,12 +85,13 @@ export default function CorporateCard({ data }: Props) {
             <span
               style={{
                 color: '#FFFFFF',
-                fontSize: '11px',
+                fontSize: isRTL ? '12px' : '11px',
                 fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '2px',
-                writingMode: isRTL ? 'vertical-lr' : 'vertical-rl',
-                textOrientation: 'mixed',
+                textTransform: isRTL ? undefined : 'uppercase',
+                letterSpacing: isRTL ? undefined : '2px',
+                writingMode: isRTL ? undefined : 'vertical-rl',
+                textOrientation: isRTL ? undefined : 'mixed',
+                textAlign: 'center',
                 fontFamily,
               }}
             >
