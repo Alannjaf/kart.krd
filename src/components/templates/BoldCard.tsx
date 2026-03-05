@@ -63,8 +63,8 @@ export default function BoldCard({ data }: Props) {
           <div className="flex items-center gap-2">
             <div className="h-0.5 w-6 bg-yellow-400" />
             <p
-              className="text-yellow-400 font-semibold uppercase tracking-widest"
-              style={{ fontSize: '11px' }}
+              className="text-yellow-400 font-semibold uppercase"
+              style={{ fontSize: '11px', letterSpacing: isRTL ? 'normal' : '0.1em' }}
             >
               {data.title || 'پیشە'}
             </p>
