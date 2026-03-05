@@ -55,13 +55,13 @@ export default function MinimalCard({ data }: Props) {
             className="text-gray-900 font-light tracking-wide leading-tight"
             style={{ fontSize: '22px', marginBottom: '4px' }}
           >
-            {data.name || 'ناوی تەواو'}
+            {data.name || (data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو')}
           </div>
           <p
             className="text-gray-500 font-light"
             style={{ fontSize: '12px' }}
           >
-            {data.title || 'پیشە'}
+            {data.title || (data.language === 'en' ? 'Job Title' : data.language === 'ar' ? 'المسمى الوظيفي' : 'پیشە')}
           </p>
           {data.company && (
             <p

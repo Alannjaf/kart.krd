@@ -59,7 +59,7 @@ export default function ClassicCard({ data }: Props) {
             className="text-gray-900 font-bold leading-tight"
             style={{ fontSize: '22px', fontFamily: isRTL ? "'Noto Sans Arabic', serif" : "Georgia, serif", marginBottom: '4px' }}
           >
-            {data.name || 'ناوی تەواو'}
+            {data.name || (data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو')}
           </div>
           <div className="flex items-center justify-center gap-3 my-1">
             <div className="h-px bg-amber-600/50 flex-1" />
@@ -67,7 +67,7 @@ export default function ClassicCard({ data }: Props) {
               className="text-amber-700 font-medium"
               style={{ fontSize: '12px' }}
             >
-              {data.title || 'پیشە'}
+              {data.title || (data.language === 'en' ? 'Job Title' : data.language === 'ar' ? 'المسمى الوظيفي' : 'پیشە')}
             </p>
             <div className="h-px bg-amber-600/50 flex-1" />
           </div>

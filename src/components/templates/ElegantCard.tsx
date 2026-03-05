@@ -30,7 +30,7 @@ export default function ElegantCard({ data }: Props) {
               lineHeight: 1.3,
             }}
           >
-            {data.name || (isRTL ? 'ناوی تەواو' : 'Full Name')}
+            {data.name || (data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو')}
           </h2>
           {data.title && (
             <p

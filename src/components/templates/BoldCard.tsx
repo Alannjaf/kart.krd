@@ -58,7 +58,7 @@ export default function BoldCard({ data }: Props) {
             className="text-white font-extrabold leading-none tracking-tight"
             style={{ fontSize: '26px', marginBottom: '6px' }}
           >
-            {data.name || 'ناوی تەواو'}
+            {data.name || (data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو')}
           </div>
           <div className="flex items-center gap-2">
             <div className="h-0.5 w-6 bg-yellow-400" />
@@ -66,7 +66,7 @@ export default function BoldCard({ data }: Props) {
               className="text-yellow-400 font-semibold uppercase"
               style={{ fontSize: '11px', letterSpacing: isRTL ? 'normal' : '0.1em' }}
             >
-              {data.title || 'پیشە'}
+              {data.title || (data.language === 'en' ? 'Job Title' : data.language === 'ar' ? 'المسمى الوظيفي' : 'پیشە')}
             </p>
           </div>
           {data.company && (

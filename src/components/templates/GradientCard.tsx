@@ -112,7 +112,7 @@ export default function GradientCard({ data }: Props) {
                 lineHeight: 1.1,
               }}
             >
-              {data.name || (isRTL ? 'ناوی تەواو' : 'Full Name')}
+              {data.name || (data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو')}
             </div>
             {data.title && (
               <div

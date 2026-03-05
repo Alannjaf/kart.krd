@@ -47,13 +47,13 @@ export default function ModernCard({ data }: Props) {
             className="text-white font-bold leading-tight"
             style={{ fontSize: '20px', marginBottom: '3px' }}
           >
-            {data.name || 'ناوی تەواو'}
+            {data.name || (data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو')}
           </div>
           <p
             className="text-yellow-400 font-medium"
             style={{ fontSize: '13px' }}
           >
-            {data.title || 'پیشە'}
+            {data.title || (data.language === 'en' ? 'Job Title' : data.language === 'ar' ? 'المسمى الوظيفي' : 'پیشە')}
           </p>
           {data.company && (
             <p
