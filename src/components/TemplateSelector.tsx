@@ -135,7 +135,7 @@ export default function TemplateSelector({ selected, onChange, cardData, layout 
       <label className="block text-sm font-semibold text-[var(--color-text)] mb-2" style={{ fontFamily }}>
         {t('form.selectTemplate')}
       </label>
-      <div role="radiogroup" aria-label={t('form.selectTemplate')} className="grid grid-cols-4 gap-3">
+      <div role="radiogroup" aria-label={t('form.selectTemplate')} className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {TEMPLATES.map((tpl) => {
           const templateName = t(`template.${tpl.id}` as TranslationKey);
           return (
