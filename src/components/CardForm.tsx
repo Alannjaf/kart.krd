@@ -21,9 +21,10 @@ interface FieldProps {
   dir?: string;
   error?: string;
   fontFamily: string;
+  maxLength?: number;
 }
 
-function Field({ label, value, onChange, placeholder, type = 'text', dir, error, fontFamily }: FieldProps) {
+function Field({ label, value, onChange, placeholder, type = 'text', dir, error, fontFamily, maxLength }: FieldProps) {
   const id = useId();
   return (
     <div>
@@ -41,6 +42,7 @@ function Field({ label, value, onChange, placeholder, type = 'text', dir, error,
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder || label}
         dir={dir}
+        maxLength={maxLength}
         className={`w-full h-11 border rounded-md px-3 text-sm transition-colors bg-[var(--color-surface)] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent ${
           error ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'
         }`}
@@ -102,9 +104,9 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
         <h3 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
           {t('form.personalInfo')}
         </h3>
-        <Field label={t('form.fullName')} value={data.name} onChange={set('name')} placeholder={t('form.namePlaceholder')} error={errors.name} fontFamily={fontFamily} />
-        <Field label={t('form.jobTitle')} value={data.title} onChange={set('title')} placeholder={t('form.titlePlaceholder')} fontFamily={fontFamily} />
-        <Field label={t('form.company')} value={data.company} onChange={set('company')} placeholder={t('form.companyPlaceholder')} fontFamily={fontFamily} />
+        <Field label={t('form.fullName')} value={data.name} onChange={set('name')} placeholder={t('form.namePlaceholder')} error={errors.name} fontFamily={fontFamily} maxLength={50} />
+        <Field label={t('form.jobTitle')} value={data.title} onChange={set('title')} placeholder={t('form.titlePlaceholder')} fontFamily={fontFamily} maxLength={60} />
+        <Field label={t('form.company')} value={data.company} onChange={set('company')} placeholder={t('form.companyPlaceholder')} fontFamily={fontFamily} maxLength={60} />
       </div>
 
       <div className="h-px bg-[var(--color-border)]" />
@@ -114,10 +116,10 @@ export default function CardForm({ data, onChange, errors = {} }: Props) {
         <h3 className="text-sm font-semibold text-[var(--color-text)]" style={{ fontFamily }}>
           {t('form.contactInfo')}
         </h3>
-        <Field label={t('form.phone')} value={data.phone} onChange={set('phone')} placeholder={t('form.phonePlaceholder')} type="tel" dir="ltr" error={errors.phone} fontFamily={fontFamily} />
-        <Field label={t('form.email')} value={data.email} onChange={set('email')} placeholder={t('form.emailPlaceholder')} type="email" dir="ltr" error={errors.email} fontFamily={fontFamily} />
-        <Field label={t('form.website')} value={data.website} onChange={set('website')} placeholder={t('form.websitePlaceholder')} dir="ltr" fontFamily={fontFamily} />
-        <Field label={t('form.address')} value={data.address} onChange={set('address')} placeholder={t('form.addressPlaceholder')} fontFamily={fontFamily} />
+        <Field label={t('form.phone')} value={data.phone} onChange={set('phone')} placeholder={t('form.phonePlaceholder')} type="tel" dir="ltr" error={errors.phone} fontFamily={fontFamily} maxLength={20} />
+        <Field label={t('form.email')} value={data.email} onChange={set('email')} placeholder={t('form.emailPlaceholder')} type="email" dir="ltr" error={errors.email} fontFamily={fontFamily} maxLength={80} />
+        <Field label={t('form.website')} value={data.website} onChange={set('website')} placeholder={t('form.websitePlaceholder')} dir="ltr" fontFamily={fontFamily} maxLength={80} />
+        <Field label={t('form.address')} value={data.address} onChange={set('address')} placeholder={t('form.addressPlaceholder')} fontFamily={fontFamily} maxLength={100} />
       </div>
 
       <div className="h-px bg-[var(--color-border)]" />
