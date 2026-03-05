@@ -18,7 +18,7 @@ export default function BackCard({ data, template }: Props) {
 
   useEffect(() => {
     if (data.qrEnabled) {
-      generateVCardQR(data).then(setQrCode);
+      generateVCardQR(data).then(setQrCode).catch(() => setQrCode(''));
     } else {
       setQrCode('');
     }
