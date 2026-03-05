@@ -13,6 +13,8 @@ import { useLanguage } from '@/context/LanguageContext';
 import { getFontFamily } from '@/lib/i18n';
 
 const STORAGE_KEY = 'kart-krd-card-data';
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_REGEX = /^[0-9+\-\s()]+$/;
 
 function loadCardData(): CardData | null {
   try {
@@ -72,8 +74,8 @@ function EditorContent() {
   const validateCardData = useCallback((data: CardData): FormErrors => {
     const errors: FormErrors = {};
     if (!data.name.trim()) errors.name = t('validation.nameRequired');
-    if (data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) errors.email = t('validation.emailInvalid');
-    if (data.phone.trim() && !/^[0-9+\-\s()]+$/.test(data.phone.trim())) errors.phone = t('validation.phoneInvalid');
+    if (data.email.trim() && !EMAIL_REGEX.test(data.email.trim())) errors.email = t('validation.emailInvalid');
+    if (data.phone.trim() && !PHONE_REGEX.test(data.phone.trim())) errors.phone = t('validation.phoneInvalid');
     return errors;
   }, [t]);
 
@@ -113,8 +115,8 @@ function EditorContent() {
   const handleCardChange = useCallback((newData: CardData) => {
     setCardData(newData);
     if (formErrors.name && newData.name.trim()) setFormErrors(prev => ({ ...prev, name: undefined }));
-    if (formErrors.email && (!newData.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newData.email.trim()))) setFormErrors(prev => ({ ...prev, email: undefined }));
-    if (formErrors.phone && (!newData.phone.trim() || /^[0-9+\-\s()]+$/.test(newData.phone.trim()))) setFormErrors(prev => ({ ...prev, phone: undefined }));
+    if (formErrors.email && (!newData.email.trim() || EMAIL_REGEX.test(newData.email.trim()))) setFormErrors(prev => ({ ...prev, email: undefined }));
+    if (formErrors.phone && (!newData.phone.trim() || PHONE_REGEX.test(newData.phone.trim()))) setFormErrors(prev => ({ ...prev, phone: undefined }));
   }, [formErrors]);
 
   const downloadButton = (
