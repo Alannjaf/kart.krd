@@ -14,11 +14,13 @@ export const metadata: Metadata = {
     siteName: "kart.krd",
     locale: "ku_IQ",
     type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "kart.krd — Kurdish Business Card Maker" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "kart.krd — کارتی بزنسی کوردی",
     description: "کارتی بزنسی پیشەیی ئامادەکە — لە چەند چرکەیەکدا. Kurdish Business Card Maker.",
+    images: ["/opengraph-image"],
   },
 };
 
