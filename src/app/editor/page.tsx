@@ -11,6 +11,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { generatePdf } from '@/lib/generatePdf';
 import { useLanguage } from '@/context/LanguageContext';
 import { getFontFamily, TranslationKey } from '@/lib/i18n';
+import { SignedIn, UserButton } from '@neondatabase/auth/react';
 
 const STORAGE_KEY = 'kart-krd-card-data';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -213,6 +214,9 @@ function EditorContent() {
 
           <div className="flex items-center gap-3">
             <LanguageSwitcher compact />
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
             <div className="hidden lg:block">
               {downloadButton}
             </div>

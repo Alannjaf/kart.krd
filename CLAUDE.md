@@ -1,0 +1,209 @@
+# kart.krd - Kurdish Business Card Maker
+
+## Project Overview
+
+Web app for creating professional bilingual business cards with PDF export. Supports Kurdish (Sorani), Arabic, and English with full RTL/LTR support. Neon Auth (Better Auth) for authentication. Card data uses client-side localStorage persistence.
+
+**Live:** kart.krd | **Deploy:** Cloudflare Workers via GitHub Actions on push to `main`
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16.1.6 (App Router) |
+| Runtime | React 19.2.3, TypeScript 5 |
+| Styling | Tailwind CSS v4, PostCSS |
+| PDF | jsPDF + html-to-image (client-side) |
+| QR Codes | qrcode library (vCard format) |
+| Auth | @neondatabase/auth (Better Auth) |
+| Deployment | OpenNextJS → Cloudflare Workers |
+| CI/CD | GitHub Actions (.github/workflows/deploy.yml) |
+| Node | v22 |
+
+## Commands
+
+```bash
+npm run dev          # Local dev server
+npm run build        # Next.js production build
+npm run lint         # ESLint (Next.js core-web-vitals + TypeScript)
+npm run build:worker # Build for Cloudflare Workers (opennextjs-cloudflare)
+npm run preview      # Preview Cloudflare Workers build locally
+npm run cf-deploy    # Deploy to Cloudflare Workers
+```
+
+## Architecture
+
+### Directory Structure
+
+```
+src/
+├── app/
+│   ├── layout.tsx              # Root layout: metadata, fonts, AuthProvider, LanguageProvider
+│   ├── page.tsx                # Server component wrapper with page metadata
+│   ├── HomePage.tsx            # Client component: landing page (hero, previews, CTA)
+│   ├── globals.css             # Tailwind imports, Neon Auth styles, CSS variables
+│   ├── api/auth/[...path]/
+│   │   └── route.ts            # Auth API handler (catch-all for Neon Auth)
+│   ├── auth/[path]/
+│   │   └── page.tsx            # Sign-in/sign-up pages (AuthView)
+│   ├── account/[path]/
+│   │   └── page.tsx            # Account management pages (AccountView)
+│   └── editor/
+│       └── page.tsx            # Main editor: CardForm + CardPreview + PDF export
+├── components/
+│   ├── AuthProvider.tsx         # NeonAuthUIProvider wrapper (email, Google, OTP, forgot-password)
+│   ├── CardForm.tsx            # Input form (personal, contact, social, logo, QR toggle)
+│   ├── CardPreview.tsx         # Renders selected template (forwardRef for PDF capture)
+│   ├── BackCard.tsx            # Back of card (QR code + logo, template-specific designs)
+│   ├── LanguageSwitcher.tsx    # UI language toggle (ku/ar/en)
+│   ├── TemplateSelector.tsx    # 2x2 grid for picking card template
+│   └── templates/
+│       ├── ModernCard.tsx      # Dark gradient, yellow accent bar
+│       ├── ClassicCard.tsx     # Light background, amber borders, serif
+│       ├── BoldCard.tsx        # Black background, large text, high contrast
+│       ├── MinimalCard.tsx     # White, minimal lines, light weights
+│       ├── ElegantCard.tsx     # Dark with gold accents
+│       ├── CreativeCard.tsx    # Burgundy with decorative circle
+│       ├── CorporateCard.tsx   # Navy blue, professional stripe
+│       └── GradientCard.tsx    # Purple-blue gradient background
+├── context/
+│   └── LanguageContext.tsx     # Global language state, t() translations, dir, locale
+├── lib/
+│   ├── auth/
+│   │   ├── server.ts           # createNeonAuth server config
+│   │   └── client.ts           # createAuthClient client config
+│   ├── i18n.ts                # Translation strings for ku/ar/en, helper functions
+│   ├── generatePdf.ts         # HTML→PNG→PDF pipeline, watermark, front+back pages
+│   └── qrUtils.ts             # vCard QR code generation
+└── types/
+    └── card.ts                # CardData, TemplateId, CardLanguage, TEMPLATES array
+```
+
+### Data Flow
+
+```
+User Input (CardForm) → CardData state → localStorage (auto-save)
+                                       → CardPreview (live render)
+                                       → generatePdf (on-demand export)
+```
+
+### Key Types (src/types/card.ts)
+
+- `CardLanguage`: `'ku' | 'ar' | 'en'` - language of the card content
+- `TemplateId`: `'modern' | 'classic' | 'bold' | 'minimal' | 'elegant' | 'creative' | 'corporate' | 'gradient'`
+- `CardData`: all card fields (name, title, company, phone, email, website, address, social links, language, template, qrEnabled, logoUrl)
+- `TEMPLATES`: array of template metadata with Kurdish labels
+
+### Language System
+
+Two separate language concepts:
+1. **UI Language** (`LanguageContext`): controls app interface language via `useLanguage()` hook → `{ locale, dir, t, setLocale }`
+2. **Card Language** (`cardData.language`): controls text direction and font on the card itself
+
+Translations live in `src/lib/i18n.ts` with keys organized by section: `nav.*`, `landing.*`, `editor.*`, `form.*`, `validation.*`, `template.*`, `cardLang.*`
+
+### RTL/LTR Handling
+
+- Root layout sets `dir="rtl"` with `suppressHydrationWarning`
+- `LanguageContext` dynamically updates `<html>` dir/lang attributes
+- Kurdish/Arabic → RTL with 'Noto Sans Arabic' font
+- English → LTR with 'Geist' font
+- Phone/email inputs always use `dir="ltr"`
+- Mixed-direction text uses `unicodeBidi: 'plaintext'`
+
+### PDF Generation (src/lib/generatePdf.ts)
+
+1. Captures front card DOM as PNG via `html-to-image` (3x pixel ratio)
+2. Creates jsPDF document (landscape, 3.5" x 2" business card size)
+3. Adds front image + "kart.krd" watermark (gray, 6pt, bottom-right)
+4. If back content exists (logo or QR): switches view, captures back, adds second page
+5. Saves as `{sanitized-name}-kart.krd.pdf`
+
+### Templates
+
+All 8 templates support: RTL/LTR, 3 languages, optional logo, social icons, contact info with icons. Each has a matching back design in `BackCard.tsx`. BackCard uses a data-driven `templateStyles` config map (not per-template blocks). Templates are lazy-loaded via `next/dynamic` on the landing page (except ModernCard which is eager).
+
+## Key Files
+
+| File | What it does |
+|------|-------------|
+| `src/app/editor/page.tsx` | Core app logic: state, validation, localStorage, PDF trigger |
+| `src/context/LanguageContext.tsx` | Global i18n provider with localStorage persistence |
+| `src/lib/i18n.ts` | All translation strings (~70 keys per language) |
+| `src/lib/generatePdf.ts` | PDF export pipeline |
+| `src/types/card.ts` | Central type definitions and template registry |
+| `.github/workflows/deploy.yml` | CI/CD: npm ci → opennextjs-cloudflare build → wrangler deploy |
+| `wrangler.jsonc` | Cloudflare Workers config (worker name: kart-krd) |
+| `open-next.config.ts` | OpenNext adapter config for Cloudflare edge |
+
+## Coding Conventions
+
+- All interactive components use `'use client'` directive
+- Auth API route at `/api/auth/[...path]` handled by Neon Auth
+- Inline styles on card templates (required for html-to-image capture)
+- Tailwind utilities for app UI, inline styles for card content that gets captured to PDF
+- Path alias: `@/*` maps to `./src/*`
+- Form validation: name required, email format, phone digits/+/- only
+- CardPreview uses `forwardRef` to expose DOM for PDF capture
+- Logo uploads capped at 2MB, stored as data URLs (excluded from localStorage)
+- CSS variables defined in globals.css: `--color-bg`, `--color-text`, `--color-text-secondary`, `--color-accent`, `--color-surface`, `--color-border`, `--color-error`, `--color-panel`
+- Font CSS variables: `--font-geist` (Latin), `--font-noto-arabic` (Kurdish/Arabic) — used in template inline styles
+- Design system: warm stone neutrals + teal accent (#0D9488), no gradients
+- LanguageSwitcher accepts `compact` prop (boolean) instead of `className`
+- TemplateSelector accepts `layout` prop (`'grid' | 'scroll'`) for desktop/mobile variants
+- Editor uses mobile tab bar pattern: `activeTab` state (`'edit' | 'preview'`) with fixed bottom bar on `< lg` screens
+- CardForm social section is collapsible (accordion pattern)
+
+## Deployment
+
+- **Trigger:** Push to `main` branch
+- **Pipeline:** GitHub Actions → `npm ci` → `opennextjs-cloudflare build` → `wrangler deploy`
+- **Secrets needed:** `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+- **Worker name:** `kart-krd` (in wrangler.jsonc)
+- **SEO:** robots.txt in /public, sitemap generated by `src/app/sitemap.ts`
+
+## Current State
+
+- Neon Auth integration with email/password, Google OAuth, email OTP, forgot-password
+- Neon database for auth (via Neon Auth managed service)
+- Middleware protects /editor and /account routes (redirects to /auth/sign-in)
+- No tests currently
+- No middleware.ts
+- 8 templates: modern, classic, bold, minimal, elegant, creative, corporate, gradient
+- Security headers configured in next.config.ts (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy)
+- OG image generated dynamically via `src/app/opengraph-image.tsx`
+- Error boundary on editor page (`src/app/editor/error.tsx`)
+- Web app manifest at `public/manifest.json` (icons not yet created)
+- Dark mode via `@media (prefers-color-scheme: dark)` in globals.css with `--color-panel` variable
+- Hydration flash prevention: LanguageContext wraps children in `visibility: hidden` until mounted
+
+## Gotchas
+
+- Card templates use **inline styles** (not Tailwind) because html-to-image needs inline styles for accurate capture
+- `logoUrl` is excluded from localStorage saves (data URLs are too large)
+- Root layout defaults to `dir="rtl"` - LanguageContext overrides this dynamically
+- PDF generation uses a callback pattern (`showBackCallback`) to temporarily switch the preview to back view for capture, wrapped in try/finally for cleanup
+- PDF render timing uses double `requestAnimationFrame` + `document.fonts.ready` (not setTimeout)
+- Fonts loaded via `next/font/google` in layout.tsx with CSS variables `--font-geist` and `--font-noto-arabic` — templates reference these variables in inline styles
+- Mobile-first design: tab bar editor on mobile (`< lg`), side-by-side on desktop (`lg+`)
+- Landing page uses actual template component renders (ModernCard etc.) for preview cards, not mock divs
+- Template fallback text is language-aware (Kurdish/Arabic/English based on cardData.language)
+- vCard QR codes use RFC 2426 format with CRLF line endings, escaped special characters, and required N property
+- All decorative SVG icons in templates have `aria-hidden="true"`
+- Form inputs have maxLength limits to prevent card overflow
+- ARIA radiogroup pattern used on language switcher, card language, template selectors, and front/back toggle (`CardSideToggle`)
+- Mobile editor tabs render both panels with CSS `hidden` class (not conditional unmount) to preserve refs
+- When passing `t()` as a prop, import `TranslationKey` from `@/lib/i18n` and type as `(key: TranslationKey) => string`
+
+# Compact instructions
+
+- This is a Next.js 16 app deployed to Cloudflare Workers via OpenNextJS
+- All rendering is client-side (`'use client'`), auth via Neon Auth (Better Auth), Neon database for auth
+- Two language systems: UI language (LanguageContext) and card content language (cardData.language)
+- Card templates MUST use inline styles (not Tailwind classes) for PDF capture compatibility
+- RTL support is critical - test all changes in Kurdish/Arabic modes
+- When adding new UI text, add translation keys to all 3 languages in src/lib/i18n.ts
+- localStorage is used for both language preference and card data persistence
+- PDF output is 3.5" x 2" business card size with "kart.krd" watermark
+- Deploy happens automatically on push to main - ensure builds pass locally first
+- Run `npm run build:worker` to verify Cloudflare compatibility before pushing
