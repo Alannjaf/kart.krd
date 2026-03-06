@@ -5,6 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { SignedIn, SignedOut, UserButton } from '@neondatabase/auth/react';
 import { getFontFamily } from "@/lib/i18n";
 import ModernCard from "@/components/templates/ModernCard";
 import { CardData } from "@/types/card";
@@ -110,6 +111,18 @@ export default function HomePage() {
           </div>
 
           <LanguageSwitcher compact />
+          <SignedOut>
+            <Link
+              href="/auth/sign-in"
+              className="inline-flex items-center h-9 px-4 rounded-md bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-hover)] transition-colors"
+              style={{ fontFamily }}
+            >
+              {t('auth.signIn')}
+            </Link>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </header>
 

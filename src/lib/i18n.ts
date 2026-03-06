@@ -17,12 +17,12 @@ export const translations = {
     'nav.cardMaker': 'دروستکەری کارتی بزنس',
 
     // Landing page
-    'landing.badge': '✦ بەخۆڕایی — بەبێ تۆمارکردن',
+    'landing.badge': '✦ بەخۆڕایی',
     'landing.heroTitle': 'کارتی بزنسیت ئامادەبکە',
     'landing.heroSubtitle': 'لە چەند چرکەیەکدا',
     'landing.heroDesc': 'کارتی بزنسی پیشەیی بۆ خۆت دروست بکە — بەکوردی، عەرەبی، یان ئینگلیزی. PDF دابەزێنە، بەبێ هیچ تۆمارکردنێک.',
     'landing.ctaButton': '🎨 ئیستا دروستی بکە — بەخۆڕایی',
-    'landing.ctaSubtext': 'پێویستی بە تۆمارکردن نییە',
+    'landing.ctaSubtext': 'بەخۆڕایی — خۆتۆمار بکە',
     'landing.templatesTitle': 'هەشت شێوازی جیاواز',
     'landing.feature1Title': 'سێ زمان',
     'landing.feature1Desc': 'کوردی، عەرەبی، ئینگلیزی — هەموو لەگەڵ پشتگیری چەپبەراستەوە و ڕاستبەچەپەوە',
@@ -117,6 +117,11 @@ export const translations = {
     'cardLang.ku': 'کوردی',
     'cardLang.ar': 'عەرەبی',
     'cardLang.en': 'English',
+
+    // Auth
+    'auth.signIn': 'چوونەژوورەوە',
+    'auth.signOut': 'چوونەدەرەوە',
+    'auth.account': 'هەژمار',
   },
   ar: {
     // Header / Nav
@@ -124,12 +129,12 @@ export const translations = {
     'nav.cardMaker': 'أداة إنشاء البطاقات',
 
     // Landing page
-    'landing.badge': '✦ مجاني — بدون تسجيل',
+    'landing.badge': '✦ مجاني',
     'landing.heroTitle': 'بطاقة أعمال جاهزة',
     'landing.heroSubtitle': 'في ثوانٍ معدودة',
     'landing.heroDesc': 'أنشئ بطاقة أعمال احترافية — بالكردية أو العربية أو الإنجليزية. حمّل PDF فوراً، بدون أي تسجيل.',
     'landing.ctaButton': '🎨 أنشئ مجاناً',
-    'landing.ctaSubtext': 'لا حاجة للتسجيل',
+    'landing.ctaSubtext': 'مجاني — سجّل الآن',
     'landing.templatesTitle': 'ثمانية أنماط مختلفة',
     'landing.feature1Title': 'ثلاث لغات',
     'landing.feature1Desc': 'الكردية والعربية والإنجليزية — مع دعم كامل للنصوص من اليمين واليسار',
@@ -224,6 +229,11 @@ export const translations = {
     'cardLang.ku': 'الكردية',
     'cardLang.ar': 'العربية',
     'cardLang.en': 'English',
+
+    // Auth
+    'auth.signIn': 'تسجيل الدخول',
+    'auth.signOut': 'تسجيل الخروج',
+    'auth.account': 'الحساب',
   },
   en: {
     // Header / Nav
@@ -231,12 +241,12 @@ export const translations = {
     'nav.cardMaker': 'Card Maker',
 
     // Landing page
-    'landing.badge': '✦ Free — No Registration Required',
+    'landing.badge': '✦ Free',
     'landing.heroTitle': 'Create Professional',
     'landing.heroSubtitle': 'Business Cards in Seconds',
     'landing.heroDesc': 'Generate professional business cards in Kurdish, Arabic, or English. Download as PDF instantly, no account required.',
     'landing.ctaButton': '🎨 Create Free Card',
-    'landing.ctaSubtext': 'No registration required',
+    'landing.ctaSubtext': 'Free — Sign up to get started',
     'landing.templatesTitle': 'Eight Different Styles',
     'landing.feature1Title': '3 Languages',
     'landing.feature1Desc': 'Kurdish, Arabic, English — all with full RTL and LTR text support',
@@ -331,6 +341,11 @@ export const translations = {
     'cardLang.ku': 'کوردی',
     'cardLang.ar': 'العربية',
     'cardLang.en': 'English',
+
+    // Auth
+    'auth.signIn': 'Sign In',
+    'auth.signOut': 'Sign Out',
+    'auth.account': 'Account',
   },
 } as const;
 

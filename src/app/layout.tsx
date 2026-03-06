@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Noto_Sans_Arabic } from "next/font/google";
 import { LanguageProvider } from "@/context/LanguageContext";
+import AuthProvider from "@/components/AuthProvider";
 import "./globals.css";
 
 const geist = Geist({
@@ -54,7 +55,9 @@ export default function RootLayout({
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-[var(--color-panel)] focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:text-[var(--color-accent)]">
           Skip to content
         </a>
-        <LanguageProvider>{children}</LanguageProvider>
+        <AuthProvider>
+          <LanguageProvider>{children}</LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   );
