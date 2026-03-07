@@ -100,12 +100,18 @@ export default function BackCard({ data, template }: Props) {
   const fontFamily = isRTL ? "var(--font-noto-arabic), sans-serif" : "var(--font-geist), sans-serif";
 
   useEffect(() => {
-    if (data.qrEnabled) {
-      generateVCardQR(data).then(setQrCode).catch(() => setQrCode(''));
-    } else {
-      setQrCode('');
-    }
+    if (!data.qrEnabled) return;
+    let cancelled = false;
+    generateVCardQR(data).then(url => {
+      if (!cancelled) setQrCode(url);
+    }).catch(() => {
+      if (!cancelled) setQrCode('');
+    });
+    return () => { cancelled = true; };
   }, [data.qrEnabled, data.name, data.title, data.company, data.phone, data.email, data.website, data.address, data.facebook, data.instagram, data.linkedin, data.twitter]);
+
+  // Clear QR code synchronously when disabled (outside effect)
+  const effectiveQrCode = data.qrEnabled ? qrCode : '';
 
   const style = templateStyles[template];
   const bgStyle = style.background.includes('gradient') || style.background.includes('#')
@@ -144,10 +150,10 @@ export default function BackCard({ data, template }: Props) {
         </div>
       )}
 
-      {data.qrEnabled && qrCode && (
+      {data.qrEnabled && effectiveQrCode && (
         <div style={{ marginBottom: '8px', ...contentStyle }}>
           <img
-            src={qrCode}
+            src={effectiveQrCode}
             alt={t('alt.qrCode')}
             style={{
               width: '88px',
@@ -159,7 +165,7 @@ export default function BackCard({ data, template }: Props) {
         </div>
       )}
 
-      {data.website && data.qrEnabled && qrCode && (
+      {data.website && data.qrEnabled && effectiveQrCode && (
         <p
           style={{ fontSize: '10px', color: style.websiteColor, textAlign: 'center', ...contentStyle }}
           dir="ltr"

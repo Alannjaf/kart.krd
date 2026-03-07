@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useCallback, useMemo, useSyncExternalStore, ReactNode } from 'react';
 import { type Locale, type Direction, type TranslationKey, translations, getDirection } from '@/lib/i18n';
 
 interface LanguageContextValue {
@@ -11,41 +11,57 @@ interface LanguageContextValue {
 }
 
 const STORAGE_KEY = 'kart-krd-locale';
+const VALID_LOCALES: Locale[] = ['ku', 'ar', 'en'];
+
+// External store for locale — initialized from localStorage on module load (client only)
+let currentLocale: Locale = 'ku';
+const listeners = new Set<() => void>();
+
+if (typeof window !== 'undefined') {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && VALID_LOCALES.includes(stored as Locale)) {
+      currentLocale = stored as Locale;
+    }
+  } catch {}
+}
+
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  return () => { listeners.delete(callback); };
+}
+
+function getSnapshot() { return currentLocale; }
+function getServerSnapshot(): Locale { return 'ku'; }
+
+function setLocaleStore(newLocale: Locale) {
+  currentLocale = newLocale;
+  try { localStorage.setItem(STORAGE_KEY, newLocale); } catch {}
+  document.documentElement.lang = newLocale;
+  document.documentElement.dir = getDirection(newLocale);
+  listeners.forEach(l => l());
+}
+
+// Mounted detection — false on server, true on client
+const noopSubscribe = () => () => {};
+const returnTrue = () => true;
+const returnFalse = () => false;
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('ku');
-  const [mounted, setMounted] = useState(false);
-
-  // Load from localStorage on mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
-      if (stored && (stored === 'ku' || stored === 'ar' || stored === 'en')) {
-        setLocaleState(stored);
-      }
-    } catch {}
-    setMounted(true);
-  }, []);
+  const locale = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const mounted = useSyncExternalStore(noopSubscribe, returnTrue, returnFalse);
 
   const setLocale = useCallback((newLocale: Locale) => {
-    setLocaleState(newLocale);
-    try {
-      localStorage.setItem(STORAGE_KEY, newLocale);
-    } catch {}
-    // Update html attributes
-    document.documentElement.lang = newLocale;
-    document.documentElement.dir = getDirection(newLocale);
+    setLocaleStore(newLocale);
   }, []);
 
-  // Set initial html attributes once mounted
+  // Sync html attributes when locale changes
   useEffect(() => {
-    if (mounted) {
-      document.documentElement.lang = locale;
-      document.documentElement.dir = getDirection(locale);
-    }
-  }, [mounted, locale]);
+    document.documentElement.lang = locale;
+    document.documentElement.dir = getDirection(locale);
+  }, [locale]);
 
   const t = useCallback((key: TranslationKey): string => {
     return translations[locale][key] ?? key;
