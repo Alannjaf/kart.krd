@@ -5,7 +5,8 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { SignedIn, SignedOut, UserButton } from '@neondatabase/auth/react';
+import { SignedIn, SignedOut } from '@neondatabase/auth/react';
+import CompactUserButton from '@/components/CompactUserButton';
 import { getFontFamily } from "@/lib/i18n";
 import ModernCard from "@/components/templates/ModernCard";
 import { CardData } from "@/types/card";
@@ -121,7 +122,7 @@ export default function HomePage() {
             </Link>
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <CompactUserButton />
           </SignedIn>
         </div>
       </header>
