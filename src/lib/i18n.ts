@@ -122,6 +122,29 @@ export const translations = {
     'auth.signIn': 'چوونەژوورەوە',
     'auth.signOut': 'چوونەدەرەوە',
     'auth.account': 'هەژمار',
+
+    // Cards (save/load)
+    'cards.save': 'پاشەکەوتکردن',
+    'cards.saving': 'پاشەکەوت دەکرێت...',
+    'cards.saved': 'پاشەکەوت کرا',
+    'cards.saveError': 'پاشەکەوتکردن سەرکەوتوو نەبوو',
+    'cards.myCards': 'کارتەکانم',
+    'cards.noCards': 'هیچ کارتێکت نیە',
+    'cards.signInToSave': 'بچۆ ژوورەوە بۆ پاشەکەوتکردن',
+    'cards.deleteConfirm': 'دڵنیایت لە سڕینەوەی ئەم کارتە؟',
+    'cards.newCard': 'کارتی نوێ',
+    'cards.cardName': 'ناوی کارت',
+
+    // Profile page
+    'profile.views': 'بینین',
+    'profile.downloadVCard': 'داگرتنی پەیوەندی',
+    'profile.share': 'هاوبەشکردن',
+    'profile.copied': 'لینک کۆپی کرا',
+    'profile.shareTitle': 'کارتی بزنسی',
+    'profile.notFound': 'کارت نەدۆزرایەوە',
+    'profile.notFoundDesc': 'ئەم کارتە بوونی نیە یان لابراوە.',
+    'profile.backHome': 'گەڕانەوە بۆ سەرەکی',
+    'profile.madeWith': 'دروستکراوە لەگەڵ',
   },
   ar: {
     // Header / Nav
@@ -234,6 +257,29 @@ export const translations = {
     'auth.signIn': 'تسجيل الدخول',
     'auth.signOut': 'تسجيل الخروج',
     'auth.account': 'الحساب',
+
+    // Cards (save/load)
+    'cards.save': 'حفظ',
+    'cards.saving': 'جارٍ الحفظ...',
+    'cards.saved': 'تم الحفظ',
+    'cards.saveError': 'فشل الحفظ',
+    'cards.myCards': 'بطاقاتي',
+    'cards.noCards': 'لا توجد بطاقات',
+    'cards.signInToSave': 'سجّل الدخول للحفظ',
+    'cards.deleteConfirm': 'هل أنت متأكد من حذف هذه البطاقة؟',
+    'cards.newCard': 'بطاقة جديدة',
+    'cards.cardName': 'اسم البطاقة',
+
+    // Profile page
+    'profile.views': 'مشاهدة',
+    'profile.downloadVCard': 'تحميل جهة الاتصال',
+    'profile.share': 'مشاركة',
+    'profile.copied': 'تم نسخ الرابط',
+    'profile.shareTitle': 'بطاقة أعمال',
+    'profile.notFound': 'البطاقة غير موجودة',
+    'profile.notFoundDesc': 'هذه البطاقة غير موجودة أو تم حذفها.',
+    'profile.backHome': 'العودة للرئيسية',
+    'profile.madeWith': 'صُنع بواسطة',
   },
   en: {
     // Header / Nav
@@ -346,6 +392,29 @@ export const translations = {
     'auth.signIn': 'Sign In',
     'auth.signOut': 'Sign Out',
     'auth.account': 'Account',
+
+    // Cards (save/load)
+    'cards.save': 'Save',
+    'cards.saving': 'Saving...',
+    'cards.saved': 'Saved',
+    'cards.saveError': 'Save failed',
+    'cards.myCards': 'My Cards',
+    'cards.noCards': 'No saved cards',
+    'cards.signInToSave': 'Sign in to save',
+    'cards.deleteConfirm': 'Are you sure you want to delete this card?',
+    'cards.newCard': 'New Card',
+    'cards.cardName': 'Card Name',
+
+    // Profile page
+    'profile.views': 'views',
+    'profile.downloadVCard': 'Download Contact',
+    'profile.share': 'Share',
+    'profile.copied': 'Link copied',
+    'profile.shareTitle': 'Business Card',
+    'profile.notFound': 'Card not found',
+    'profile.notFoundDesc': 'This card does not exist or has been removed.',
+    'profile.backHome': 'Back to home',
+    'profile.madeWith': 'Made with',
   },
 } as const;
 
