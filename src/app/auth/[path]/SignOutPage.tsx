@@ -15,7 +15,7 @@ export default function SignOutPage() {
     async function performSignOut() {
       console.log('[sign-out] Starting sign-out flow');
 
-      // Step 1: Call Better Auth signOut (clears server session + sets cookie expiry headers)
+      // Step 1: Call Better Auth signOut
       try {
         console.log('[sign-out] Calling authClient.signOut()...');
         await authClient.signOut();
@@ -24,18 +24,20 @@ export default function SignOutPage() {
         console.error('[sign-out] authClient.signOut() failed:', err);
       }
 
-      // Step 2: Call our custom endpoint to force-clear all auth cookies
-      try {
-        console.log('[sign-out] Calling /api/signout to force-clear cookies...');
-        const res = await fetch('/api/signout', { method: 'POST' });
-        const data = await res.json();
-        console.log('[sign-out] /api/signout response:', data);
-      } catch (err) {
-        console.error('[sign-out] /api/signout failed:', err);
+      // Step 2: Clear all auth cookies client-side
+      console.log('[sign-out] Clearing cookies client-side...');
+      const cookies = document.cookie.split(';');
+      for (const cookie of cookies) {
+        const name = cookie.split('=')[0].trim();
+        console.log('[sign-out] Clearing cookie:', name);
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${window.location.hostname}`;
       }
 
-      console.log('[sign-out] Sign-out complete, redirecting to /auth/sign-in');
-      router.push('/auth/sign-in');
+      console.log('[sign-out] All cookies cleared, redirecting...');
+
+      // Hard redirect to ensure fresh state
+      window.location.href = '/auth/sign-in';
     }
 
     performSignOut();
