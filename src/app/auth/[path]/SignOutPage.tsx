@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth/client';
 
 export default function SignOutPage() {
   const signingOut = useRef(false);
-  const router = useRouter();
 
   useEffect(() => {
     if (signingOut.current) return;
@@ -14,34 +12,35 @@ export default function SignOutPage() {
 
     async function performSignOut() {
       console.log('[sign-out] Starting sign-out flow');
+      console.log('[sign-out] Current cookies (visible to JS):', document.cookie);
 
-      // Step 1: Call Better Auth signOut
       try {
         console.log('[sign-out] Calling authClient.signOut()...');
-        await authClient.signOut();
-        console.log('[sign-out] authClient.signOut() succeeded');
+        const result = await authClient.signOut({
+          fetchOptions: {
+            onSuccess: () => {
+              console.log('[sign-out] signOut onSuccess fired — server session invalidated');
+              console.log('[sign-out] Cookies after signOut:', document.cookie);
+              // Hard redirect to force fresh page load (clears React state + re-reads cookies)
+              window.location.replace('/auth/sign-in');
+            },
+            onError: (ctx) => {
+              console.error('[sign-out] signOut onError:', ctx.error);
+              // Even on error, redirect — user wanted to sign out
+              window.location.replace('/auth/sign-in');
+            },
+          },
+        });
+        console.log('[sign-out] signOut returned:', JSON.stringify(result));
       } catch (err) {
-        console.error('[sign-out] authClient.signOut() failed:', err);
+        console.error('[sign-out] signOut threw:', err);
+        // Fallback: redirect anyway
+        window.location.replace('/auth/sign-in');
       }
-
-      // Step 2: Clear all auth cookies client-side
-      console.log('[sign-out] Clearing cookies client-side...');
-      const cookies = document.cookie.split(';');
-      for (const cookie of cookies) {
-        const name = cookie.split('=')[0].trim();
-        console.log('[sign-out] Clearing cookie:', name);
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${window.location.hostname}`;
-      }
-
-      console.log('[sign-out] All cookies cleared, redirecting...');
-
-      // Hard redirect to ensure fresh state
-      window.location.href = '/auth/sign-in';
     }
 
     performSignOut();
-  }, [router]);
+  }, []);
 
   return (
     <div className="flex flex-col items-center gap-3">
