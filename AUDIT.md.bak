@@ -1,0 +1,385 @@
+# kart.krd Full Codebase Audit
+
+**Date:** 2026-03-06
+**Scope:** UI/UX, code quality, performance, accessibility, SEO, PDF generation, template design, i18n/RTL, error handling, configuration, deployment
+**Out of scope:** Authentication, payment integration
+
+---
+
+## CRITICAL (Must Fix)
+
+### 1. Leaked Database Credentials in .env.local
+**File:** `.env.local` lines 2, 5
+**Problem:** Contains a live Neon database password (`npg_icI3glAd7ZFR`) and cookie signing secret (`krt8xPm2vLqW9nZa5jYcRfHb3sDe7gTu`). Auth was removed but credentials remain. Even though gitignored, these should be considered compromised if they ever appeared in commit history.
+**Fix:** Rotate credentials in Neon dashboard immediately. Delete all 4 unused env vars from `.env.local`.
+
+### 2. BoldCard `tracking-widest` Breaks Arabic/Kurdish Text
+**File:** `src/components/templates/BoldCard.tsx` line 66
+**Problem:** `tracking-widest` (letter-spacing) on the job title disconnects Arabic/Kurdish connected letterforms, making text unreadable in RTL mode. Arabic script requires letters to be connected -- increased letter-spacing breaks this fundamental property.
+**Fix:** Conditionally apply `tracking-widest` only when `data.language === 'en'`. For RTL languages, use `letterSpacing: 0` or `letterSpacing: 'normal'`.
+
+### 3. Font Family 'Inter' Referenced But Never Loaded
+**File:** All 8 templates + `src/components/BackCard.tsx` line 17
+**Problem:** Templates specify `fontFamily: "'Inter', sans-serif"` for English text, but only Geist and Noto Sans Arabic are loaded via Google Fonts in `layout.tsx`. The `getFontFamily()` helper in `i18n.ts` line 10 returns `'Geist'` for English -- contradicting what templates actually use. English text falls back to system sans-serif, which varies by OS/device.
+**Fix:** Either load Inter via Google Fonts/next-font, or change all template font references to `'Geist'` to match the loaded font.
+
+### 4. Both Pages Are Fully Client-Rendered -- Zero SSR for SEO
+**File:** `src/app/page.tsx` line 1, `src/app/editor/page.tsx` line 1
+**Problem:** Both pages have `'use client'` at line 1. The landing page -- the most SEO-critical page -- renders nothing without JavaScript. Crawlers that don't execute JS see an empty shell. Client components cannot export `metadata`, so there's no page-specific title or description.
+**Fix:** Extract the landing page's static content into a server component. Keep only interactive parts (language switcher, etc.) as client components. Use `generateMetadata()` for page-specific SEO.
+
+### 5. No Open Graph Image for Social Sharing
+**File:** `src/app/layout.tsx` lines 10-22
+**Problem:** `openGraph` metadata has no `images` property. `twitter.card` is set to `summary_large_image` but no image is provided. No `og-image.png` or `opengraph-image.tsx` exists anywhere. Every social share (Facebook, Twitter/X, LinkedIn) shows a blank placeholder.
+**Fix:** Create `public/og-image.png` (1200x630px) or `src/app/opengraph-image.tsx` for dynamic generation. Add `images` to both `openGraph` and `twitter` metadata.
+
+### 6. No Security Headers
+**File:** `next.config.ts` line 3
+**Problem:** Config is completely empty `{}`. No security headers configured: missing `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Content-Security-Policy`. Default `X-Powered-By: Next.js` header leaks framework info.
+**Fix:** Add `headers()` function and `poweredByHeader: false` to next.config.ts.
+
+---
+
+## HIGH (Should Fix Soon)
+
+### 7. Render-Blocking Google Fonts
+**File:** `src/app/layout.tsx` lines 33-38
+**Problem:** Two Google Font families (Geist 4 weights + Noto Sans Arabic 6 weights = 10 weight files) loaded via external `<link>` tags. This causes render-blocking requests, FOUT/FOIT risk, and bypasses Next.js font optimization. Requires 3 external network requests (2 preconnects + 1 stylesheet) on every page load.
+**Fix:** Switch to `next/font/google` for automatic self-hosting, `font-display: swap`, and zero layout shift.
+
+### 8. MinimalCard Text Contrast Fails WCAG AA
+**File:** `src/components/templates/MinimalCard.tsx` lines 88, 94, 100
+**Problem:** Email, website, and address text uses `text-gray-400` (#9CA3AF) on white background = ~2.7:1 contrast ratio. WCAG AA requires 4.5:1 for normal text. Combined with `fontWeight: 300` at 13px, text is extremely hard to read.
+**Fix:** Use `text-gray-600` (#4B5563) minimum for WCAG AA compliance. Consider bumping font weight to 400.
+
+### 9. BoldCard Address Text Low Contrast
+**File:** `src/components/templates/BoldCard.tsx` line 103
+**Problem:** Address uses `text-gray-500` (~#6B7280) on `bg-gray-950` (~#030712). Contrast ~4.2:1, barely passes AA for large text but fails for the 14px size used here.
+**Fix:** Use `text-gray-400` minimum for this background.
+
+### 10. All Form Labels Missing htmlFor/id Association
+**File:** `src/components/CardForm.tsx` lines 29-45
+**Problem:** The `Field` component wraps `<label>` and `<input>` but has no `htmlFor`/`id` linkage. Screen readers cannot associate labels with inputs. Also affects: file input (line 140-161), QR checkbox (lines 127-137).
+**Fix:** Generate unique IDs (e.g., `useId()` hook) and wire up `htmlFor`/`id` on all form controls.
+
+### 11. No Skip-to-Content Link or `<main>` Landmark
+**File:** `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/editor/page.tsx`
+**Problem:** No skip navigation link anywhere. No `<main>` landmark on either page (both use bare `<div>` roots). Keyboard/screen reader users must tab through the full header on every page. No `<nav>` landmark in headers either.
+**Fix:** Add `<a href="#main-content" class="sr-only focus:not-sr-only">Skip to content</a>` in layout. Wrap page content in `<main id="main-content">`. Wrap header nav in `<nav>`.
+
+### 12. Mobile Tab Bar Has No ARIA Roles/States
+**File:** `src/app/editor/page.tsx` lines 306-328
+**Problem:** The Edit/Preview tab bar is two plain buttons with visual-only state. Missing: `role="tablist"` on container, `role="tab"` + `aria-selected` on buttons, `role="tabpanel"` on content areas. SVG icons (lines 312-314, 323-326) lack `aria-hidden="true"`.
+**Fix:** Implement WAI-ARIA Tabs pattern with proper roles, states, and keyboard navigation.
+
+### 13. Front/Back Toggle Missing ARIA
+**File:** `src/app/editor/page.tsx` lines 189-208, 267-286
+**Problem:** The front/back card toggle buttons have no `aria-pressed`, `role="radiogroup"`, or `aria-selected`. Duplicated in desktop and mobile markup (DRY violation). Screen readers cannot determine current state.
+**Fix:** Add ARIA roles and states. Extract toggle into a shared component.
+
+### 14. BackCard QR Generation Has No Error Handling
+**File:** `src/components/BackCard.tsx` line 21
+**Problem:** `generateVCardQR(data).then(setQrCode)` has no `.catch()`. If QR generation fails, it's an unhandled promise rejection. No fallback UI, no user notification.
+**Fix:** Add `.catch()` handler with fallback state. Show error indicator or hide QR section on failure.
+
+### 15. PDF Generation Has No Error Cleanup
+**File:** `src/lib/generatePdf.ts` lines 7-82
+**Problem:** No try/catch in the function. If front capture succeeds but back capture fails (line 53), `showBackCallback(false)` at line 74 never fires -- UI gets stuck on back view. The caller catches errors but can't clean up the internal state.
+**Fix:** Wrap in try/finally to ensure `showBackCallback(false)` always executes.
+
+### 16. PDF `skipFonts: true` May Cause Missing Text
+**File:** `src/lib/generatePdf.ts` lines 26, 61
+**Problem:** `skipFonts: true` tells html-to-image not to inline font declarations. If Google Fonts haven't fully loaded at capture time, text falls back to system fonts. Especially risky for Kurdish/Arabic text requiring Noto Sans Arabic.
+**Fix:** Remove `skipFonts: true` or add a font-loading check before capture. Consider using `document.fonts.ready` promise.
+
+### 17. vCard Missing Required `N` Property
+**File:** `src/lib/qrUtils.ts` lines 6-17
+**Problem:** vCard only has `FN` (formatted name) but not `N` (structured name). The `N` property is **required** in vCard 3.0 (RFC 2426). Some QR code readers may fail to parse the vCard.
+**Fix:** Add `N:;${data.name};;;` (last;first;middle;prefix;suffix) to the vCard string.
+
+### 18. vCard Special Characters Not Escaped
+**File:** `src/lib/qrUtils.ts` lines 9-15
+**Problem:** Values are inserted directly without escaping. In vCard 3.0, commas, semicolons, and backslashes must be escaped. An address like "Suite 5; Building 3" produces an invalid `ADR` field because unescaped semicolons are treated as component delimiters.
+**Fix:** Escape `;`, `,`, and `\` in all vCard field values before insertion.
+
+### 19. CreativeCard Logo Position Hardcoded `right: 12` (RTL Bug)
+**File:** `src/components/templates/CreativeCard.tsx` (estimated lines 38-54)
+**Problem:** Logo uses `position: 'absolute', right: 12`. In RTL mode, the logo should be on the left side, but it's always pinned to the right. This breaks the visual layout for Kurdish/Arabic cards.
+**Fix:** Use logical properties: `insetInlineEnd: 12` instead of `right: 12`.
+
+### 20. ElegantCard Logo Margin Logic Inverted
+**File:** `src/components/templates/ElegantCard.tsx` (estimated line 64)
+**Problem:** Uses `isRTL ? 'me-4' : 'ms-4'` which results in left margin regardless of direction. `ms-4` (margin-inline-start) already adapts to RTL. The conditional actually prevents correct RTL behavior.
+**Fix:** Just use `ms-4` unconditionally (or equivalent inline style).
+
+---
+
+## MEDIUM (Should Fix)
+
+### 21. Hardcoded Kurdish Fallback Text Across Templates
+**Files:** `ModernCard.tsx:50`, `ClassicCard.tsx:62`, `BoldCard.tsx:61`, `MinimalCard.tsx:58`
+**Problem:** When name/title is empty, fallback text is always Kurdish (`'ناوی تەواو'`, `'پیشە'`) regardless of card language. Shows Kurdish placeholders on English/Arabic cards. Inconsistent across templates: ElegantCard shows Kurdish/English (no Arabic), CreativeCard shows nothing, CorporateCard shows nothing.
+**Fix:** Use language-aware fallbacks: `data.language === 'en' ? 'Full Name' : data.language === 'ar' ? 'الاسم الكامل' : 'ناوی تەواو'`. Standardize approach across all 8 templates.
+
+### 22. Tailwind Classes on Card Templates (Against Project Guidelines)
+**Files:** All 8 template components
+**Problem:** CLAUDE.md states: "Card templates MUST use inline styles (not Tailwind classes) for PDF capture compatibility." Yet templates extensively use Tailwind: `bg-gradient-to-br`, `text-white`, `flex`, `items-center`, `w-full`, `h-full`, etc. If html-to-image doesn't fully capture Tailwind-generated CSS, PDF output could look very different from the preview.
+**Fix:** Convert all visual Tailwind classes in card templates to inline `style={{}}` properties. Keep Tailwind only for app UI outside the capture area.
+
+### 23. `alert()` Used for Errors in Multiple Places
+**Files:** `src/app/editor/page.tsx:107`, `src/components/CardForm.tsx:156`
+**Problem:** `window.alert()` is used for PDF errors and file-too-large errors. It blocks the main thread, is not accessible, and looks unprofessional. Screen readers announce it as a generic alert.
+**Fix:** Implement a toast notification system or inline error messages.
+
+### 24. No Character Limits or Overflow Handling on Inputs
+**Files:** `src/components/CardForm.tsx`, all templates
+**Problem:** No `maxLength` on any input field. Very long names/titles/addresses overflow the fixed-dimension card. Templates use `whiteSpace: 'nowrap'` but no `overflow: 'hidden'` or `textOverflow: 'ellipsis'` on contact fields.
+**Fix:** Add `maxLength` to inputs (e.g., name: 50, title: 60, company: 60). Add `overflow: hidden` + `textOverflow: 'ellipsis'` on card text elements.
+
+### 25. LanguageContext Value Object Recreated Every Render
+**File:** `src/context/LanguageContext.tsx` line 57
+**Problem:** `value={{ locale, dir, t, setLocale }}` creates a new object on every render. While `t` and `setLocale` are memoized, the context value itself is new, causing every consumer of `useLanguage()` to re-render on every LanguageProvider render.
+**Fix:** Wrap the value in `useMemo(() => ({ locale, dir, t, setLocale }), [locale, dir, t, setLocale])`.
+
+### 26. 8 Template Components Eagerly Imported on Landing Page
+**File:** `src/app/page.tsx` lines 8-15
+**Problem:** All 8 template card components are statically imported and fully rendered (with ResizeObservers) on the landing page. That's 8 complete template renders + 8-9 ResizeObservers active simultaneously. Significant bundle size and runtime cost for a landing page.
+**Fix:** Use `React.lazy()` or `next/dynamic` for template components below the fold. Consider using static images instead of live renders for the template preview grid.
+
+### 27. PDF Generation Relies on setTimeout Race Condition
+**File:** `src/lib/generatePdf.ts` line 50, `src/app/editor/page.tsx` line 100
+**Problem:** Uses `setTimeout(resolve, 100)` and `setTimeout(resolve, 200)` to wait for React re-render. On slow devices, 300ms total may not be enough. No mechanism confirms the render is complete.
+**Fix:** Use `requestAnimationFrame` chain or `MutationObserver` to detect when the DOM has actually updated. Alternatively, use `flushSync` or await `document.fonts.ready`.
+
+### 28. Mobile Preview Unmounts CardPreview Ref
+**File:** `src/app/editor/page.tsx` lines 240-302
+**Problem:** On mobile, switching to Edit tab completely unmounts `CardPreview`. The `cardRef` becomes null. If PDF download is triggered from the header button while on Edit tab, it silently fails with no user feedback (early return at line 94). Form scroll position is also lost when switching back.
+**Fix:** Render both tabs but hide inactive one with CSS (`display: none` or `visibility: hidden`) to preserve refs and scroll state.
+
+### 29. Hardcoded Alt Text on 5 of 8 Template Back Designs
+**File:** `src/components/BackCard.tsx` lines 178, 185, 215, 222, 246, 253, 280, 287, 315, 325
+**Problem:** Modern/Classic/Bold back designs use `t('alt.logo')` and `t('alt.qrCode')` for translated alt text. But Elegant/Creative/Corporate/Gradient/Minimal back designs use hardcoded English `"Logo"` and `"QR Code"`. Kurdish/Arabic screen reader users get English alt text on 5 of 8 templates.
+**Fix:** Use `t('alt.logo')` and `t('alt.qrCode')` consistently in all template sections. Ensure `useLanguage()` is called once at the top.
+
+### 30. BackCard Massive Code Duplication
+**File:** `src/components/BackCard.tsx` (343 lines)
+**Problem:** Nearly identical code repeated 8 times with only color/decoration differences. Each template block has the same logo/QR/website rendering pattern. ~32 duplicate inline SVG icon paths.
+**Fix:** Extract a single `BackCardContent` component that receives style/color props. Map template IDs to style configs.
+
+### 31. Social Accordion Toggle Missing ARIA
+**File:** `src/components/CardForm.tsx` lines 181-193
+**Problem:** The social section toggle button has no `aria-expanded`, `aria-controls`, or `aria-hidden` on the decorative chevron icon. Screen readers cannot convey expanded/collapsed state.
+**Fix:** Add `aria-expanded={socialOpen}`, `aria-controls="social-section"`, and `aria-hidden="true"` on the chevron SVG.
+
+### 32. Language/Template Selectors Missing ARIA
+**Files:** `src/components/LanguageSwitcher.tsx` lines 16-28, `src/components/TemplateSelector.tsx` lines 97-123, 136-163, `src/components/CardForm.tsx` lines 78-89
+**Problem:** Language buttons, card language buttons, and template selection buttons all act as radio groups but lack `role="radiogroup"`, `role="radio"`, `aria-checked`/`aria-pressed` attributes. No keyboard arrow-key navigation.
+**Fix:** Implement WAI-ARIA radio group pattern on all selector controls.
+
+### 33. saveCardData Silently Swallows Errors
+**File:** `src/app/editor/page.tsx` line 36
+**Problem:** `catch {}` silently swallows all localStorage errors. If localStorage is full (QuotaExceededError) or unavailable (Safari private browsing), user data fails to save with zero indication.
+**Fix:** At minimum, set an error state and show a non-blocking warning to the user.
+
+### 34. No Error Boundary in Editor
+**File:** `src/app/editor/page.tsx`
+**Problem:** No React Error Boundary wraps the editor. If a template component or PDF generation throws during rendering, the entire page crashes with the default Next.js error UI.
+**Fix:** Add an Error Boundary with a user-friendly recovery UI around the editor content.
+
+### 35. Clear Button Has No Confirmation
+**File:** `src/app/editor/page.tsx` lines 169-175, 253-259
+**Problem:** Clicking "Clear" immediately wipes all card data with no confirmation. Especially problematic on mobile where accidental taps are common.
+**Fix:** Add a confirmation dialog or undo mechanism.
+
+### 36. Logo Lost on Page Reload With No Warning
+**File:** `src/app/editor/page.tsx` line 33
+**Problem:** `logoUrl` is excluded from localStorage saves (data URLs too large). After page reload, all card data restores except the logo. No warning is shown to the user.
+**Fix:** Show a persistent info banner when a logo is uploaded: "Logo will not persist after page reload." Consider using IndexedDB for logo storage.
+
+### 37. CI Pipeline Missing Lint Step
+**File:** `.github/workflows/deploy.yml`
+**Problem:** No `npm run lint` step. Lint errors don't block deployment. Also: no `permissions` block (overly broad token), no `concurrency` control (simultaneous deploys possible), uses `npx opennextjs-cloudflare build` instead of `npm run build:worker` (inconsistent with package.json).
+**Fix:** Add lint step before build. Add `permissions: contents: read`. Add `concurrency: { group: deploy, cancel-in-progress: true }`. Use `npm run build:worker`.
+
+### 38. English Translation Uses Kurdish Script for Arabic Language Label
+**File:** `src/lib/i18n.ts` line 338
+**Problem:** In the English translations, `cardLang.ar` is `'عربی'` -- the Kurdish word for Arabic in Perso-Arabic script. English UI users see `عربی` instead of `Arabic` or `العربية`.
+**Fix:** Change to `'العربية'` (Arabic self-name) or `'Arabic'` (English name) depending on design intent.
+
+---
+
+## LOW (Nice to Have)
+
+### 39. `set()` Helper Type-Unsafe for Non-String Fields
+**File:** `src/components/CardForm.tsx` lines 66-67
+**Problem:** `set` accepts `keyof CardData` but returns a handler expecting `string`. Calling `set('qrEnabled')('true')` would set a string where boolean is expected. No memoization on `set`, causing all Field components to re-render on every keystroke.
+**Fix:** Type `set` as a discriminated union or use `useCallback` with proper generics.
+
+### 40. PDF FAST Compression Reduces Print Quality
+**File:** `src/lib/generatePdf.ts` lines 37, 66
+**Problem:** `pdf.addImage(..., 'FAST')` uses lowest-quality compression. At ~216 effective DPI (below standard 300 DPI for print), combined with FAST compression, printed business cards may show visible artifacts.
+**Fix:** Use `'MEDIUM'` or `'SLOW'` compression. Consider bumping `pixelRatio: 4` for ~288 DPI.
+
+### 41. PDF Has No Document Metadata
+**File:** `src/lib/generatePdf.ts`
+**Problem:** Generated PDF has no title, author, or keywords metadata.
+**Fix:** Add `pdf.setProperties({ title: data.name, creator: 'kart.krd', subject: 'Business Card' })`.
+
+### 42. vCard Uses LF Instead of CRLF Line Endings
+**File:** `src/lib/qrUtils.ts` lines 6-17
+**Problem:** vCard spec (RFC 2426) requires `\r\n` line endings. Current code uses `\n`. Some strict vCard parsers may reject it.
+**Fix:** Replace all `\n` with `\r\n` in the vCard string.
+
+### 43. No `prefers-reduced-motion` Handling
+**File:** `src/app/globals.css` lines 43-45
+**Problem:** `.card-preview` has `transition: all 0.2s ease`. No `@media (prefers-reduced-motion: reduce)` query to disable animations for users who prefer reduced motion.
+**Fix:** Add media query to disable or reduce transitions.
+
+### 44. Unused CSS Classes
+**File:** `src/app/globals.css` lines 27-35
+**Problem:** `.font-ku`, `.font-ar`, `.font-en` classes are defined but never used anywhere. Font overrides are all done via inline styles.
+**Fix:** Remove unused classes.
+
+### 45. Redundant `box-sizing: border-box`
+**File:** `src/app/globals.css` lines 16-18
+**Problem:** Tailwind v4's preflight already sets `box-sizing: border-box` on all elements.
+**Fix:** Remove the redundant declaration.
+
+### 46. `transition: all` Is Overly Broad
+**File:** `src/app/globals.css` line 44
+**Problem:** `.card-preview { transition: all 0.2s ease }` transitions every animatable property, causing unexpected animations on height, width, padding, etc.
+**Fix:** Scope to specific properties: `transition: transform 0.2s ease, box-shadow 0.2s ease`.
+
+### 47. Body Font Prioritizes Arabic Over Latin
+**File:** `src/app/globals.css` line 21
+**Problem:** Body font is `'Noto Sans Arabic', 'Geist', sans-serif`. Arabic font takes precedence even for English text. Elements without explicit `fontFamily` override will use the Arabic font for Latin characters.
+**Fix:** Use `'Geist', 'Noto Sans Arabic', sans-serif` as the default, and override with Arabic-first on RTL content.
+
+### 48. TemplateSelector Grid Not Responsive
+**File:** `src/components/TemplateSelector.tsx` line 136
+**Problem:** Grid layout uses fixed `grid-cols-4` regardless of screen width. On smaller desktop screens (1024-1200px), 4 columns may be cramped. Scroll layout has hidden scrollbar with no visual cue that more templates exist.
+**Fix:** Use responsive columns: `grid-cols-2 md:grid-cols-4`. Add scroll indicators for horizontal variant.
+
+### 49. Unused Translation Keys (Dead Code)
+**File:** `src/lib/i18n.ts`
+**Problem:** Several keys defined but never used: `landing.templatesDesc`, `landing.feature1Icon/feature2Icon/feature3Icon`, `form.socialMedia`. Also, `TEMPLATES` array in `card.ts` has `label`/`labelKu` properties never referenced.
+**Fix:** Remove unused translation keys and TEMPLATES properties.
+
+### 50. Static Sitemap With Hardcoded lastmod
+**File:** `public/sitemap.xml` line 5
+**Problem:** `lastmod` hardcoded to `2026-03-02`. Will become stale. Root URL missing trailing slash per sitemap protocol spec.
+**Fix:** Use Next.js `sitemap.ts` route handler for dynamic generation. Add trailing slash to root URL.
+
+### 51. Missing Manifest and PWA Assets
+**Problem:** No `manifest.json`/`site.webmanifest`, no `apple-touch-icon.png`. Can't install as PWA, iOS bookmarks get generic screenshot.
+**Fix:** Create `public/manifest.json` with app name, theme color, icons. Add apple-touch-icon.
+
+### 52. No `.nvmrc` or `engines` Field
+**Files:** `package.json`, project root
+**Problem:** CLAUDE.md says Node v22 required but no enforcement. No `.nvmrc`, no `engines` in package.json.
+**Fix:** Add `"engines": { "node": ">=22" }` to package.json. Create `.nvmrc` with `22`.
+
+### 53. `@types/qrcode` in Dependencies Instead of devDependencies
+**File:** `package.json` line 15
+**Problem:** Type definition packages should be in `devDependencies`.
+**Fix:** Move to `devDependencies`.
+
+### 54. Missing `.open-next/` from ESLint Ignores
+**File:** `eslint.config.mjs` lines 9-15
+**Problem:** `.open-next/` build artifact not in ESLint ignore list.
+**Fix:** Add `.open-next/` to the global ignores array.
+
+### 55. Dead Middleware Config in open-next.config.ts
+**File:** `open-next.config.ts` lines 15-25
+**Problem:** Middleware section configured with `external: true` but no `src/middleware.ts` exists. Dead configuration.
+**Fix:** Remove middleware section from config.
+
+### 56. tsconfig Target ES2017 Is Unnecessarily Old
+**File:** `tsconfig.json` line 2
+**Problem:** Project targets Node 22 and modern browsers. `ES2017` forces unnecessary transpilation.
+**Fix:** Update to `ES2022` or `ESNext`.
+
+### 57. Variable Shadowing: `t` in Editor
+**File:** `src/app/editor/page.tsx` line 51
+**Problem:** `TEMPLATES.find(t => t.id === urlTemplate)` shadows the translation function `t` from `useLanguage()`. Confusing and could cause bugs during refactoring.
+**Fix:** Rename callback parameter to `tpl` or `template`.
+
+### 58. Duplicated Validation Regexes
+**File:** `src/app/editor/page.tsx` lines 75-76 and 116-117
+**Problem:** Email regex and phone regex each appear twice (in `validateCardData` and `handleCardChange`).
+**Fix:** Extract to shared constants or a validation utility.
+
+### 59. Social Section Appears/Disappears Instantly
+**File:** `src/components/CardForm.tsx` line 195
+**Problem:** Social section toggles with conditional render (instant show/hide), no animation. Jarring compared to the smooth chevron rotation.
+**Fix:** Use CSS `max-height` transition or `Collapsible` component pattern.
+
+### 60. LanguageSwitcher Labels Not Universally Understandable
+**File:** `src/components/LanguageSwitcher.tsx` lines 7-9
+**Problem:** Language labels (`'کو'`, `'عر'`, `'En'`) are abbreviated. Non-Kurdish/Arabic readers can't identify the first two. No tooltips or `title` attributes.
+**Fix:** Add `title` attributes with full language names in their native script.
+
+### 61. No Dark Mode Support
+**File:** `src/app/globals.css` lines 3-14
+**Problem:** Color scheme is hardcoded light-mode only. No `prefers-color-scheme: dark` or `.dark` class support.
+**Fix:** Add dark mode CSS variables in a `@media (prefers-color-scheme: dark)` block.
+
+### 62. `reactStrictMode` Not Enabled
+**File:** `next.config.ts`
+**Problem:** `reactStrictMode: true` is not set. Misses development-time warnings for common React bugs.
+**Fix:** Add `reactStrictMode: true` to the config.
+
+### 63. CorporateCard Vertical Arabic Text
+**File:** `src/components/templates/CorporateCard.tsx` (estimated line 92)
+**Problem:** Uses `writingMode: 'vertical-lr'` for company name in RTL mode. Arabic/Kurdish script with connected letterforms is not designed for vertical orientation. Text likely renders poorly.
+**Fix:** Remove vertical writing mode for RTL languages, or use a different decorative approach.
+
+### 64. Hydration Flash of Kurdish Content
+**File:** `src/context/LanguageContext.tsx` lines 18-19, `src/app/layout.tsx` line 31
+**Problem:** Initial state is `'ku'`. SSR renders Kurdish. If user's stored locale is English, there's a visible flash of Kurdish content until the `useEffect` fires and updates to English.
+**Fix:** Use a loading skeleton until locale is determined, or use cookies/headers to detect preferred language server-side.
+
+### 65. BackCard useEffect Missing Social Fields in Dependencies
+**File:** `src/components/BackCard.tsx` line 25
+**Problem:** QR code regeneration depends on `data.name, data.title, data.company, data.phone, data.email, data.website, data.address` but not social fields. If vCard ever includes social links, QR won't update when those change.
+**Fix:** Either add social fields to the dependency array or document that they're intentionally excluded.
+
+### 66. SVG Icons Missing `aria-hidden="true"` Across All Templates
+**Files:** All template components, tab bar icons
+**Problem:** Decorative SVG icons in templates (phone, email, globe, etc.) are not hidden from screen readers. Screen readers may try to announce SVG path data.
+**Fix:** Add `aria-hidden="true"` to all decorative SVG elements.
+
+### 67. Multiple `<h1>` Elements on Landing Page
+**File:** `src/app/page.tsx` + template components
+**Problem:** The landing page renders template previews that contain `<h1>` tags (for card names). Combined with the page's own `<h1>`, there are multiple `<h1>` elements, which violates heading hierarchy best practices.
+**Fix:** Use `<div>` or `<span>` with appropriate styling instead of `<h1>` in card templates, or render templates in an `<iframe>` or with `role="presentation"`.
+
+### 68. No `rel="noopener noreferrer"` on External Links
+**Files:** Card templates (website links)
+**Problem:** If any template renders an `<a>` tag for the website field with `target="_blank"`, it should include `rel="noopener noreferrer"` for security.
+**Fix:** Audit all `<a>` tags and add `rel="noopener noreferrer"` where needed.
+
+---
+
+## Issue Count Summary
+
+| Priority | Count |
+|----------|-------|
+| Critical | 6 |
+| High | 14 |
+| Medium | 18 |
+| Low | 30 |
+| **Total** | **68** |
+
+## Top 10 Quick Wins (High Impact, Low Effort)
+
+1. Delete unused `.env.local` credentials and rotate Neon secrets
+2. Add `poweredByHeader: false` to next.config.ts
+3. Add OG image and fix social sharing metadata
+4. Fix BoldCard `tracking-widest` for RTL languages
+5. Change `'Inter'` to `'Geist'` in all templates (or load Inter)
+6. Add `.catch()` to BackCard QR generation promise
+7. Add `aria-hidden="true"` to all decorative SVGs
+8. Add `useMemo` to LanguageContext value object
+9. Fix MinimalCard contrast colors (gray-400 -> gray-600)
+10. Add try/finally to generatePdf for cleanup
