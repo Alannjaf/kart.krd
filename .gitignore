@@ -43,3 +43,5 @@ next-env.d.ts
 .env.local
 
 .open-next/
+.claude/worktrees/
+*.bak
