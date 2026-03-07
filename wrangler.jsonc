@@ -1,7 +1,6 @@
 {
   "name": "kart-krd",
   "main": ".open-next/worker.js",
-  "no_bundle": true,
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
