@@ -1,5 +1,6 @@
 import { AuthView } from '@neondatabase/auth/react';
-import SignOutPage from './SignOutPage';
+
+export const dynamicParams = false;
 
 export default async function AuthPage({
   params,
@@ -7,14 +8,6 @@ export default async function AuthPage({
   params: Promise<{ path: string }>;
 }) {
   const { path } = await params;
-
-  if (path === 'sign-out') {
-    return (
-      <main className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
-        <SignOutPage />
-      </main>
-    );
-  }
 
   return (
     <main className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
