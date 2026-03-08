@@ -19,7 +19,7 @@ export default function ProfileClient({ cardData, cardId, slug, views }: Props) 
   const { t, dir, locale } = useLanguage();
   const fontFamily = getFontFamily(locale);
   const [copied, setCopied] = useState(false);
-  const profileUrl = `https://kart.krd/c/${slug}`;
+  const profileUrl = typeof window !== 'undefined' ? `${window.location.origin}/c/${slug}` : `/c/${slug}`;
 
   const handleShare = async () => {
     if (navigator.share) {

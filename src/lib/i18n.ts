@@ -63,6 +63,9 @@ export const translations = {
     'editor.loading': 'چاوەڕێبکە...',
     'editor.tabEdit': 'دەستکاری',
     'editor.tabPreview': 'پێشبینی',
+    'editor.copyLink': 'کۆپی لینک',
+    'editor.openProfile': 'کردنەوەی پرۆفایل',
+    'editor.linkCopied': 'لینک کۆپی کرا',
 
     // Card form
     'form.cardLanguage': 'زمانی کارت',
@@ -198,6 +201,9 @@ export const translations = {
     'editor.loading': 'انتظر...',
     'editor.tabEdit': 'تحرير',
     'editor.tabPreview': 'معاينة',
+    'editor.copyLink': 'نسخ الرابط',
+    'editor.openProfile': 'فتح الملف الشخصي',
+    'editor.linkCopied': 'تم نسخ الرابط',
 
     // Card form
     'form.cardLanguage': 'لغة البطاقة',
@@ -333,6 +339,9 @@ export const translations = {
     'editor.loading': 'Loading...',
     'editor.tabEdit': 'Edit',
     'editor.tabPreview': 'Preview',
+    'editor.copyLink': 'Copy Link',
+    'editor.openProfile': 'Open Profile',
+    'editor.linkCopied': 'Link copied',
 
     // Card form
     'form.cardLanguage': 'Card Language',
