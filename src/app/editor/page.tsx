@@ -720,16 +720,31 @@ function EditorContent() {
                         <div className="px-4 py-3 text-xs text-[var(--color-text-secondary)] text-center">{t('cards.noCards')}</div>
                       ) : (
                         fabCards.map(card => (
-                          <button
+                          <div
                             key={card.id}
                             onClick={() => handleFabCardSelect(card)}
-                            className="w-full flex items-center px-4 py-2.5 text-start hover:bg-[var(--color-surface)] transition-colors"
+                            className="w-full flex items-center justify-between px-4 py-2.5 text-start hover:bg-[var(--color-surface)] transition-colors"
                           >
                             <div className="min-w-0">
                               <p className="text-sm font-medium text-[var(--color-text)] truncate">{card.card_name}</p>
                               <p className="text-xs text-[var(--color-text-secondary)]">/{card.slug}</p>
                             </div>
-                          </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!window.confirm(t('cards.deleteConfirm'))) return;
+                                fetch(`/api/cards/${card.id}`, { method: 'DELETE' }).then(res => {
+                                  if (res.ok) setFabCards(prev => prev.filter(c => c.id !== card.id));
+                                });
+                              }}
+                              className="p-2 text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded transition-all flex-shrink-0 ml-2"
+                              aria-label="Delete"
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
                         ))
                       )}
                     </div>
