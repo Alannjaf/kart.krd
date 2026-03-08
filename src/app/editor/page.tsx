@@ -190,7 +190,7 @@ function MyCardsDropdown({ fontFamily, t, onLoad }: {
                   </div>
                   <button
                     onClick={(e) => handleDelete(e, card.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-[var(--color-error)] hover:bg-red-50 rounded transition-all flex-shrink-0"
+                    className="p-1 text-[var(--color-error)] hover:bg-red-50 rounded transition-all flex-shrink-0"
                     aria-label="Delete"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
